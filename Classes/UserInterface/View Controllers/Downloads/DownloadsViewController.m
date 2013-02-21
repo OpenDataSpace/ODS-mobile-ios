@@ -250,7 +250,7 @@
      */
     if (!folderDataSource.editing)
     {
-        NSLog(@"Reloading favorites tableview");
+        AlfrescoLogDebug(@"Reloading favorites tableview");
         [folderDataSource refreshData];
         [self.tableView reloadData];
         [self selectCurrentRow];

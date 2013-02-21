@@ -332,7 +332,7 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
     NSString *filePath = [fileURLToUpload path];
 	NSString *fileName = self.saveBackMetadata.originalName;
 
-    NSLog(@"updating file at %@ to nodeRef: %@", filePath, self.saveBackMetadata.objectId);
+    AlfrescoLogDebug(@"updating file at %@ to nodeRef: %@", filePath, self.saveBackMetadata.objectId);
 
     // extract node id from objectId (nodeRef)
     NSArray *idSplit = [self.saveBackMetadata.objectId componentsSeparatedByString:@"/"];
@@ -350,7 +350,7 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
         putLink = [alfrescoUtils setContentURLforNode:nodeId tenantId:self.saveBackMetadata.tenantID];
     }
     
-    NSLog(@"putLink = %@", putLink);
+    AlfrescoLogDebug(@"putLink = %@", putLink);
     
     NSString *putFile = [CMISAtomEntryWriter generateAtomEntryXmlForFilePath:filePath uploadFilename:fileName];
     
@@ -428,7 +428,7 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
         }
         else
         {
-            NSLog(@"Failed to save the edited file %@ to Documents folder", self.updatedFileURL);
+            AlfrescoLogDebug(@"Failed to save the edited file %@ to Documents folder", self.updatedFileURL);
             
             displayErrorMessageWithTitle(NSLocalizedString(@"savetodocs.alert.description", @"Failed to save the edited file to Downloads"), NSLocalizedString(@"savetodocs.alert.title", @"Save Failed"));
         }

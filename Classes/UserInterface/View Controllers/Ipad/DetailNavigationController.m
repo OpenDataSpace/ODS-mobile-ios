@@ -137,7 +137,7 @@ static CGFloat masterViewControllerWidth = 320.0;
     // Update the user interface for the detail item.
     if (self.detailViewController)
     {
-        NSLog(@"Detail View Controller title: %@", self.detailViewController.title);
+        AlfrescoLogDebug(@"Detail View Controller title: %@", self.detailViewController.title);
         
         if (self.fullScreenModalController)
         {

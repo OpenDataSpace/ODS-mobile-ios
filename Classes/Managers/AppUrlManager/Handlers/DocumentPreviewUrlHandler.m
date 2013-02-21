@@ -116,7 +116,7 @@ static NSString * const PREFIX = @"doc-preview";
     NSString *cloudHostname = [AppProperties propertyForKey:kAlfrescoCloudHostname];
     BOOL isCloud = [self.browserUrl.host isEqualToCaseInsensitiveString:cloudHostname];
 
-    NSLog(@"%@: Document Preview Object ID: %@ and TenantID: %@", self.repositoryUrl, self.objectId, self.tenantID);
+    AlfrescoLogDebug(@"%@: Document Preview Object ID: %@ and TenantID: %@", self.repositoryUrl, self.objectId, self.tenantID);
     
     // Check that we have an account setup with the same hostname
     AccountInfo *account = [[AccountManager sharedManager] accountInfoForHostname:self.repositoryUrl.host username:self.userName includeInactiveAccounts:YES];
@@ -218,7 +218,7 @@ static NSString * const PREFIX = @"doc-preview";
         [request setCompletionBlock:^{
             if (!request.responseSuccessful)
             {
-                NSLog(@"%d Response Code", request.responseStatusCode);
+                AlfrescoLogDebug(@"%d Response Code", request.responseStatusCode);
                 [self showGeneralFailureMessage];
             }
             else

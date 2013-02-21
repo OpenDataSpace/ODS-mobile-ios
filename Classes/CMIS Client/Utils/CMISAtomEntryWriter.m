@@ -111,7 +111,7 @@ NSUInteger const kBase64EncodeChunkSize = 524288;
     }
     else
     {
-        NSLog(@"Could not create a file handle for %@", self.filePath);
+        AlfrescoLogDebug(@"Could not create a file handle for %@", self.filePath);
     }
     
     [self appendFileWithString:@"</cmisra:base64></cmisra:content>"];
@@ -152,7 +152,7 @@ NSUInteger const kBase64EncodeChunkSize = 524288;
                                                                  attributes:nil];
         if (!fileCreated)
         {
-            NSLog(@"CMISUploadFileHTTPRequest ERROR: could not create file %@", self.internalFilePath);
+            AlfrescoLogDebug(@"CMISUploadFileHTTPRequest ERROR: could not create file %@", self.internalFilePath);
         }
     }
     else

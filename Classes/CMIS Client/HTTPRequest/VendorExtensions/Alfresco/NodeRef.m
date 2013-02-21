@@ -60,7 +60,7 @@
             [self setStoreId:[idSplit objectAtIndex:0]];
             [self setObjectId:[idSplit objectAtIndex:1]];
             
-            NSLog(@"StoreType: %@, StoreId: %@, ObjectID: %@", storeType, storeId, objectId);
+            AlfrescoLogDebug(@"StoreType: %@, StoreId: %@, ObjectID: %@", storeType, storeId, objectId);
         }
     }
     return self;

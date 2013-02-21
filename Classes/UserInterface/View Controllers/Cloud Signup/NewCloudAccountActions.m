@@ -205,7 +205,7 @@ static NSString * const kPlistExtension = @"plist";
     NewCloudAccountHTTPRequest *signupRequest = (NewCloudAccountHTTPRequest *)request;
     AccountInfo *account = [signupRequest signupAccount];
     [[AccountManager sharedManager] removeAccountInfo:account];
-    NSLog(@"Cloud signup request failed: %@", [request error]);
+    AlfrescoLogDebug(@"Cloud signup request failed: %@", [request error]);
     [[self HUD] hide:YES];
     
     if (signupRequest.blockedEmail)

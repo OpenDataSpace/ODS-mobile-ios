@@ -217,7 +217,7 @@
 #pragma mark Action Selectors
 - (void)cancelButtonPressed
 {
-    NSLog(@"Comment Cancel Button Pressed");
+    AlfrescoLogDebug(@"Comment Cancel Button Pressed");
     if (delegate && [delegate respondsToSelector:@selector(didCancelComment:)])
         [delegate didCancelComment];
 	[self.navigationController popViewControllerAnimated:YES];
@@ -225,7 +225,7 @@
 
 - (void)saveCommentButtonPressed
 {
-    NSLog(@"Save button pressed");
+    AlfrescoLogDebug(@"Save button pressed");
     
     // Disable the Save button to prevent multiple save button clicks.
     [[[self navigationItem] rightBarButtonItem] setEnabled:NO];
@@ -282,7 +282,7 @@
 #pragma mark ASIHttpRequestDelegate
 -(void)requestFailed:(CommentsHttpRequest *)request
 {
-    NSLog(@"failed to post comment request failed");
+    AlfrescoLogDebug(@"failed to post comment request failed");
     if ( [NSThread isMainThread] )
     {
         displayErrorMessageWithTitle(NSLocalizedString(@"add.comment.failure.message", @"Failed to add new comment, please try again"), NSLocalizedString(@"add.comment.failure.title", @""));
@@ -300,13 +300,13 @@
 
 - (void)requestFinished:(CommentsHttpRequest *)request
 {
-    NSLog(@"comment post request finished");
+    AlfrescoLogDebug(@"comment post request finished");
     [self performSelectorOnMainThread:@selector(saveAndExit) withObject:nil waitUntilDone:NO];
     [self stopHUD];
 }
 
 - (void)cancelActiveConnection:(NSNotification *) notification {
-    NSLog(@"applicationWillResignActive in AddCommentViewController");
+    AlfrescoLogDebug(@"applicationWillResignActive in AddCommentViewController");
     [commentsRequest clearDelegatesAndCancel];
     
     [[[self navigationItem] rightBarButtonItem] setEnabled:YES];

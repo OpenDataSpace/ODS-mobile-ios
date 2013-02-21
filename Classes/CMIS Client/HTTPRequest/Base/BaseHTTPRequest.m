@@ -156,7 +156,7 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
 
     if (tokenizedURLString == nil)
     {
-        NSLog(@"-- WARNING -- did not find URL entry for key '%@'", apiKey);
+        AlfrescoLogDebug(@"-- WARNING -- did not find URL entry for key '%@'", apiKey);
     }
 
     NSMutableDictionary *tokens = [self tokenDictionaryRepresentationForAccountInfo:[[AccountManager sharedManager] accountInfoForUUID:uuid] 
@@ -167,7 +167,7 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
     urlString = [urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSURL *newURL = [NSURL URLWithString:urlString];
     
-    NSLog(@"\nAPIKEY: %@\n\t%@\n\t%@\n\t",apiKey,tokenizedURLString,urlString);
+    AlfrescoLogDebug(@"\nAPIKEY: %@\n\t%@\n\t%@\n\t",apiKey,tokenizedURLString,urlString);
     
     id base = [self requestWithURL:newURL accountUUID:uuid useAuthentication:useAuthentication];
     [base setServerAPI:apiKey];
@@ -220,7 +220,7 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
     if (uuid == nil)
     {
         uuid = [[[[AccountManager sharedManager] allAccounts] lastObject] uuid];
-        NSLog(@"-- WARNING -- Request encountered nil uuid, using last configured account");
+        AlfrescoLogDebug(@"-- WARNING -- Request encountered nil uuid, using last configured account");
     }
     
     self = [super initWithURL:newURL];
@@ -334,7 +334,7 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
         FDAccountStatus errorStatus = FDAccountStatusConnectionError;
         // Try to determine if the certificate has expired
         // the priority is to mark an account as with expired certificate
-        NSLog(@"Error code: %d", theError.code);
+        AlfrescoLogDebug(@"Error code: %d", theError.code);
         
         NSError *underlyingError = [theError.userInfo objectForKey:NSUnderlyingErrorKey];
         
@@ -348,7 +348,7 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
     if (self.suppressAllErrors)
     {
         // just log the error if we're supressing all errors
-        NSLog(@"%@: %d %@\r\n%@", self.class, [self responseStatusCode], [self responseStatusMessage], theError);
+        AlfrescoLogDebug(@"%@: %d %@\r\n%@", self.class, [self responseStatusCode], [self responseStatusMessage], theError);
     }
     else
     {
@@ -380,7 +380,7 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
         }
         else 
         {
-            NSLog(@"%@", theError);
+            AlfrescoLogDebug(@"%@", theError);
         }
     }
 

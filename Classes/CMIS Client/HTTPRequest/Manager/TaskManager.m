@@ -394,7 +394,7 @@ static NSString *TASKS_STARTED_BY_ME = @"tasksstartedbyme";
 
 - (void)requestFailed:(ASIHTTPRequest *)request 
 {
-    NSLog(@"Tasks Request Failed: %@", [request error]);
+    AlfrescoLogDebug(@"Tasks Request Failed: %@", [request error]);
     requestsFailed++;
     
     //Just show one alert if there's no internet connection

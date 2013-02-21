@@ -476,10 +476,9 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
             }
         }
     }
-    //NSLog(@"favorites Request Failed: %@", [request error]);
+    AlfrescoLogTrace(@"favorites Request Failed: %@", [request error]);
     
     //Just show one alert if there's no internet connection
-    
     if (showOfflineAlert && ([request.error code] == ASIConnectionFailureErrorType || [request.error code] == ASIRequestTimedOutErrorType))
     {
         showConnectionErrorMessage(request);
@@ -490,7 +489,7 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
 - (void)queueFinished:(ASINetworkQueue *)queue
 {
     //Checking if all the requests failed
-    //NSLog(@"========Fails: %d =========Finished: %d =========== Total Count %d", requestsFailed, requestsFinished, requestCount);
+    AlfrescoLogTrace(@"========Fails: %d =========Finished: %d =========== Total Count %d", requestsFailed, requestsFinished, requestCount);
     if (requestsFailed == requestCount)
     {
         NSString *description = @"All requests failed";
@@ -560,7 +559,7 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
                                                                 includingPropertiesForKeys:[NSArray arrayWithObject:NSURLNameKey]
                                                                                    options:NSDirectoryEnumerationSkipsHiddenFiles|NSDirectoryEnumerationSkipsSubdirectoryDescendants
                                                                               errorHandler:^BOOL(NSURL *url, NSError *fileError) {
-                                                                                  NSLog(@"Error retrieving the favorite folder contents in URL: %@ and error: %@", url, fileError.localizedDescription);
+                                                                                  AlfrescoLogDebug(@"Error retrieving the favorite folder contents in URL: %@ and error: %@", url, fileError.localizedDescription);
                                                                                   return YES;
                                                                               }];
             
@@ -1197,7 +1196,7 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
         
         if (fileError)
         {
-            NSLog(@"Error creating the %@ folder: %@", @"Documents", [fileError description]);
+            AlfrescoLogDebug(@"Error creating the %@ folder: %@", @"Documents", [fileError description]);
             return  nil;
         }
     }

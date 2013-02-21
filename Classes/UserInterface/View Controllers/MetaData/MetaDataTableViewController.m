@@ -158,7 +158,7 @@ static NSArray * cmisPropertiesToDisplay = nil;
         }
         @catch (NSException *exception)
         {
-            NSLog(@"FATAL: tagging request failed on viewDidload");
+            AlfrescoLogDebug(@"FATAL: tagging request failed on viewDidload");
         }
         @finally
         {
@@ -192,7 +192,7 @@ static NSArray * cmisPropertiesToDisplay = nil;
 
 -(void)requestFailed:(TaggingHttpRequest *)request
 {
-    NSLog(@"Error from the request: %@", [request.error description]);
+    AlfrescoLogDebug(@"Error from the request: %@", [request.error description]);
     [self stopHUD];
 }
 
@@ -428,7 +428,7 @@ static NSArray * cmisPropertiesToDisplay = nil;
 - (void)downloadWasCancelled:(DownloadProgressBar *)down
 {
     
-    NSLog(@"Download was cancelled!");
+    AlfrescoLogDebug(@"Download was cancelled!");
 }
 
 #pragma mark - MBProgressHUD Helper Methods
@@ -452,7 +452,7 @@ static NSArray * cmisPropertiesToDisplay = nil;
 
 - (void)cancelActiveConnection:(NSNotification *) notification
 {
-    NSLog(@"applicationWillResignActive in MetaDataTableViewController");
+    AlfrescoLogDebug(@"applicationWillResignActive in MetaDataTableViewController");
     [taggingRequest clearDelegatesAndCancel];
     [versionHistoryRequest cancel];
 }

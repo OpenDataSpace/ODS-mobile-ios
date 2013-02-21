@@ -239,7 +239,7 @@ typedef enum
             delegate.siteTypeToDisplay = DocumentPickerSiteTypeAllSites;
             break;
         default:
-            NSLog(@"Something went wrong. You shouldn't come here. Probably a programmatic error");
+            AlfrescoLogDebug(@"Something went wrong. You shouldn't come here. Probably a programmatic error");
             break;
     }
     [delegate loadDataForTableView:self.tableView];

@@ -592,11 +592,11 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         
         AGImagePickerController *imagePickerController = [[AGImagePickerController alloc] initWithFailureBlock:^(NSError *error) 
          {
-             NSLog(@"Fail. Error: %@", error);
+             AlfrescoLogDebug(@"Fail. Error: %@", error);
              
              if (error == nil) 
              {
-                 NSLog(@"User has cancelled.");
+                 AlfrescoLogDebug(@"User has cancelled.");
                  [blockSelf dismissModalViewControllerHelper];
              } 
              else 
@@ -623,7 +623,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
              
          } andSuccessBlock:^(NSArray *info) {
              [blockSelf startHUD];
-             NSLog(@"User finished picking %d library assets", info.count);
+             AlfrescoLogDebug(@"User finished picking %d library assets", info.count);
              //It is always NO because we will show the UploadForm next
              //Only affects iPhone, in the iPad the popover dismiss is always animated
              [blockSelf dismissModalViewControllerHelper:NO];
@@ -883,7 +883,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     if([_childsToDownload count] <= 0) {
         [self noFilesToDownloadPrompt];
     } else {
-        NSLog(@"Begin downloading %d files", [_childsToDownload count]);
+        AlfrescoLogDebug(@"Begin downloading %d files", [_childsToDownload count]);
         //download all childs
         self.downloadQueueProgressBar = [DownloadQueueProgressBar createWithNodes:_childsToDownload delegate:self andMessage:NSLocalizedString(@"Downloading Document", @"Downloading Document")];
         [self.downloadQueueProgressBar setSelectedUUID:self.selectedAccountUUID];
@@ -914,7 +914,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 - (void) downloadQueue:(DownloadQueueProgressBar *)down completeDownloads:(NSArray *)downloads 
 {
-    //NSLog(@"Download Queue completed!");
+    AlfrescoLogTrace(@"Download Queue completed!");
     DownloadInfo *download;
     NSInteger successCount = 0;
     NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -954,7 +954,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     
     [self fireNotificationAlert:message];
     self.downloadQueueProgressBar = nil;
-    NSLog(@"%d downloads successful", successCount);
+    AlfrescoLogDebug(@"%d downloads successful", successCount);
 }
 
 - (void) downloadQueueWasCancelled:(DownloadQueueProgressBar *)down {
@@ -988,7 +988,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         }
         else
         {
-            NSLog(@"Image picked from Photo Library with Location Services off/unavailable");
+            AlfrescoLogDebug(@"Image picked from Photo Library with Location Services off/unavailable");
             [self startHUD];
 
             // We need to save the image into a file in the temp folder
@@ -1203,7 +1203,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 #pragma mark - SavedDocumentPickerDelegate
 
 - (void)savedDocumentPicker:(SavedDocumentPickerController *)picker didPickDocuments:(NSArray *)documentURLs {
-    NSLog(@"User selected the documents %@", documentURLs);
+    AlfrescoLogDebug(@"User selected the documents %@", documentURLs);
     
     //Hide popover on iPad
     [self dismissModalViewControllerHelper:NO];
@@ -1385,7 +1385,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 - (void)applicationWillResignActive:(NSNotification *)notification
 {
-    NSLog(@"applicationWillResignActive in RepositoryNodeViewController");
+    AlfrescoLogDebug(@"applicationWillResignActive in RepositoryNodeViewController");
     [self.popover dismissPopoverAnimated:NO];
     self.popover = nil;
     

@@ -64,16 +64,16 @@
         
         if(![registrationId isNotEmpty])
         {
-            NSLog(@"No registration-id in the incoming url %@", url);
+            AlfrescoLogDebug(@"No registration-id in the incoming url %@", url);
         } 
         else if([registrationId isNotEmpty] && [filteredAccounts count] == 0)
         {
-            NSLog(@"No account found with the registration-id %@", registrationId);
+            AlfrescoLogDebug(@"No account found with the registration-id %@", registrationId);
         }
     }
     else
     {
-        NSLog(@"Incorrect number of path components. Sample: alfresco://activate-cloud-account/activiti$1106914");
+        AlfrescoLogDebug(@"Incorrect number of path components. Sample: alfresco://activate-cloud-account/activiti$1106914");
     }
 }
 

@@ -78,7 +78,7 @@
 
 - (void)requestFailed:(ASIHTTPRequest *)request 
 {
-    NSLog(@"People Request Failed: %@", [request error]);
+    AlfrescoLogDebug(@"People Request Failed: %@", [request error]);
     
     if(self.delegate && [self.delegate respondsToSelector:@selector(peopleRequestFailed:)])
     {

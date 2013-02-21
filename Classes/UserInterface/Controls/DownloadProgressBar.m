@@ -93,13 +93,13 @@
 #pragma mark ASIHTTPRequestDelegate
 -(void)requestFailed:(ASIHTTPRequest *)request
 {
-    NSLog(@"failed to download file: %@", [request.error description]);
+    AlfrescoLogDebug(@"failed to download file: %@", [request.error description]);
     [self performSelectorOnMainThread:@selector(downloadFailed:) withObject:request waitUntilDone:NO];
 }
 
 -(void)requestFinished:(ASIHTTPRequest *)request
 {
-    NSLog(@"download file request finished using cache: %@", [request didUseCachedResponse]? @"YES":@"NO");
+    AlfrescoLogDebug(@"download file request finished using cache: %@", [request didUseCachedResponse]? @"YES":@"NO");
 	
     [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:request.downloadDestinationPath];
     [progressAlert dismissWithClickedButtonIndex:1 animated:NO];
@@ -284,7 +284,7 @@
 }
 
 - (void) cancelActiveConnection:(NSNotification *) notification {
-    NSLog(@"applicationWillResignActive in DownloadProgressBar");
+    AlfrescoLogDebug(@"applicationWillResignActive in DownloadProgressBar");
     [progressAlert dismissWithClickedButtonIndex:0 animated:YES];
     [graceTimer invalidate];
 }

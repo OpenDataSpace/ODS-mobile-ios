@@ -125,7 +125,7 @@
 #pragma mark - SavedDocumentPickerControllerDelegate methods
 - (void)savedDocumentPicker:(SavedDocumentPickerController *)picker didPickDocuments:(NSArray *)documentURLs
 {
-    NSLog(@"Documents: %@", documentURLs);
+    AlfrescoLogDebug(@"Documents: %@", documentURLs);
     [self networkCertificateFinished:[[documentURLs objectAtIndex:0] path]];
 }
 

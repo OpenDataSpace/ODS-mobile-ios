@@ -177,7 +177,7 @@ NSString * const kActivityManagerErrorDomain = @"ActivityManagerErrorDomain";
 
 - (void)requestFailed:(ASIHTTPRequest *)request 
 {
-    NSLog(@"Activities Request Failed: %@", [request error]);
+    AlfrescoLogDebug(@"Activities Request Failed: %@", [request error]);
     requestsFailed++;
     
     // Just show one alert if there's no internet connection

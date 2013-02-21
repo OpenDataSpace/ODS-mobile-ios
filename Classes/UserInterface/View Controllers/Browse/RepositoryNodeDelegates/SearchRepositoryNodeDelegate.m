@@ -264,7 +264,7 @@
     
     if ([searchPattern length] > 0)
     {
-        NSLog(@"Start searching for %@", searchPattern);
+        AlfrescoLogDebug(@"Start searching for %@", searchPattern);
         // Cancel if there's a current request
         if ([self.searchRequest isExecuting])
         {

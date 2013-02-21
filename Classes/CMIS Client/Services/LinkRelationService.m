@@ -55,7 +55,7 @@
     NSPredicate *predicate = [self predicateForLinkRelationName:linkRelationStr];
 	NSArray *result = [[cmisObject linkRelations] filteredArrayUsingPredicate:predicate];
 	if ([result count] != 1) {
-		NSLog(@"Hierarchy Navigation Link Relation could not be determined for given link relations: %@", [cmisObject linkRelations]);
+		AlfrescoLogDebug(@"Hierarchy Navigation Link Relation could not be determined for given link relations: %@", [cmisObject linkRelations]);
 		return nil;
 	}
 	
@@ -67,7 +67,7 @@
     NSPredicate *predicate = [self predicateForLinkRelationName:linkRelationStr cmisMediaType:cmisMediaType];
 	NSArray *result = [[cmisObject linkRelations] filteredArrayUsingPredicate:predicate];
 	if ([result count] != 1) {
-		NSLog(@"Hierarchy Navigation Link Relation could not be determined for given link relations: %@", [cmisObject linkRelations]);
+		AlfrescoLogDebug(@"Hierarchy Navigation Link Relation could not be determined for given link relations: %@", [cmisObject linkRelations]);
 		return nil;
 	}
 	
@@ -89,7 +89,7 @@
 			//
 			// FIXME: Implement Me
 			//
-			NSLog(@"Hierarchy Navigation Link Relation Up not yet implemented!");
+			AlfrescoLogDebug(@"Hierarchy Navigation Link Relation Up not yet implemented!");
 			break;	
 		}
 		case HierarchyNavigationLinkRelationDown:
@@ -106,7 +106,7 @@
 		}
 		default:
 		{
-			NSLog(@"Unable to resolve Hierarchy Navigation Link Relation: [%d-%@], %@", linkRelation, linkRelationString, cmisService);
+			AlfrescoLogDebug(@"Unable to resolve Hierarchy Navigation Link Relation: [%d-%@], %@", linkRelation, linkRelationString, cmisService);
 			return nil;
 		}
 	}
@@ -114,7 +114,7 @@
 	NSPredicate *predicate = [self predicateForLinkRelationName:linkRelationString cmisMediaType:mediaType];
 	NSArray *result = [[cmisObject linkRelations] filteredArrayUsingPredicate:predicate];
 	if ([result count] != 1) {
-		NSLog(@"Hierarchy Navigation Link Relation could not be determined for given link relations: %@", [cmisObject linkRelations]);
+		AlfrescoLogDebug(@"Hierarchy Navigation Link Relation could not be determined for given link relations: %@", [cmisObject linkRelations]);
 		return nil;
 	}
 	
@@ -129,7 +129,7 @@
 	NSString *linkHref = [self hrefForHierarchyNavigationLinkRelation:HierarchyNavigationLinkRelationDown cmisService:@"getChildren" cmisObject:cmisFolder];
 	
 	if (nil == linkHref) {
-		NSLog(@"getChildren link destination could not be found for given link relations: %@", [cmisFolder linkRelations]);
+		AlfrescoLogDebug(@"getChildren link destination could not be found for given link relations: %@", [cmisFolder linkRelations]);
 		return nil;
 	}
 	

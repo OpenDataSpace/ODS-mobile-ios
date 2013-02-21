@@ -475,7 +475,7 @@ NSInteger const kGetCommentsCountTag = 6;
             
             if (error)
             {
-                NSLog(@"Error copying file to temp path %@", [error description]);
+                AlfrescoLogDebug(@"Error copying file to temp path %@", [error description]);
             }
         }
     }
@@ -993,7 +993,7 @@ NSInteger const kGetCommentsCountTag = 6;
             [self enableAllToolbarControls:YES animated:YES];
             if (!completed && error)
             {
-                NSLog(@"Printing could not complete because of error: %@", error);
+                AlfrescoLogDebug(@"Printing could not complete because of error: %@", error);
             }
         };
         
@@ -1130,14 +1130,14 @@ NSInteger const kGetCommentsCountTag = 6;
         {
             if (buttonIndex != alertView.cancelButtonIndex)
             {
-                NSLog(@"User confirmed removal of file %@", self.fileName);
+                AlfrescoLogDebug(@"User confirmed removal of file %@", self.fileName);
                 [[FileDownloadManager sharedInstance] removeDownloadInfoForFilename:self.fileName];
             }
             break;
         }
         default:
         {
-            NSLog(@"Unknown AlertView!");
+            AlfrescoLogDebug(@"Unknown AlertView!");
             break;
         }
     }
@@ -1171,7 +1171,7 @@ NSInteger const kGetCommentsCountTag = 6;
     // Otherwise use alfresco repository code
     if (self.cmisObjectId && ([self.cmisObjectId length] > 0) && !(self.isDownloaded && useLocalComments) && account)
     {
-        NSLog(@"Comment Button Pressed, retrieving Comments from current request");
+        AlfrescoLogDebug(@"Comment Button Pressed, retrieving Comments from current request");
         if ([self.commentsRequest isFinished])
         {
             [self loadCommentsViewController:self.commentsRequest.commentsDictionary];
@@ -1195,7 +1195,7 @@ NSInteger const kGetCommentsCountTag = 6;
     else
     {
         // We Should never get here, but just in case, throw an alert
-        NSLog(@"NodeRef Not Available");
+        AlfrescoLogDebug(@"NodeRef Not Available");
         displayErrorMessage(@"Comments are not available for this document");
     }
 }
@@ -1228,7 +1228,7 @@ NSInteger const kGetCommentsCountTag = 6;
 
 - (void)commentsHttpRequestDidFail:(id)sender
 {
-    NSLog(@"commentsHttpRequestDidFail!");
+    AlfrescoLogDebug(@"commentsHttpRequestDidFail!");
     [self stopHUD];
 }
 
@@ -1345,7 +1345,7 @@ NSInteger const kGetCommentsCountTag = 6;
  */
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
-    NSLog(@"Failed to load preview: %@", [error description]);
+    AlfrescoLogDebug(@"Failed to load preview: %@", [error description]);
     if ([error code] == kFrameLoadCodeError)
     {
         [self performSelectorOnMainThread:@selector(previewLoadFailed) withObject:nil waitUntilDone:NO];
@@ -1398,7 +1398,7 @@ NSInteger const kGetCommentsCountTag = 6;
 
 - (void)likeRequest:(LikeHTTPRequest *)request failedWithError:(NSError *)theError 
 {
-    NSLog(@"likeRequest:failedWithError:%@", [theError description]);
+    AlfrescoLogDebug(@"likeRequest:failedWithError:%@", [theError description]);
     if (request.tag == kLike_GET_Request)
     {
         return;
@@ -1470,7 +1470,7 @@ NSInteger const kGetCommentsCountTag = 6;
 
 - (void)applicationWillResignActive:(NSNotification *) notification
 {
-    NSLog(@"applicationWillResignActive in DocumnetViewController");
+    AlfrescoLogDebug(@"applicationWillResignActive in DocumnetViewController");
     [self cancelActiveHTTPConnections];
 }
 

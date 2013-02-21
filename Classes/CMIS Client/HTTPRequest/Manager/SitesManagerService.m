@@ -321,7 +321,7 @@ static NSMutableDictionary *sharedInstances;
     }
     else
     {
-        NSLog(@"Site request failed... cancelling other requests: %@", [request description]);
+        AlfrescoLogDebug(@"Site request failed... cancelling other requests: %@", [request description]);
         if(showOfflineAlert && ([request.error code] == ASIConnectionFailureErrorType || [request.error code] == ASIRequestTimedOutErrorType))
         {
             showConnectionErrorMessage(request);
@@ -375,7 +375,7 @@ static NSMutableDictionary *sharedInstances;
     self.mySites = nil;
     self.favoriteSites = nil;
     self.favoriteSiteNames = nil;
-    NSLog(@"Invalidating SitesManagerService results");
+    AlfrescoLogDebug(@"Invalidating SitesManagerService results");
 }
 
 - (BOOL)isFavoriteSite:(RepositoryItem *)site

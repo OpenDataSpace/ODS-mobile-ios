@@ -100,14 +100,14 @@
     
     if (!success)
     {
-        NSLog(@"Failed to create file %@, with error: %@", destination, [error description]);
+        AlfrescoLogError(@"Failed to create file %@, with error: %@", destination, [error description]);
     }
     else
     {
         success = [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:destination];
         if (!success)
         {
-            NSLog(@"Failed to protect file %@, with error: %@", destination, [error description]);
+            AlfrescoLogError(@"Failed to protect file %@, with error: %@", destination, [error description]);
         }
     }
     
@@ -159,14 +159,14 @@
     BOOL success = [manager copyItemAtPath:source toPath:destination error:&error];
     if (!success)
     {
-        NSLog(@"Failed to create file %@, with error: %@", destination, [error description]);
+        AlfrescoLogError(@"Failed to create file %@, with error: %@", destination, [error description]);
     }
     else
     {
         success = [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:destination];
         if (!success)
         {
-            NSLog(@"Failed to protect file %@, with error: %@", destination, [error description]);
+            AlfrescoLogError(@"Failed to protect file %@, with error: %@", destination, [error description]);
         }
     }
     
@@ -199,7 +199,7 @@
     // Did we hit the max suffix number?
     if (suffix == kFileSuffixMaxAttempts)
     {
-        NSLog(@"ERROR: Couldn't save downloaded file as kFileSuffixMaxAttempts (%u) reached", kFileSuffixMaxAttempts);
+        AlfrescoLogError(@"ERROR: Couldn't save downloaded file as kFileSuffixMaxAttempts (%u) reached", kFileSuffixMaxAttempts);
         return nil;
     }
     
@@ -245,7 +245,7 @@
     
     if (error)
     {
-        NSLog(@"Error: %@ deleting file: %@", [error description], filename);
+        AlfrescoLogError(@"Error: %@ deleting file: %@", [error description], filename);
         return NO;
     }
     
@@ -287,7 +287,7 @@
         
         if (error)
         {
-            NSLog(@"Error creating the %@ folder: %@", @"Documents", [error description]);
+            AlfrescoLogError(@"Error creating the %@ folder: %@", @"Documents", [error description]);
             return  nil;
         }
     }
@@ -299,7 +299,7 @@
         
         if (error)
         {
-            NSLog(@"Error creating the %@ folder: %@", @"Documents", [error description]);
+            AlfrescoLogError(@"Error creating the %@ folder: %@", @"Documents", [error description]);
             return  nil;
         }
     }
@@ -326,7 +326,7 @@
         
         if (error)
         {
-            NSLog(@"Error creating the %@ folder: %@", kFDLibraryConfigFolderName, [error description]);
+            AlfrescoLogError(@"Error creating the %@ folder: %@", kFDLibraryConfigFolderName, [error description]);
             return  nil;
         }
     }
