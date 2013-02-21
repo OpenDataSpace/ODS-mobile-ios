@@ -25,7 +25,6 @@
 
 #import "SiteListHTTPRequest.h"
 #import "RepositoryItem.h"
-#import "ASIHttpRequest+Alfresco.h"
 
 @implementation SiteListHTTPRequest
 @synthesize results;

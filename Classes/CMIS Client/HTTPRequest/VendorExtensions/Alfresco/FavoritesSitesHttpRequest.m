@@ -24,7 +24,6 @@
 //
 
 #import "FavoritesSitesHttpRequest.h"
-#import "ASIHttpRequest+Alfresco.h"
 
 @implementation FavoritesSitesHttpRequest
 @synthesize favoriteSites = _favoriteSites;
