@@ -46,7 +46,7 @@
                            [[accountInfo protocol] lowercaseString], [accountInfo hostname], [accountInfo port],
                            serviceRootPath];
     
-    NSLog(@"Base Alfresco Repository Service URL: %@", urlString);
+    AlfrescoLogDebug(@"Base Alfresco Repository Service URL: %@", urlString);
     
     return urlString;
 }

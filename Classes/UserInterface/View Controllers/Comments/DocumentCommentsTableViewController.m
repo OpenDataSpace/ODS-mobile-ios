@@ -168,7 +168,7 @@
         }
 
         modifiedOn = changeStringDateToFormat(modifiedOn, @"MMM dd yyyy HH:mm:ss ZZZZ", @"EE d MMM yyyy HH:mm:ss");
-        NSLog(@"Final Date: %@", modifiedOn);
+        AlfrescoLogDebug(@"Final Date: %@", modifiedOn);
 
         CommentCellViewController *cellController = [[CommentCellViewController alloc]  initWithTitle:author 
                                                                                          withSubtitle:[commentHtml stringByRemovingHTMLTags] 
@@ -278,7 +278,7 @@
 
 - (void) didSubmitComment:(NSString *)comment
 {
-    NSLog(@"Comment: %@", comment);
+    AlfrescoLogDebug(@"Comment: %@", comment);
     if (self.cmisObjectId)
     {
         self.commentsRequest = [CommentsHttpRequest commentsHttpGetRequestWithNodeRef:[NodeRef nodeRefFromCmisObjectId:self.cmisObjectId] 
@@ -298,7 +298,7 @@
 
 - (void)requestFinished:(ASIHTTPRequest *)sender
 {
-    NSLog(@"commentsHttpRequestDidFinish");
+    AlfrescoLogDebug(@"commentsHttpRequestDidFinish");
     CommentsHttpRequest *request = (CommentsHttpRequest *)sender;
     [self setModel:[[[IFTemporaryModel alloc] initWithDictionary:[NSMutableDictionary dictionaryWithDictionary:request.commentsDictionary]] autorelease]];
     [self updateAndReload];
@@ -306,12 +306,12 @@
 
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
-    NSLog(@"commentsHttpRequestDidFail!");
+    AlfrescoLogDebug(@"commentsHttpRequestDidFail!");
 }
 
 - (void) cancelActiveConnection:(NSNotification *) notification
 {
-    NSLog(@"applicationWillResignActive in DocumentCommentsTableViewController");
+    AlfrescoLogDebug(@"applicationWillResignActive in DocumentCommentsTableViewController");
     [self.commentsRequest clearDelegatesAndCancel];
 }
 

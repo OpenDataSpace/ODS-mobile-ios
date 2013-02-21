@@ -73,13 +73,13 @@
 #pragma mark Overriden Key-Value Coding Methods
 - (id)valueForUndefinedKey:(NSString *)key
 {
-//	NSLog(@"RepositoryInfo ignoring key: '%@' in valueForUndefinedKey:", key);
+	AlfrescoLogTrace(@"RepositoryInfo ignoring key: '%@' in valueForUndefinedKey:", key);
 	return nil;
 }
 
 - (void)setValue:(id)value forUndefinedKey:(NSString *)key
 {
-//	NSLog(@"RepositoryInfo ignoring key: '%@' in setValue:forUndefinedKey:", key);	
+	AlfrescoLogTrace(@"RepositoryInfo ignoring key: '%@' in setValue:forUndefinedKey:", key);	
 }
 
 @end

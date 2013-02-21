@@ -506,8 +506,8 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
 - (void)uploadFinished:(NSNotification *)notification
 {
     UploadInfo *uploadInfo = [notification.userInfo objectForKey:@"uploadInfo"];
-    NSLog(@"uploadinfo: %@",[uploadInfo upLinkRelation]);
-    NSLog(@"self: %@",self.uplinkRelation);
+    AlfrescoLogDebug(@"uploadinfo: %@",[uploadInfo upLinkRelation]);
+    AlfrescoLogDebug(@"self: %@",self.uplinkRelation);
     
     if (uploadInfo.uploadStatus == UploadInfoStatusUploaded 
         && [uploadInfo uploadType] == UploadFormTypeCreateDocument

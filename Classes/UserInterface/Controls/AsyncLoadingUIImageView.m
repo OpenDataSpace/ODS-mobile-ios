@@ -92,7 +92,7 @@ typedef void (^AsyncLoadingUIInageViewFailureBlock)(NSError *);
 
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
-    NSLog(@"Request failed: %@", request.error.localizedDescription);
+    AlfrescoLogDebug(@"Request failed: %@", request.error.localizedDescription);
     if (self.failureBlock)
     {
         self.failureBlock(request.error);

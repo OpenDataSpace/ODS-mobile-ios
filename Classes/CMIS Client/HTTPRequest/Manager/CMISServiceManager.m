@@ -238,7 +238,7 @@ NSString * const kProductNameEnterprise = @"Enterprise";
 
 - (void)loadServiceDocumentForAccountUuid:(NSString *)uuid isForRestrictedFiles:(BOOL)isForRestrictedFiles
 {
-    NSLog(@"CMISServiceManager - Loading service document for account: %@", uuid);
+    AlfrescoLogDebug(@"CMISServiceManager - Loading service document for account: %@", uuid);
     
     AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:uuid];
     if (account.isMultitenant)
@@ -331,7 +331,7 @@ NSString * const kProductNameEnterprise = @"Enterprise";
 
 - (void)startServiceRequestsForAccountUUIDs:(NSArray *)accountUUIDsArray isForRestrictedFiles:(BOOL)isForRestrictedFiles
 {
-    NSLog(@"CMISServiceManager - Starting service requests for accounts: %@", accountUUIDsArray);
+    AlfrescoLogDebug(@"CMISServiceManager - Starting service requests for accounts: %@", accountUUIDsArray);
     AccountManager *manager = [AccountManager sharedManager];
     NSMutableSet *accountsRunning = [NSMutableSet setWithSet:self.accountsRunning];
     
@@ -385,7 +385,7 @@ NSString * const kProductNameEnterprise = @"Enterprise";
     if ([request isKindOfClass:[ServiceDocumentRequest class]])
     {
         ServiceDocumentRequest *serviceDocReq = (ServiceDocumentRequest *)request;
-        NSLog(@"Service document request success for UUID=%@", [serviceDocReq accountUUID]);
+        AlfrescoLogDebug(@"Service document request success for UUID=%@", [serviceDocReq accountUUID]);
         
         RepositoryInfo *thisRepository = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:serviceDocReq.accountUUID tenantID:serviceDocReq.tenantID];
         AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:serviceDocReq.accountUUID];
@@ -422,7 +422,7 @@ NSString * const kProductNameEnterprise = @"Enterprise";
     }
     else if ([request isKindOfClass:[TenantsHTTPRequest class]])
     {
-        NSLog(@"TenantsHTTPRequest requestFinished");
+        AlfrescoLogDebug(@"TenantsHTTPRequest requestFinished");
         TenantsHTTPRequest *tenantsRequest = (TenantsHTTPRequest *)request;
         
         NSString *accountUUID = [tenantsRequest accountUUID];
@@ -465,7 +465,7 @@ NSString * const kProductNameEnterprise = @"Enterprise";
 
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
-    NSLog(@"ServiceDocument Request Failed: %@", request.error);
+    AlfrescoLogDebug(@"ServiceDocument Request Failed: %@", request.error);
 
     ServiceDocumentRequest *serviceDocReq = (ServiceDocumentRequest *)request;
     [self.accountsRunning removeObject:[serviceDocReq accountUUID]];

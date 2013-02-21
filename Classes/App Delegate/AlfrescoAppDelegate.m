@@ -127,14 +127,14 @@ static NSArray *unsupportedDevices;
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
-    NSLog(@"applicationWillEnterForeground");
+    AlfrescoLogDebug(@"applicationWillEnterForeground");
     // Usually we want to recreate everything that was freed from memory on the
     // applicationWillResignActive: or applicationDidEnterBackground: but we only
     // release objects that could be recreated lazy (viewDidLoad)
     
     // we reload the userDefault in case the user changed something
     if(![[FDKeychainUserDefaults standardUserDefaults] synchronize]) {
-        NSLog(@"There was an error saving/updating the userDefaults");
+        AlfrescoLogDebug(@"There was an error saving/updating the userDefaults");
     }
     
     [ASIHTTPRequest setDefaultCacheIfEnabled];
@@ -187,7 +187,7 @@ static NSArray *unsupportedDevices;
 
 /* Since iOS 4 this is rarely called */
 - (void)applicationWillTerminate:(UIApplication *)application {
-    NSLog(@"applicationWillTerminate");
+    AlfrescoLogDebug(@"applicationWillTerminate");
     //We will try to clean the session download cache
     //Since we cannot rely on this method walways getting called
     //there's no guarantee it gets cleared until the user starts the app again
@@ -342,7 +342,7 @@ static BOOL applicationIsActive = NO;
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-    NSLog(@"applicationDidBecomeActive");
+    AlfrescoLogDebug(@"applicationDidBecomeActive");
 	[[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
     
     FDKeychainUserDefaults *userDefaults = [FDKeychainUserDefaults standardUserDefaults];
@@ -443,7 +443,7 @@ static BOOL applicationIsActive = NO;
 
 - (void)resetUserPreferencesToDefault
 {
-    NSLog(@"Resetting User Preferences to default");
+    AlfrescoLogDebug(@"Resetting User Preferences to default");
     NSArray *preferences = [[FDKeychainUserDefaults standardUserDefaults] defaultPreferences];
     NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
     [[FDKeychainUserDefaults standardUserDefaults] removePersistentDomainForName:appDomain];
@@ -483,7 +483,7 @@ static BOOL applicationIsActive = NO;
 - (NSArray *) userPreferences {
     NSString *rootPlist = [[NSBundle mainBundle] pathForResource:@"Root" ofType:@"plist"];
     if(!rootPlist) {
-        NSLog(@"Could not find Settings.bundle");
+        AlfrescoLogDebug(@"Could not find Settings.bundle");
         return [NSArray array];
     }
 	
@@ -602,7 +602,7 @@ static BOOL applicationIsActive = NO;
     // Reset Settings if toggled
     if ([[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"resetToDefault"]) 
     {
-        NSLog(@"Reset Detected - Asking user for confirmation");
+        AlfrescoLogDebug(@"Reset Detected - Asking user for confirmation");
         UIAlertView *resetConfirmation = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"settings.appResetConfirmation.title", @"App Reset Confirmation")
                                                                     message:NSLocalizedString(@"settings.appResetConfirmation.message", @"Are you sure you want to reset the application? This will remove all data, reset the app settings, will remove all accounts and cannot be undone")
                                                                    delegate:self
@@ -752,7 +752,7 @@ static BOOL applicationIsActive = NO;
         [fileManager moveItemAtPath:oldPath toPath:newPath error:&error];
         
         if(error) {
-            NSLog(@"Cannot move the configuration file from the old location to the new");
+            AlfrescoLogDebug(@"Cannot move the configuration file from the old location to the new");
         }
     }
     
@@ -764,7 +764,7 @@ static BOOL applicationIsActive = NO;
         [fileManager removeItemAtPath:oldConfigDir error:&error];
         
         if(error) {
-            NSLog(@"Error deleting the old config folder");
+            AlfrescoLogDebug(@"Error deleting the old config folder");
         }
     }
     

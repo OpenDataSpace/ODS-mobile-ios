@@ -252,7 +252,7 @@ NSTimeInterval const kDocExpiryCheckingInterval = 5;
 
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
-    NSLog(@"Error: %@ ", [request.error description]);
+    AlfrescoLogDebug(@"Error: %@ ", [request.error description]);
 }
 
 - (void)queueFinished:(ASINetworkQueue *)queue

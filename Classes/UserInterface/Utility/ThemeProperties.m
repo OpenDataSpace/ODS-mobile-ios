@@ -143,7 +143,7 @@ NSString * const kSelectedSegmentColor = @"root.selectedSegmentColor";
     } 
     else 
     {
-        NSLog(@"ERROR: UIColor doesn't respond to the %@ selector. Check the %@ plist file",selectorName,kThemeFile);
+        AlfrescoLogError(@"ERROR: UIColor doesn't respond to the %@ selector. Check the %@ plist file",selectorName,kThemeFile);
         return [UIColor whiteColor];
     }
 }

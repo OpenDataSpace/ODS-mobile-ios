@@ -89,7 +89,7 @@
     }
     else
     {
-        NSLog(@"%d: %@", self.responseStatusCode, self.responseString);
+        AlfrescoLogDebug(@"%d: %@", self.responseStatusCode, self.responseString);
         [self setSuppressAllErrors:YES];
         [self requestFinishedWithSuccessResponse];
         [super requestFinished];

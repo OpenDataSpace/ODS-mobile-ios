@@ -205,7 +205,7 @@ NSString * const kPhotoQualityKey = @"photoQuality";
 
 - (void)cancelButtonPressed
 {
-    NSLog(@"UploadFormTableViewController: Cancelled");
+    AlfrescoLogDebug(@"UploadFormTableViewController: Cancelled");
     
     if([self.uploadInfo uploadStatus] == UploadInfoStatusFailed)
     {
@@ -216,7 +216,7 @@ NSString * const kPhotoQualityKey = @"photoQuality";
 
 - (void)saveButtonPressed
 {
-    NSLog(@"UploadFormTableViewController: Upload");
+    AlfrescoLogDebug(@"UploadFormTableViewController: Upload");
     [self.navigationItem.rightBarButtonItem setEnabled:NO];
     if ([self isMultiUpload])
     {
@@ -276,7 +276,7 @@ NSString * const kPhotoQualityKey = @"photoQuality";
             [self.uploadInfo setFilename:name];
         }
         
-        NSLog(@"New Filename: %@", [self.uploadInfo completeFileName]);
+        AlfrescoLogDebug(@"New Filename: %@", [self.uploadInfo completeFileName]);
         
         
         NSString *tags = [model objectForKey:@"tags"];
@@ -697,7 +697,7 @@ NSString * const kPhotoQualityKey = @"photoQuality";
         if ((newTag == nil) || ([[newTag stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length]==0)) 
         { // No text found, alert
             displayErrorMessageWithTitle(NSLocalizedString(@"uploadview.error.invalidtag.message", @"Tags must contain text"), NSLocalizedString(@"uploadview.error.invalidtag.title", @"Invalid Tag"));
-            NSLog(@"Empty Tag ERROR");
+            AlfrescoLogDebug(@"Empty Tag ERROR");
         }
         else 
         {
@@ -708,7 +708,7 @@ NSString * const kPhotoQualityKey = @"photoQuality";
             }
             else
             {
-                NSLog(@"Create Tag: %@", newTag);
+                AlfrescoLogDebug(@"Create Tag: %@", newTag);
                 // Tag does not exist, tag must be added
                 TaggingHttpRequest *request = [TaggingHttpRequest httpRequestCreateNewTag:newTag accountUUID:selectedAccountUUID tenantID:self.tenantID];
                 [request setDelegate:self];
@@ -774,7 +774,7 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     [[self asyncRequests] removeObject:request];
 
     [self setAvailableTagsArray:[NSMutableArray array]];
-    NSLog(@"Failed to retrieve tags: %@", request.apiMethod);
+    AlfrescoLogDebug(@"Failed to retrieve tags: %@", request.apiMethod);
     
     if ([request.apiMethod isEqualToString:kCreateTag])
     {

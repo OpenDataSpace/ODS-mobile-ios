@@ -153,7 +153,7 @@
     NSArray *repositories = [[RepositoryServices shared] getRepositoryInfoArrayForAccountUUID:self.accountUUID];
     if (repositories.count > 1)
     {
-        NSLog(@"[WARNING] Got multiple repositories back, but only 1 is supported here!");
+        AlfrescoLogWarning(@"Got multiple repositories back, but only 1 is supported here!");
     }
     else if (repositories.count == 1)
     {

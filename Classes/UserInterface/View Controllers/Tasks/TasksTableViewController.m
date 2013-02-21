@@ -470,7 +470,7 @@ NSInteger const kSelectAccountActionSheet = 102;
 
 - (void)taskManagerRequestFailed:(TaskManager *)taskManager
 {
-    NSLog(@"Request in TasksTableViewController failed! %@", [taskManager.error description]);
+    AlfrescoLogDebug(@"Request in TasksTableViewController failed! %@", [taskManager.error description]);
     
     [self failedToFetchTasksError];
     [self dataSourceFinishedLoadingWithSuccess:NO];
@@ -656,7 +656,7 @@ NSInteger const kSelectAccountActionSheet = 102;
 
         }];
         [request setFailedBlock:^{
-            NSLog(@"Request in TasksTableViewController failed! %@", [request.error description]);
+            AlfrescoLogDebug(@"Request in TasksTableViewController failed! %@", [request.error description]);
             [self stopHUD];
         }];
         [request startAsynchronous];
@@ -708,7 +708,7 @@ NSInteger const kSelectAccountActionSheet = 102;
 
 - (void)applicationWillResignActive:(NSNotification *) notification
 {
-    NSLog(@"applicationWillResignActive in TasksTableViewController");
+    AlfrescoLogDebug(@"applicationWillResignActive in TasksTableViewController");
     [self.tasksRequest clearDelegatesAndCancel];
 }
 

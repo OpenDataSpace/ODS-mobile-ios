@@ -252,7 +252,7 @@ NSString * const kUploadInfoUploadFileIsTemporary = @"uploadFileIsTemporary";
         NSString *filePath = [_uploadFileURL path];
         if ([fileManager fileExistsAtPath:filePath])
         {
-            NSLog(@"UploadInfo: removing temp file %@", filePath);
+            AlfrescoLogDebug(@"UploadInfo: removing temp file %@", filePath);
             [fileManager removeItemAtPath:filePath error:nil];
         }
     }

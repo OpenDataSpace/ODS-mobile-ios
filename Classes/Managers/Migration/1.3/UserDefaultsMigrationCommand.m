@@ -30,7 +30,7 @@
 - (NSArray *) userPreferences {
     NSString *rootPlist = [[NSBundle mainBundle] pathForResource:@"Root" ofType:@"plist"];
     if(!rootPlist) {
-        NSLog(@"Could not find Settings.bundle");
+        AlfrescoLogDebug(@"Could not find Settings.bundle");
         return [NSArray array];
     }
 	

@@ -128,7 +128,7 @@ NSString * const kImportCertificatePKCS12Type = @"application/x-pkcs12";
 
 - (void)importButtonAction:(id)sender
 {    
-    NSLog(@"Importing certificate file: %@", self.certificatePath);
+    AlfrescoLogDebug(@"Importing certificate file: %@", self.certificatePath);
     ImportCertificateStatus  status;
     NSData *certificateData = [NSData dataWithContentsOfFile:self.certificatePath];
     AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:self.accountUUID];
@@ -172,7 +172,7 @@ NSString * const kImportCertificatePKCS12Type = @"application/x-pkcs12";
     FDCertificate *certificateWrapper = [account certificateWrapper];
     if (certificateWrapper)
     {
-        NSLog(@"Imported certificate summary: %@", certificateWrapper.summary);
+        AlfrescoLogDebug(@"Imported certificate summary: %@", certificateWrapper.summary);
         [self cleanUp];
     }
 }

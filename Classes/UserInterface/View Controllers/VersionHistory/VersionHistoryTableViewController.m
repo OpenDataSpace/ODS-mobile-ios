@@ -414,7 +414,7 @@
             
             if (error)
             {
-                NSLog(@"Error copying file to temp path %@", [error description]);
+                AlfrescoLogDebug(@"Error copying file to temp path %@", [error description]);
             }
         }
         

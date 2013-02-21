@@ -81,17 +81,17 @@
     AccountStatusHTTPRequest *statusRequest = (AccountStatusHTTPRequest *)request;
     NSString *accountUUID = [statusRequest.accountInfo uuid];
     AccountInfo *originalAccount = [[AccountManager sharedManager] accountInfoForUUID:accountUUID];
-    NSLog(@"AccountStatus request for account %@ completed", [originalAccount description]);
+    AlfrescoLogDebug(@"AccountStatus request for account %@ completed", [originalAccount description]);
 }
 
 - (void)requestFailed:(ASIHTTPRequest *)request 
 {
-    NSLog(@"AccountStatusHTTPRequest Failed: %@", [request error]);
+    AlfrescoLogDebug(@"AccountStatusHTTPRequest Failed: %@", [request error]);
 }
 
 - (void)queueFinished:(ASINetworkQueue *)queue 
 {
-    NSLog(@"All AccountStatus requests in the queue finished");
+    AlfrescoLogDebug(@"All AccountStatus requests in the queue finished");
     [self.statusRequestQueue setSuspended:YES];
 }
 

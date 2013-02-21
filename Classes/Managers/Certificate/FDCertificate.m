@@ -110,10 +110,10 @@ NSString * const kCertificatePasscode = @"kCertificatePasscode";
                                    (CFArrayRef *)&pkcs12);
     if (err != errSecSuccess)
     {
-        NSLog(@"Error importing PKCS12 data, error code: %ld", err);
+        AlfrescoLogDebug(@"Error importing PKCS12 data, error code: %ld", err);
     }
     
-    NSLog(@"Import result: %@", pkcs12);
+    AlfrescoLogDebug(@"Import result: %@", pkcs12);
     return pkcs12;
 }
 

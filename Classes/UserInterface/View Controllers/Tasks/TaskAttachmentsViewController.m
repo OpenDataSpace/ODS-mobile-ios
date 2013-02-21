@@ -100,7 +100,7 @@ enum AttachmentSections {
         case (AttachmentSectionAttachmentList):
             return self.attachments.count;
         default:
-            NSLog(@"[Warning] Invalid section. Please check your code, you shouldn't be seeing this!");
+            AlfrescoLogWarning(@"Invalid section. Please check your code, you shouldn't be seeing this!");
             return 0;
     }
 }
@@ -119,7 +119,7 @@ enum AttachmentSections {
         case (AttachmentSectionAttachmentList):
             return [self createAttachmentCellForRow:indexPath.row];
         default:
-            NSLog(@"[Warning] Invalid section. Please check your code, you shouldn't be seeing this!");
+            AlfrescoLogWarning(@"Invalid section. Please check your code, you shouldn't be seeing this!");
             return nil;
     }
 }

@@ -175,7 +175,7 @@
 
 - (void)activityManagerRequestFailed:(ActivityManager *)activityManager
 {
-    NSLog(@"Request in ActivitiesTableViewController failed! %@", [activityManager.error description]);
+    AlfrescoLogDebug(@"Request in ActivitiesTableViewController failed! %@", [activityManager.error description]);
 
     [self failedToFetchActivitiesError];
     [self dataSourceFinishedLoadingWithSuccess:NO];
@@ -207,7 +207,7 @@
 
 -(void)requestFailed:(ASIHTTPRequest *)request
 {
-    NSLog(@"Request in ActivitiesTableViewController failed! %@", [request.error description]);
+    AlfrescoLogDebug(@"Request in ActivitiesTableViewController failed! %@", [request.error description]);
     
     [self stopHUD];
     [self.tableView setAllowsSelection:YES];
@@ -365,7 +365,7 @@
         [self.tableView setAllowsSelection:NO];
         ActivityTableCellController *activityCell = (ActivityTableCellController *)sender;
         Activity *activity = activityCell.activity;
-        NSLog(@"User tapped row, selection type: %@", selection);
+        AlfrescoLogDebug(@"User tapped row, selection type: %@", selection);
         
         self.cellSelection = selection;
         self.selectedActivity = activity;
@@ -392,12 +392,12 @@
     [self startHUD];
     [self.objectByIdRequest startAsynchronous];
     
-    NSLog(@"Starting objectByIdRequest");
+    AlfrescoLogDebug(@"Starting objectByIdRequest");
 }
 
 - (void)startDownloadRequest:(ObjectByIdRequest *)request 
 {
-    NSLog(@"objectByIdRequest finished with: %@", request.responseString);
+    AlfrescoLogDebug(@"objectByIdRequest finished with: %@", request.responseString);
     RepositoryItem *repositoryNode = request.repositoryItem;
     
     if(repositoryNode.contentLocation && request.responseStatusCode < 400) 
@@ -428,7 +428,7 @@
 
 - (void)startMetadataRequest:(ObjectByIdRequest *)request
 {
-    NSLog(@"objectByIdRequest finished with: %@", request.responseString);
+    AlfrescoLogDebug(@"objectByIdRequest finished with: %@", request.responseString);
     
     RepositoryItem *repositoryNode = request.repositoryItem;
     if (repositoryNode.describedByURL && request.responseStatusCode < 400) 
@@ -456,7 +456,7 @@
 }
 
 - (void)objectByIdRequestFailed: (ASIHTTPRequest *) request {
-    NSLog(@"objectByIdRequest failed");
+    AlfrescoLogDebug(@"objectByIdRequest failed");
     [self requestFailed:request];
     self.objectByIdRequest = nil;
 }
@@ -584,7 +584,7 @@
 }
 
 - (void) applicationWillResignActive:(NSNotification *) notification {
-    NSLog(@"applicationWillResignActive in ActivitiesTableViewController");
+    AlfrescoLogDebug(@"applicationWillResignActive in ActivitiesTableViewController");
     [activitiesRequest clearDelegatesAndCancel];
 }
 

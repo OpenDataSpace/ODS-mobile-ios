@@ -136,7 +136,7 @@
 "favorite-view.no-documents" = "No Documents";
 
 "favorite-errors.title" = "Sync Errors";
-"favorite-errors.unfavorited-on-server-with-local-changes.header" = "The following documents have been unfavorited on the server but have local changes. Please select how you would like to proceed for each file.\n\nPlease note that files will be saved to \"Downloads\"";
+"favorite-errors.unfavorited-on-server-with-local-changes.header" = "The following documents have been unfavorited since you edited them. Tap Sync to upload your edited version to the server, or Save to save it to the \"Downloads\" folder.\n\nPlease note that syncing here does not restore to Favorites.";
 "favorite-errors.deleted-on-server-with-local-changes.header" = "The following documents have been deleted on the server but copies have been saved to the \"Downloads\" section";
 "favorite-errors.pending-sync-on-server-with-local-changes.header" = "The following documents are pending sync and have local changes. Please select how you would like to proceed for each file.\n\nPlease note that files will be saved to \"Downloads\"";
 "favorite-errors.button.sync" = "Sync";
@@ -281,6 +281,7 @@
 "create-folder.in-progress" = "Creating folder...";
 "create-folder.success" = "Created new folder named \"%@\"";
 "create-folder.failure" = "Failed to create new folder named \"%@\"";
+"create-folder.duplicate" = "A file or folder named \"%@\" already exists";
 
 "postprogressbar.upload.picture" = "Uploading Photo";
 "postprogressbar.upload.video" = "Uploading Video";

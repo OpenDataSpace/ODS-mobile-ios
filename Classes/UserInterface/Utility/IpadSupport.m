@@ -198,7 +198,7 @@ DetailNavigationController * detailController;
         else 
         {
             //We probably didn't initialize correctly the splitview
-            NSLog(@"Detail Controller is not a DetailNavigationController");
+            AlfrescoLogDebug(@"Detail Controller is not a DetailNavigationController");
         }
     }
 }

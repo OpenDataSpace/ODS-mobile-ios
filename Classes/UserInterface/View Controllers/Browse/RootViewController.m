@@ -806,7 +806,7 @@ static NSArray *siteTypes;
 {
     [self dataSourceFinishedLoadingWithSuccess:NO];
     [self clearAllHUDs];
-    NSLog(@"FAILURE %@", [request error]);
+    AlfrescoLogDebug(@"FAILURE %@", [request error]);
 }
 
 - (void)requestFinished:(ASIHTTPRequest *)request 
@@ -838,7 +838,7 @@ static NSArray *siteTypes;
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
     [self clearAllHUDs];
-    NSLog(@"FAILURE %@", [request error]);
+    AlfrescoLogDebug(@"FAILURE %@", [request error]);
 }
 
 
@@ -894,7 +894,7 @@ static NSArray *siteTypes;
 
 - (void)serviceDocumentRequestFailed:(ServiceDocumentRequest *)serviceRequest 
 {
-    NSLog(@"ServiceDocument Request Failure \n\tErrorDescription: %@ \n\tErrorFailureReason:%@ \n\tErrorObject:%@", 
+    AlfrescoLogDebug(@"ServiceDocument Request Failure \n\tErrorDescription: %@ \n\tErrorFailureReason:%@ \n\tErrorObject:%@", 
           [serviceRequest.error description], [[serviceRequest error] localizedFailureReason],[serviceRequest error]);
     
 #if defined (TARGET_ALFRESCO)
@@ -1059,7 +1059,7 @@ static NSArray *siteTypes;
 
 - (void)applicationWillResignActive:(NSNotification *) notification
 {
-    NSLog(@"applicationWillResignActive in RootViewController");
+    AlfrescoLogDebug(@"applicationWillResignActive in RootViewController");
     
     [self cancelAllHTTPConnections];
 }

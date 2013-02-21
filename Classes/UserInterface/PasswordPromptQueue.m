@@ -137,14 +137,14 @@
         {
             if ([pendingRequest.accountUUID isEqualToString:nextRequest.accountUUID])
             {
-                NSLog(@"PasswordPromptQueue: Found matching accountUUID");
+                AlfrescoLogDebug(@"PasswordPromptQueue: Found matching accountUUID");
                 [pendingRequest setUsername:nextRequest.accountInfo.username];
                 [pendingRequest setPassword:newPassword];
                 [pendingRequest retryUsingSuppliedCredentials];
                 [removeArray addObject:pendingRequest];
             }
         }
-        NSLog(@"PasswordPromptQueue: Removing %d requests", removeArray.count);
+        AlfrescoLogDebug(@"PasswordPromptQueue: Removing %d requests", removeArray.count);
         [self.promptQueue removeObjectsInArray:removeArray];
 
         promptActive = NO;

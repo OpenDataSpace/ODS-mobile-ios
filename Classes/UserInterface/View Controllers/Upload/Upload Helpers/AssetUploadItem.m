@@ -64,7 +64,7 @@
      } 
     failureBlock:^(NSError *err) 
     {
-        NSLog(@"Error: %@",[err localizedDescription]);
+        AlfrescoLogDebug(@"Error: %@",[err localizedDescription]);
         finishBlock(nil);
     }];
 }
@@ -118,7 +118,7 @@
     CGImageDestinationRef destination = CGImageDestinationCreateWithData((CFMutableDataRef)dest_data,UTI,1,NULL);
     
     if(!destination) {
-        NSLog(@"***Could not create image destination ***");
+        AlfrescoLogDebug(@"***Could not create image destination ***");
         if (source) 
         {
             CFRelease(source);
@@ -156,7 +156,7 @@
     success = CGImageDestinationFinalize(destination);
     
     if(!success) {
-        NSLog(@"***Could not create data from image destination ***");
+        AlfrescoLogDebug(@"***Could not create data from image destination ***");
     }
     
     //now we have the data ready to go, so do whatever you want with it

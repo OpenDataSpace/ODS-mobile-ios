@@ -39,7 +39,7 @@
 
 - (void)handleUrl:(NSURL *)url annotation:(id)annotation
 {
-    NSLog(@"Adding account from details on URL...");
+    AlfrescoLogDebug(@"Adding account from details on URL...");
     
     // get parameter values from URL
     NSDictionary *queryPairs = [url queryPairs];
@@ -90,7 +90,7 @@
     }
     else 
     {
-        NSLog(@"URL did not contain enough information to create account; host, port, username and password are required!");
+        AlfrescoLogDebug(@"URL did not contain enough information to create account; host, port, username and password are required!");
     }
 }
 

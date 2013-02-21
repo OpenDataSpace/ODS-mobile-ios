@@ -159,7 +159,7 @@ extern NSString * const kMDMAspectKey;
 extern NSString * const kFileExpiryKey;
 // Custom Notifications
 extern NSString * const kNotificationExpiredFiles;
-extern NSString * const KNotificationViewedDocumentRestrictionStatus;
+extern NSString * const kNotificationViewedDocumentRestrictionStatus;
 
 //
 // User Preferences name constants

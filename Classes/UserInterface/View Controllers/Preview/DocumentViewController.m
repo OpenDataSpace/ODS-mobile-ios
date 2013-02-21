@@ -128,6 +128,10 @@ NSInteger const kGetCommentsCountTag = 6;
 - (void)viewDidDisappear:(BOOL)animated
 {
     [self.popover dismissPopoverAnimated:YES];
+    if (self.actionSheet.isVisible)
+    {
+        [self.actionSheet dismissWithClickedButtonIndex:self.actionSheet.cancelButtonIndex animated:NO];
+    }
     [super viewDidDisappear:animated];
 }
 
@@ -471,7 +475,7 @@ NSInteger const kGetCommentsCountTag = 6;
             
             if (error)
             {
-                NSLog(@"Error copying file to temp path %@", [error description]);
+                AlfrescoLogDebug(@"Error copying file to temp path %@", [error description]);
             }
         }
     }
@@ -546,7 +550,7 @@ NSInteger const kGetCommentsCountTag = 6;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(documentUpdated:) name:kNotificationDocumentUpdated object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accountStatusChanged:) name:kNotificationAccountStatusChanged object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDocumentRestrictionStatus:) name:KNotificationViewedDocumentRestrictionStatus object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDocumentRestrictionStatus:) name:kNotificationViewedDocumentRestrictionStatus object:nil];
 }
 
 - (void)newDocumentPopover
@@ -684,7 +688,7 @@ NSInteger const kGetCommentsCountTag = 6;
     BOOL canPerformRemoteRequests = self.canPerformRemoteRequests;
     if (!self.actionSheet.isVisible)
     {
-        [self enableDocumentActionToolbarControls:canPerformRemoteRequests animated:NO];
+        [self enableDocumentActionToolbarControls:canPerformRemoteRequests allowOfflineActions:YES animated:NO];
         [self buildActionMenu];
     }
 }
@@ -815,6 +819,11 @@ NSInteger const kGetCommentsCountTag = 6;
     BOOL isVideo = isVideoExtension([self.fileName pathExtension]);
     BOOL isAudio = isAudioExtension([self.fileName pathExtension]);
     
+    if (self.actionSheet && self.actionSheet.isVisible)
+    {
+        [self.actionSheet dismissWithClickedButtonIndex:self.actionSheet.cancelButtonIndex animated:NO];
+    }
+    
     self.actionSheet = [[[ImageActionSheet alloc] initWithTitle:@""
                                                        delegate:self
                                               cancelButtonTitle:nil
@@ -917,7 +926,7 @@ NSInteger const kGetCommentsCountTag = 6;
 /**
  * Enables/disables the toolbar buttons to the right of the actionSheet button
  */
-- (void)enableDocumentActionToolbarControls:(BOOL)enable animated:(BOOL)animated
+- (void)enableDocumentActionToolbarControls:(BOOL)enable allowOfflineActions:(BOOL)offlineAllowed animated:(BOOL)animated
 {
     BOOL conditional = (enable && [self canPerformRemoteRequests]);
     FavoriteManager *favoriteManager = [FavoriteManager sharedManager];
@@ -932,7 +941,7 @@ NSInteger const kGetCommentsCountTag = 6;
     [self.commentButton setEnabled:conditional];
     [self.favoriteButton.barButton setEnabled:conditional];
     [self.likeBarButton.barButton setEnabled:conditional];
-    [self.editButton setEnabled:conditional || isSyncedFile];
+    [self.editButton setEnabled:conditional || (offlineAllowed && isSyncedFile)];
     if (animated)
     {
         [UIView commitAnimations];
@@ -950,7 +959,7 @@ NSInteger const kGetCommentsCountTag = 6;
         [UIView setAnimationDuration:0.3];
     }
     [self.actionSheetSenderControl setEnabled:enable];
-    [self enableDocumentActionToolbarControls:enable animated:NO];
+    [self enableDocumentActionToolbarControls:enable allowOfflineActions:NO animated:NO];
     if (animated)
     {
         [UIView commitAnimations];
@@ -984,7 +993,7 @@ NSInteger const kGetCommentsCountTag = 6;
             [self enableAllToolbarControls:YES animated:YES];
             if (!completed && error)
             {
-                NSLog(@"Printing could not complete because of error: %@", error);
+                AlfrescoLogDebug(@"Printing could not complete because of error: %@", error);
             }
         };
         
@@ -1121,14 +1130,14 @@ NSInteger const kGetCommentsCountTag = 6;
         {
             if (buttonIndex != alertView.cancelButtonIndex)
             {
-                NSLog(@"User confirmed removal of file %@", self.fileName);
+                AlfrescoLogDebug(@"User confirmed removal of file %@", self.fileName);
                 [[FileDownloadManager sharedInstance] removeDownloadInfoForFilename:self.fileName];
             }
             break;
         }
         default:
         {
-            NSLog(@"Unknown AlertView!");
+            AlfrescoLogDebug(@"Unknown AlertView!");
             break;
         }
     }
@@ -1162,7 +1171,7 @@ NSInteger const kGetCommentsCountTag = 6;
     // Otherwise use alfresco repository code
     if (self.cmisObjectId && ([self.cmisObjectId length] > 0) && !(self.isDownloaded && useLocalComments) && account)
     {
-        NSLog(@"Comment Button Pressed, retrieving Comments from current request");
+        AlfrescoLogDebug(@"Comment Button Pressed, retrieving Comments from current request");
         if ([self.commentsRequest isFinished])
         {
             [self loadCommentsViewController:self.commentsRequest.commentsDictionary];
@@ -1186,7 +1195,7 @@ NSInteger const kGetCommentsCountTag = 6;
     else
     {
         // We Should never get here, but just in case, throw an alert
-        NSLog(@"NodeRef Not Available");
+        AlfrescoLogDebug(@"NodeRef Not Available");
         displayErrorMessage(@"Comments are not available for this document");
     }
 }
@@ -1219,7 +1228,7 @@ NSInteger const kGetCommentsCountTag = 6;
 
 - (void)commentsHttpRequestDidFail:(id)sender
 {
-    NSLog(@"commentsHttpRequestDidFail!");
+    AlfrescoLogDebug(@"commentsHttpRequestDidFail!");
     [self stopHUD];
 }
 
@@ -1336,7 +1345,7 @@ NSInteger const kGetCommentsCountTag = 6;
  */
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
-    NSLog(@"Failed to load preview: %@", [error description]);
+    AlfrescoLogDebug(@"Failed to load preview: %@", [error description]);
     if ([error code] == kFrameLoadCodeError)
     {
         [self performSelectorOnMainThread:@selector(previewLoadFailed) withObject:nil waitUntilDone:NO];
@@ -1389,7 +1398,7 @@ NSInteger const kGetCommentsCountTag = 6;
 
 - (void)likeRequest:(LikeHTTPRequest *)request failedWithError:(NSError *)theError 
 {
-    NSLog(@"likeRequest:failedWithError:%@", [theError description]);
+    AlfrescoLogDebug(@"likeRequest:failedWithError:%@", [theError description]);
     if (request.tag == kLike_GET_Request)
     {
         return;
@@ -1461,7 +1470,7 @@ NSInteger const kGetCommentsCountTag = 6;
 
 - (void)applicationWillResignActive:(NSNotification *) notification
 {
-    NSLog(@"applicationWillResignActive in DocumnetViewController");
+    AlfrescoLogDebug(@"applicationWillResignActive in DocumnetViewController");
     [self cancelActiveHTTPConnections];
 }
 

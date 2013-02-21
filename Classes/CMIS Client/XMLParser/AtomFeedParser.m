@@ -137,7 +137,7 @@ static NSString *kType_Item __unused = @"type";
 
 - (void)parser:(NSXMLParser *)parser parseErrorOccurred:(NSError *)parseError {
     // FIXME Handle Errors
-    NSLog(@"Parse Error: %@", parseError);
+    AlfrescoLogDebug(@"Parse Error: %@", parseError);
 }
 
 

@@ -32,7 +32,7 @@
 - (void)useCacheIfEnabled {
     BOOL useRequestCache = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"useDownloadCache"];
     if(useRequestCache) {
-        NSLog(@"Using cache for request url: %@", [self.url absoluteString]);
+        AlfrescoLogDebug(@"Using cache for request url: %@", [self.url absoluteString]);
         [self setDownloadCache:[ASIDownloadCache sharedCache]];
     } else {
         [self setDownloadCache:nil];
@@ -45,7 +45,7 @@
     BOOL useRequestCache = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"useDownloadCache"];
     
     if(useRequestCache) {
-        NSLog(@"Enabling caching for all requests");
+        AlfrescoLogDebug(@"Enabling caching for all requests");
         // Default policy ASIAskServerIfModifiedWhenStaleCachePolicy is fine
         [ASIHTTPRequest setDefaultCache:[ASIDownloadCache sharedCache]];
     } else {

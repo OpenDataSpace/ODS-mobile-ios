@@ -297,7 +297,7 @@ NSInteger const kRestrictedImageViewTag = 30;
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	NSLog(@"Deleted the cell: %d", indexPath.row);
+	AlfrescoLogDebug(@"Deleted the cell: %d", indexPath.row);
     NSURL *fileURL = [[self.children objectAtIndex:indexPath.row] retain];
     NSString *filename = [fileURL lastPathComponent];
 	BOOL fileExistsInFavorites = [[FileDownloadManager sharedInstance] downloadExistsForKey:filename];
@@ -306,7 +306,7 @@ NSInteger const kRestrictedImageViewTag = 30;
 	if (fileExistsInFavorites)
     {
         [[FileDownloadManager sharedInstance] removeDownloadInfoForFilename:filename];
-		NSLog(@"Removed File '%@'", filename);
+		AlfrescoLogDebug(@"Removed File '%@'", filename);
     }
     
     [self refreshData];
@@ -370,7 +370,7 @@ NSInteger const kRestrictedImageViewTag = 30;
 
 - (void)accessoryButtonTapped:(UIControl *)button withEvent:(UIEvent *)event
 {
-    NSLog(@"accessory view tapped");
+    AlfrescoLogDebug(@"accessory view tapped");
     NSIndexPath *indexPath = [self.currentTableView indexPathForRowAtPoint:[[[event touchesForView:button] anyObject] locationInView:self.currentTableView]];
     if (indexPath != nil)
     {
@@ -424,7 +424,7 @@ NSInteger const kRestrictedImageViewTag = 30;
                                                             includingPropertiesForKeys:[NSArray arrayWithObject:NSURLNameKey]
                                                                                options:NSDirectoryEnumerationSkipsHiddenFiles|NSDirectoryEnumerationSkipsSubdirectoryDescendants
                                                                           errorHandler:^BOOL(NSURL *url, NSError *error) {
-            NSLog(@"Error retrieving the download folder contents in URL: %@ and error: %@", url, error);
+            AlfrescoLogDebug(@"Error retrieving the download folder contents in URL: %@ and error: %@", url, error);
             return YES;
         }];
 		

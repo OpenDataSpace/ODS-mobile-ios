@@ -61,7 +61,7 @@
 - (void)failWithError:(NSError *)theError
 {
     if (theError)
-        NSLog(@"Activities HTTP Request Failure: %@", theError);
+        AlfrescoLogDebug(@"Activities HTTP Request Failure: %@", theError);
     
     [super failWithError:theError];
 }

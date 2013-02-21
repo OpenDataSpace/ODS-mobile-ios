@@ -97,7 +97,7 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
 	NSString *content = [NSString stringWithContentsOfFile:self.documentPath usedEncoding:&fileEncoding error:&error];
     if(error)
     {
-        NSLog(@"Cannot load document path %@ with error %@", self.documentPath, [error description]);
+        AlfrescoLogDebug(@"Cannot load document path %@ with error %@", self.documentPath, [error description]);
     }
     else 
     {
@@ -170,7 +170,7 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
     [[self.editView text] writeToFile:self.documentTempPath atomically:YES encoding:NSUTF8StringEncoding error:&error];
     if(error)
     {
-        NSLog(@"Cannot save document %@ with error %@", self.documentTempPath, [error description]);
+        AlfrescoLogDebug(@"Cannot save document %@ with error %@", self.documentTempPath, [error description]);
         displayErrorMessageWithTitle(NSLocalizedString(@"edit-document.writefailed.message", @"Edit Document Write Failed Message"), NSLocalizedString(@"edit-document.failed.title", @"Edit Document Save Failed Title"));
         return;
     }
@@ -223,7 +223,7 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
                 putLink = [alfrescoUtils setContentURLforNode:nodeId tenantId:self.tenantID];
             }
             
-            NSLog(@"putLink = %@", putLink);
+            AlfrescoLogDebug(@"putLink = %@", putLink);
             
             NSString *putFile = [CMISAtomEntryWriter generateAtomEntryXmlForFilePath:self.documentTempPath uploadFilename:fileName];
             
