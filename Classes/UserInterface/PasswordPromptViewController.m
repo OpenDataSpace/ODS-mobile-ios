@@ -33,6 +33,7 @@
 
 @interface PasswordPromptViewController ()
 @property (nonatomic, retain) IFTextCellController *passwordCell;
+@property (nonatomic, retain) UIBarButtonItem *saveButton;
 @end
 
 @interface PasswordPromptViewController (Private)
@@ -42,13 +43,10 @@
 @end
 
 @implementation PasswordPromptViewController
-@synthesize accountInfo = _accountInfo;
-@synthesize password = _password;
-@synthesize delegate = _delegate;
-@synthesize passwordCell = _passwordCell;
 
 - (void)dealloc
 {
+    _delegate = nil;
     [_accountInfo release];
     [_saveButton release];
     [_password release];
@@ -62,7 +60,7 @@
     self = [super initWithStyle:UITableViewStyleGrouped];
     if (self)
     {
-        _accountInfo = [accountInfo retain];
+        self.accountInfo = accountInfo;
     }
     return self;
 }
@@ -73,11 +71,12 @@
     [Theme setThemeForUINavigationBar:self.navigationController.navigationBar];
     [self setTitle:NSLocalizedString(@"passwordPrompt.title", "Secure Credentials")];
 
-    [_saveButton release];
-    _saveButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(saveAction:)];
-    [_saveButton setEnabled:NO];
-    styleButtonAsDefaultAction(_saveButton);
-    [self.navigationItem setRightBarButtonItem:_saveButton];
+    UIBarButtonItem *saveButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(saveAction:)] autorelease];
+    saveButton.enabled = NO;
+    styleButtonAsDefaultAction(saveButton);
+    [self.navigationItem setRightBarButtonItem:saveButton];
+    self.saveButton = saveButton;
+
     [self.navigationItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelAction:)] autorelease]];
 }
 
@@ -96,9 +95,9 @@
 
 - (void)cancelAction:(id)sender
 {
-    if (_delegate)
+    if (self.delegate)
     {
-        [_delegate passwordPromptWasCancelled:self];
+        [self.delegate passwordPromptWasCancelled:self];
     }
 }
 
@@ -106,14 +105,13 @@
 {
     NSString *password = [self.model objectForKey:@"password"];
 
-    if (_delegate)
+    if (self.delegate)
     {
-        [_delegate passwordPrompt:self savedWithPassword:password];
+        [self.delegate passwordPrompt:self savedWithPassword:password];
     }
 }
 
-#pragma mark -
-#pragma mark GenericViewController
+#pragma mark - GenericViewController
 
 - (void)constructTableGroups
 {
@@ -122,37 +120,32 @@
         [self setModel:[self accountInfoToModel:_accountInfo]];
 	}
     
-    // Arrays for section headers, bodies and footers
-	NSMutableArray *headers = [NSMutableArray array];
-	NSMutableArray *groups = [NSMutableArray array];
-    
-    if (_accountInfo) 
+    if (self.accountInfo)
     {
+        // Arrays for section headers, bodies and footers
+        NSMutableArray *headers = [NSMutableArray array];
+        NSMutableArray *groups = [NSMutableArray array];
+        
         IFValueCellController *descriptionCell = [[[IFValueCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.description", @"Description")
-                                                                                           atKey:@"accountDescription" inModel:self.model] autorelease];
-        IFValueCellController *usernameReadCell = nil;
-        if (![_accountInfo isMultitenant]) 
-        {
-            usernameReadCell = [[[IFValueCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.username", @"Username")
-                                                                                                atKey:@"accountUsername" inModel:self.model] autorelease];
-        } 
-        else 
-        {
-            usernameReadCell = [[[IFValueCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.email", @"Email")
-                                                                                                atKey:@"accountUsername" inModel:self.model] autorelease];
+                                                                                         atKey:@"accountDescription"
+                                                                                       inModel:self.model] autorelease];
 
-        }
-        IFTextCellController *passwordCell = [[[IFTextCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.password", @"Password") 
+        NSString *usernameLabelKey = (self.accountInfo.isMultitenant) ? @"accountdetails.fields.email" : @"accountdetails.fields.username";
+        IFValueCellController *usernameReadCell = [[[IFValueCellController alloc] initWithLabel:NSLocalizedString(usernameLabelKey, @"Username/Email")
+                                                                                          atKey:@"accountUsername"
+                                                                                        inModel:self.model] autorelease];
+
+        IFTextCellController *passwordCell = [[[IFTextCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.password", @"Password")
                                                                            andPlaceholder:NSLocalizedString(@"accountdetails.placeholder.required", @"required")  
-                                                                                    atKey:@"password" inModel:self.model] autorelease];
+                                                                                    atKey:@"password"
+                                                                                  inModel:self.model] autorelease];
         [passwordCell setReturnKeyType:UIReturnKeyDone];
         [passwordCell setSecureTextEntry:YES];
         [passwordCell setUpdateTarget:self];
         [passwordCell setEditChangedAction:@selector(textValueChanged:)];
-        [self setPasswordCell:passwordCell];
+        self.passwordCell = passwordCell;
         
-        NSArray *authGroup = [NSArray arrayWithObjects:descriptionCell, usernameReadCell, passwordCell, nil];
-        [groups addObject:authGroup];
+        [groups addObject:@[descriptionCell, usernameReadCell, passwordCell]];
         
         if (self.isRequestForExpiredFiles)
         {
@@ -162,11 +155,11 @@
         {
             [headers addObject:NSLocalizedString(@"passwordPrompt.header.title", "Provide the password for the following account")];
         }
-        
+
+        tableGroups = [groups retain];
+        tableHeaders = [headers retain];
+        [self assignFirstResponderHostToCellControllers];
     }
-    tableGroups = [groups retain];
-	tableHeaders = [headers retain];
-	[self assignFirstResponderHostToCellControllers];
 }
 
 - (void)textValueChanged:(id)sender
