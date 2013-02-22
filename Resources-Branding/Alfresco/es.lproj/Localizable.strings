@@ -40,8 +40,8 @@
 "connectionErrorTitle" = "Error de conexión";
 
 /* Downloading Document */
-"Downloading Document" = "Subiendo documento";
-"Downloading Documents" = "Subiendo documentos";
+"Downloading Document" = "Descargando documento";
+"Downloading Documents" = "Descargando documentos";
 
 /* Abbrevation for Gigabyte, used as follows: '1 GB' */
 "gb" = "GB";
