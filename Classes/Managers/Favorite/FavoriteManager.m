@@ -306,7 +306,7 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
             {
                 RepositoryItem *repoItem = [searchedDocument objectAtIndex:0];
                 
-                if ([self findNodeInFavorites:repoItem.guid] == nil)
+                if (repoItem.title != nil && ![repoItem.title isEqualToString:@""] && [self findNodeInFavorites:repoItem.guid] == nil)
                 {
                     FavoriteTableCellWrapper *cellWrapper = [[FavoriteTableCellWrapper alloc] initWithRepositoryItem:repoItem];
                     cellWrapper.accountUUID = [(CMISQueryHTTPRequest *)request accountUUID];
@@ -334,12 +334,15 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
             
             for (RepositoryItem *repoItem in searchedDocuments)
             {
+                if(repoItem.title != nil && ![repoItem.title isEqualToString:@""])
+                {
                 FavoriteTableCellWrapper *cellWrapper = [[[FavoriteTableCellWrapper alloc] initWithRepositoryItem:repoItem] autorelease];
                 
                 cellWrapper.accountUUID = [(CMISQueryHTTPRequest *)request accountUUID];
                 cellWrapper.tenantID = [(CMISQueryHTTPRequest *)request tenantID];
                 
                 [self.favorites addObject:cellWrapper];
+                }
             }
         }
         
@@ -573,8 +576,9 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
                 
                 NSDictionary *fileDownloadinfo = [fileManager downloadInfoForFilename:[fileURL lastPathComponent]];
                 NSString *accountUUID = [fileDownloadinfo objectForKey:@"accountUUID"];
+                NSString *docTitle = [fileDownloadinfo objectForKey:@"filename"];
                 
-                if ([activeAccountUuids containsObject:accountUUID])
+                if (docTitle != nil && ![docTitle isEqualToString:@""] && [activeAccountUuids containsObject:accountUUID])
                 {
                     RepositoryItem *item = [[RepositoryItem alloc] initWithDictionary:fileDownloadinfo];
                     FavoriteTableCellWrapper *cellWrapper = [[FavoriteTableCellWrapper alloc] initWithRepositoryItem:item];
