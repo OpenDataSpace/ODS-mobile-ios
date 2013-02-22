@@ -39,7 +39,7 @@
         
         if(error)
         {
-            NSLog(@"Failed to protect file %@, with error: %@", path, [error description]);
+            AlfrescoLogDebug(@"Failed to protect file %@, with error: %@", path, [error description]);
         }
     }
     

@@ -156,16 +156,16 @@ CGFloat const GUTTER = 10.0f;
 					self.popover = [[classPopoverController alloc] initWithContentViewController:picker];
 					[self.popover release];
 					[self.popover presentPopoverFromRect:[[[tableController tableView] cellForRowAtIndexPath:cellIndexPath] frame] inView:[tableController view] permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-					NSLog(@"On an iPad so showing the popover");
+					AlfrescoLogDebug(@"On an iPad so showing the popover");
 				} else {
-					NSLog(@"Device does not support popover");
+					AlfrescoLogDebug(@"Device does not support popover");
 				}
 			} else 
 #endif
 				[tableController.navigationController presentModalViewController:picker animated:YES];	
 		}
 		@catch (NSException * e) {
-			NSLog(@"Exception setting up UIImagePickerController%@", [e description]);
+			AlfrescoLogDebug(@"Exception setting up UIImagePickerController%@", [e description]);
 		}
 		@finally {
 			[picker release];
@@ -290,7 +290,7 @@ CGFloat const GUTTER = 10.0f;
 		
 
 		if (image)
-			NSLog(@"PHOTO RESOLUTION: %@", [NSValue valueWithCGSize:image.size]);
+			AlfrescoLogDebug(@"PHOTO RESOLUTION: %@", [NSValue valueWithCGSize:image.size]);
 	}
 	
     return cell;
@@ -309,13 +309,13 @@ CGFloat const GUTTER = 10.0f;
 		[self tableView:(UITableView *)tableController.view didSelectRowAtIndexPath: self.cellIndexPath];
 	}
 	@catch (NSException *ex) {
-		NSLog(@"unable to become first responder");
+		AlfrescoLogDebug(@"unable to become first responder");
 	}
 }
 
 -(void)resignFirstResponder
 {
-	NSLog(@"resign first responder is noop for photo cells");
+	AlfrescoLogDebug(@"resign first responder is noop for photo cells");
 }
 
 #pragma mark UIImagePickerControllerDelegate

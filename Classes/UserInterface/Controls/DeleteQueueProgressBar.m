@@ -135,7 +135,7 @@ NSInteger const kDeleteCounterTag =  6;
     {
         RepositoryItem *item = [self.itemsToDelete objectAtIndex:index];
         NSURL *url = [NSURL URLWithString:item.deleteURL];
-        NSLog(@"DELETE: %@", [url description]);
+        AlfrescoLogDebug(@"DELETE: %@", [url description]);
         
         BaseHTTPRequest *request = [BaseHTTPRequest requestWithURL:url accountUUID:self.selectedUUID];
         [request setTenantID:self.tenantID];

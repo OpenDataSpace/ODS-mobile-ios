@@ -219,7 +219,7 @@
 
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
-    NSLog(@"failed to upload file");
+    AlfrescoLogDebug(@"failed to upload file");
     [self performSelectorOnMainThread:@selector(uploadFailed:) withObject:request waitUntilDone:NO];
 }
 

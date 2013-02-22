@@ -365,7 +365,7 @@
     }
     else if([request isKindOfClass:[ActionServiceHTTPRequest class]])
     {
-        NSLog(@"The Action Service extract-metadata request failed for request %@ and error: %@", [request postBody], [request error]);
+        AlfrescoLogDebug(@"The Action Service extract-metadata request failed for request %@ and error: %@", [request postBody], [request error]);
     }
 }
 

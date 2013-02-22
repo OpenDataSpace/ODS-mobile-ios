@@ -49,7 +49,7 @@
 {
 	
 	// log the response
-	//NSLog(@"**** async result: %@", request.responseString);
+	AlfrescoLogTrace(@"**** async result: %@", self.responseString);
 	
 	// create a hash to hold the properties, indexed by id
 	NSMutableDictionary *p = [[NSMutableDictionary alloc] init];

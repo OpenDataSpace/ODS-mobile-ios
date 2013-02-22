@@ -397,7 +397,7 @@ CGFloat const kWhitePadding = 0.0f;
 {
     NSArray *activeUploads = [[UploadsManager sharedManager] activeUploads];
     NSInteger operationCount = [activeUploads count];
-    NSLog(@"Operation count %d", operationCount);
+    AlfrescoLogDebug(@"Operation count %d", operationCount);
     
     //This may be called from a background thread
     //making sure the UI updates are performed in the main thread

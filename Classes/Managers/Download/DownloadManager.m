@@ -130,7 +130,7 @@
     // Did we hit the max suffix number?
     if (suffix == kFileSuffixMaxAttempts)
     {
-        NSLog(@"ERROR: Couldn't save downloaded file as kFileSuffixMaxAttempts (%u) reached", kFileSuffixMaxAttempts);
+        AlfrescoLogError(@"Couldn't save downloaded file as kFileSuffixMaxAttempts (%u) reached", kFileSuffixMaxAttempts);
         return [self requestFailed:request];
     }
     

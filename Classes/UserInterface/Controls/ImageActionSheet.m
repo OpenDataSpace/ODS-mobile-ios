@@ -75,7 +75,7 @@ CGFloat const kButtonRightPadding = 10.0f;
         }
         else 
         {
-            NSLog(@"ERROR - Incorrectly initialized ImageActionSheet");
+            AlfrescoLogDebug(@"ERROR - Incorrectly initialized ImageActionSheet");
             [NSException raise:@"Incorrectly initialized ImageActionSheet" format:@"Expected NSString or UIImages only and in the correct order"];
         }
         index++;
@@ -84,7 +84,7 @@ CGFloat const kButtonRightPadding = 10.0f;
 
     if([titles count] != [images count])
     {
-        NSLog(@"ERROR - Incorrectly initialized ImageActionSheet");
+        AlfrescoLogDebug(@"ERROR - Incorrectly initialized ImageActionSheet");
         [NSException raise:@"Incorrectly initialized ImageActionSheet" format:@"Incorrect number of parameters"];
     }
     

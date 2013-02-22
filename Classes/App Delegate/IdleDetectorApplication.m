@@ -95,7 +95,7 @@
 
 - (void)idleTimerExceeded 
 {
-    NSLog(@"idle time exceeded");
+    AlfrescoLogDebug(@"idle time exceeded");
     [[SessionKeychainManager sharedManager] clearSession];
 }
 

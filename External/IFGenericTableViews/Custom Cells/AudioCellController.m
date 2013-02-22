@@ -160,7 +160,7 @@ static UIColor const *kDisabledColor;
         NSError *error = nil;
         [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryRecord error: &error];
         if(error) {
-            NSLog(@"Error trying to start audio session: %@", error.localizedDescription);
+            AlfrescoLogDebug(@"Error trying to start audio session: %@", error.localizedDescription);
             return;
         }
         
@@ -185,7 +185,7 @@ static UIColor const *kDisabledColor;
         
         if(error) {
             //[recordButton useRedDeleteStyle];
-            NSLog(@"Error trying to record audio: %@", error.description);
+            AlfrescoLogDebug(@"Error trying to record audio: %@", error.description);
             [[AVAudioSession sharedInstance] setActive: NO error: nil];
         } else {            
             self.recorder.delegate = self;
@@ -225,7 +225,7 @@ static UIColor const *kDisabledColor;
         NSError *error = nil;
         [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryPlayback error: &error];
         if(error) {
-            NSLog(@"Error trying to start audio session: %@", error.localizedDescription);
+            AlfrescoLogDebug(@"Error trying to start audio session: %@", error.localizedDescription);
             [playButton setEnabled:YES];
             return;
         }
@@ -236,7 +236,7 @@ static UIColor const *kDisabledColor;
         [newPlayer release];
         
         if(error) {
-            NSLog(@"Error trying to play audio: %@", error.description);
+            AlfrescoLogDebug(@"Error trying to play audio: %@", error.description);
         } else {
             [self performSelectorOnMainThread:@selector(changePlayLabel:) withObject:NSLocalizedString(@"audiorecord.stop", @"Stop")waitUntilDone:NO];
             recordButton.enabled = NO;
@@ -301,7 +301,7 @@ static UIColor const *kDisabledColor;
 
 -(void)audioPlayerDecodeErrorDidOccur:(AVAudioPlayer *)player 
                                 error:(NSError *)error {
-    NSLog(@"Decode Error occurred");
+    AlfrescoLogDebug(@"Decode Error occurred");
 }
 
 #pragma mark - AVAudioRecorderDelegate methods
@@ -312,7 +312,7 @@ static UIColor const *kDisabledColor;
 (AVAudioRecorder *)recorder 
                                   error:(NSError *)error
 {
-    NSLog(@"Encode Error occurred");
+    AlfrescoLogDebug(@"Encode Error occurred");
 }
 
 
@@ -329,13 +329,13 @@ static UIColor const *kDisabledColor;
 		[self tableView:(UITableView *)tableController.view didSelectRowAtIndexPath: self.cellIndexPath];
 	}
 	@catch (NSException *ex) {
-		NSLog(@"unable to become first responder");
+		AlfrescoLogDebug(@"unable to become first responder");
 	}
 }
 
 -(void)resignFirstResponder
 {
-	NSLog(@"resign first responder is noop for photo cells");
+	AlfrescoLogDebug(@"resign first responder is noop for photo cells");
 }
 
 - (void)controllerWillBeDismissed:(IFGenericTableViewController *)sender

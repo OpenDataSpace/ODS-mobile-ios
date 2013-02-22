@@ -156,7 +156,7 @@ const CGFloat kDefaultDetailTextLabelSize = 14.0f;
     [cell.imageView setImage:self.imageView.image];
     
     [cell.textLabel setText:self.textLabel.text];
-    //NSLog(@"Default font size: %f", cell.textLabel.font.pointSize);
+    AlfrescoLogTrace(@"Default font size: %f", cell.textLabel.font.pointSize);
     [cell.textLabel setFont:self.textLabel.font];
     [cell.textLabel setTextColor:self.textLabel.textColor];
     [cell.detailTextLabel setFont:self.detailTextLabel.font];

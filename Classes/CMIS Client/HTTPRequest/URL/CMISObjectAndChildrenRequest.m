@@ -164,7 +164,7 @@
         } 
         else 
         {
-            NSLog(@"The objectRequest did not responds to the repositoryItem selector");
+            AlfrescoLogDebug(@"The objectRequest did not responds to the repositoryItem selector");
             if([self.delegate respondsToSelector:self.didFailSelector])
             {
                 [self.delegate performSelector:self.didFailSelector withObject:self];

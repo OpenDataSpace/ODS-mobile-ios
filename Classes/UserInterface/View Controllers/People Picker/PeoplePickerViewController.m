@@ -291,7 +291,7 @@ NSInteger const kMaxNumberOfRecentPeople = 10;
 
     if (error)
     {
-        NSLog(@"[WARNING] Could not write recent people to disk: %@", error.localizedDescription);
+        AlfrescoLogWarning(@"Could not write recent people to disk: %@", error.localizedDescription);
         [[NSFileManager defaultManager] removeItemAtPath:path error:&error];
     }
 }

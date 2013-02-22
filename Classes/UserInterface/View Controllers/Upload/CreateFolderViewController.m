@@ -183,7 +183,10 @@
     {
         [self.delegate performSelector:@selector(createFolder:failedForName:) withObject:self withObject:[self.model objectForKey:@"name"]];
     }
-    displayErrorMessage([NSString stringWithFormat:NSLocalizedString(@"create-folder.failure", @"Failed to create folder"), [self.model objectForKey:@"name"]]);
+
+    // Specific error message for "duplicate item" conflict
+    NSString *errorMessageKey = (request.responseStatusCode == 409) ? @"create-folder.duplicate" : @"create-folder.failure";
+    displayErrorMessage([NSString stringWithFormat:NSLocalizedString(errorMessageKey, @"Failed to create folder"), [self.model objectForKey:@"name"]]);
 }
 
 @end

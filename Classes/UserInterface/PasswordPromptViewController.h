@@ -32,9 +32,6 @@
 @protocol PasswordPromptDelegate;
 
 @interface PasswordPromptViewController : IFGenericTableViewController
-{
-    UIBarButtonItem *_saveButton;
-}
 
 @property (nonatomic, retain) AccountInfo *accountInfo;
 @property (nonatomic, copy) NSString *password;

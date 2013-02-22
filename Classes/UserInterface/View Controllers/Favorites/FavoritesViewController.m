@@ -511,7 +511,7 @@ static const NSInteger delayToShowErrors = 2.0f;
 
 - (void)favoriteManagerRequestFailed:(FavoriteManager *)favoriteManager
 {
-    NSLog(@"Request in FavoriteManager failed! %@", [favoriteManager.error description]);
+    AlfrescoLogDebug(@"Request in FavoriteManager failed! %@", [favoriteManager.error description]);
     
     FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)[self.tableView dataSource];
     

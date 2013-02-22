@@ -126,7 +126,7 @@ NSString * const kDefaultImageExtension = @"jpg";
             if(success)
             {
                 [self setAssetURL:[NSURL fileURLWithPath:tempImagePath]];
-                NSLog(@"Saved image url: %@", self.assetURL);
+                AlfrescoLogDebug(@"Saved image url: %@", self.assetURL);
                 if([self.delegate respondsToSelector:@selector(photoCaptureSaver:didFinishSavingWithURL:)])
                 {
                     [self.delegate photoCaptureSaver:self didFinishSavingWithURL:self.assetURL];
@@ -139,7 +139,7 @@ NSString * const kDefaultImageExtension = @"jpg";
             success = YES;
             //get asset url
             [self setAssetURL:assetURL];
-            NSLog(@"Saved image url: %@", assetURL);
+            AlfrescoLogDebug(@"Saved image url: %@", assetURL);
             if([self.delegate respondsToSelector:@selector(photoCaptureSaver:didFinishSavingWithAssetURL:)])
             {
                 [self.delegate photoCaptureSaver:self didFinishSavingWithAssetURL:assetURL];
@@ -196,7 +196,7 @@ NSString * const kDefaultImageExtension = @"jpg";
     CGImageDestinationRef destination = CGImageDestinationCreateWithData((CFMutableDataRef)dest_data,UTI,1,NULL);
     
     if(!destination) {
-        NSLog(@"***Could not create image destination ***");
+        AlfrescoLogDebug(@"***Could not create image destination ***");
         if (source) 
         {
             CFRelease(source);
@@ -215,7 +215,7 @@ NSString * const kDefaultImageExtension = @"jpg";
     success = CGImageDestinationFinalize(destination);
     
     if(!success) {
-        NSLog(@"***Could not create data from image destination ***");
+        AlfrescoLogDebug(@"***Could not create data from image destination ***");
     }
     else {
         //now we have the data ready to go, so do whatever you want with it

@@ -53,7 +53,7 @@ NSInteger const kFileIsExpired = -1;
     
     if (![FileUtils saveTempFile:tempFile withName:md5Path overwriteExisting:self.overwriteExistingDownloads])
     {
-        NSLog(@"Cannot move tempFile: %@ to the downloadFolder, newName: %@", tempFile, md5Path);
+        AlfrescoLogDebug(@"Cannot move tempFile: %@ to the downloadFolder, newName: %@", tempFile, md5Path);
         return nil;
     }
     
@@ -67,7 +67,7 @@ NSInteger const kFileIsExpired = -1;
         {
             [FileUtils unsave:md5Path];
             [[self readMetadata] setObject:previousInfo forKey:md5Id];
-            NSLog(@"Cannot save the metadata plist");
+            AlfrescoLogDebug(@"Cannot save the metadata plist");
             return nil;
         }
         else
@@ -134,7 +134,7 @@ NSInteger const kFileIsExpired = -1;
     
     if (![self writeMetadata])
     {
-        NSLog(@"Cannot save the metadata plist");
+        AlfrescoLogDebug(@"Cannot save the metadata plist");
         return nil;
     }
     
@@ -196,7 +196,7 @@ NSInteger const kFileIsExpired = -1;
             
             if (![self writeMetadata])
             {
-                NSLog(@"Cannot delete the metadata in the plist");
+                AlfrescoLogDebug(@"Cannot delete the metadata in the plist");
                 return NO;
             }
         }
@@ -305,7 +305,7 @@ NSInteger const kFileIsExpired = -1;
         
         if (!downloadMetadata)
         {
-            NSLog(@"Error reading plist from file '%s', error = '%s'", [path UTF8String], [error UTF8String]);
+            AlfrescoLogDebug(@"Error reading plist from file '%s', error = '%s'", [path UTF8String], [error UTF8String]);
             [error release];
         }
     }
@@ -334,7 +334,7 @@ NSInteger const kFileIsExpired = -1;
     }
     else
     {
-        NSLog(@"Error writing plist to file '%s', error = '%s'", [path UTF8String], [error UTF8String]);
+        AlfrescoLogDebug(@"Error writing plist to file '%s', error = '%s'", [path UTF8String], [error UTF8String]);
         [error release];
         return NO;
     }

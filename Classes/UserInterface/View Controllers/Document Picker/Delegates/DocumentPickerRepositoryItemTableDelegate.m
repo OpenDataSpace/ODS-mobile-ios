@@ -347,11 +347,11 @@
 {
     if (self.searching)
     {
-        NSLog(@"CMISSearchHttpRequest failed : %@", request.error.localizedDescription);
+        AlfrescoLogDebug(@"CMISSearchHttpRequest failed : %@", request.error.localizedDescription);
     }
     else
     {
-        NSLog(@"FolderItemsHTTPRequest failed : %@", request.error.localizedDescription);
+        AlfrescoLogDebug(@"FolderItemsHTTPRequest failed : %@", request.error.localizedDescription);
     }
     [self searchingFinished];
     stopProgressHUD(self.progressHud);

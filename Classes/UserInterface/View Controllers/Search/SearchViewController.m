@@ -331,7 +331,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     
     if (!currentRepository)
     {
-        NSLog(@"Search is not available but the user is notified when a search is triggered");
+        AlfrescoLogDebug(@"Search is not available but the user is notified when a search is triggered");
     }
 	
     [self stopHUD];
@@ -339,7 +339,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 
 - (void)serviceDocumentRequestFailed:(ServiceDocumentRequest *)serviceRequest 
 {
-	NSLog(@"ServiceDocument Request Failure \n\tErrorDescription: %@ \n\tErrorFailureReason:%@ \n\tErrorObject:%@", 
+	AlfrescoLogDebug(@"ServiceDocument Request Failure \n\tErrorDescription: %@ \n\tErrorFailureReason:%@ \n\tErrorObject:%@", 
           [[serviceRequest error] description], [[serviceRequest error] localizedFailureReason],[serviceRequest error]);
     [self stopHUD];
 }
@@ -445,7 +445,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 - (void)requestFailed:(ASIHTTPRequest *)request 
 {
     NSError *error = [request error];
-    NSLog(@"Failure: %@", error);	
+    AlfrescoLogDebug(@"Failure: %@", error);	
     
     [self.results removeAllObjects];
     if ([request responseStatusCode] == 500)
@@ -870,7 +870,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 
 - (void) applicationWillResignActive:(NSNotification *) notification
 {
-    NSLog(@"applicationWillResignActive in SearchViewController");
+    AlfrescoLogDebug(@"applicationWillResignActive in SearchViewController");
     [self.searchDownload cancel];
     [self.serviceDocumentRequest clearDelegatesAndCancel];
 }

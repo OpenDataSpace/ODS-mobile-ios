@@ -40,7 +40,7 @@
 
 - (void)requestFinishedWithSuccessResponse
 {
-    NSLog(@"MDM is enabled for accountUUID %@", self.accountUUID);
+    AlfrescoLogDebug(@"MDM is enabled for accountUUID %@", self.accountUUID);
     
     [[AlfrescoMDMLite sharedInstance] enableMDMForAccountUUID:self.accountUUID tenantID:self.tenantID enabled:YES];
 }
@@ -50,7 +50,7 @@
     // Override: Ignore a 404 error
     if (self.responseStatusCode == 404)
     {
-        NSLog(@"MDM is NOT available for accountUUID %@", self.accountUUID);
+        AlfrescoLogDebug(@"MDM is NOT available for accountUUID %@", self.accountUUID);
 
         [[AlfrescoMDMLite sharedInstance] enableMDMForAccountUUID:self.accountUUID tenantID:self.tenantID enabled:NO];
 

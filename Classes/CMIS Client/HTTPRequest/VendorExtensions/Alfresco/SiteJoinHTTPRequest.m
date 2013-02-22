@@ -25,8 +25,6 @@
 
 #import "SiteJoinHTTPRequest.h"
 #import "AccountManager.h"
-#import "RepositoryServices.h"
-#import "RepositoryInfo.h"
 
 @implementation SiteJoinHTTPRequest
 
@@ -39,22 +37,11 @@
                                     [NSDictionary dictionaryWithObject:accountInfo.username forKey:@"userName"], @"person",
                                     nil];
     
-    /**
-     * Due to a breaking API change between 3.4 and 4.0, we need to know which version of the Join request to use
-     */
-    NSString *serverAPI = kServerAPISiteJoin;
-    RepositoryInfo *repositoryInfo = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:uuid tenantID:tenantID];
-    if (repositoryInfo && [repositoryInfo.productVersion integerValue] < 4)
-    {
-        // We can re-use the Leave URL for 3.4 servers, which has the required format
-        serverAPI = kServerAPISiteLeave;
-    }
-        
-    SiteJoinHTTPRequest *request = [SiteJoinHTTPRequest requestForServerAPI:serverAPI accountUUID:uuid tenantID:tenantID infoDictionary:infoDictionary];
+    SiteJoinHTTPRequest *request = [SiteJoinHTTPRequest requestForServerAPI:kServerAPISiteJoin accountUUID:uuid tenantID:tenantID infoDictionary:infoDictionary];
     [request setPostBody:[request mutableDataFromJSONObject:postParameters]];
     [request setContentLength:[request.postBody length]];
     [request addRequestHeader:@"Content-Type" value:@"application/json"];
-    [request setRequestMethod:@"PUT"];
+    [request setRequestMethod:@"POST"];
     
     return request;
 }

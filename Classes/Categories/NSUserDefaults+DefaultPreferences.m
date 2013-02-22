@@ -30,7 +30,7 @@
 - (NSArray *)defaultPreferences {
     NSString *settingsBundle = [[NSBundle mainBundle] pathForResource:@"Settings" ofType:@"bundle"];
     if(!settingsBundle) {
-        NSLog(@"Could not find Settings.bundle");
+        AlfrescoLogDebug(@"Could not find Settings.bundle");
         return [NSArray array];
     }
 	

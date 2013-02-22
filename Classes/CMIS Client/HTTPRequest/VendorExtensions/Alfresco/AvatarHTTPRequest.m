@@ -44,7 +44,7 @@
 {
     if (theError)
     {
-        NSLog(@"Error while retrieving avatar (url = '%@'): %@", self.url.absoluteString, theError.localizedDescription);
+        AlfrescoLogDebug(@"Error while retrieving avatar (url = '%@'): %@", self.url.absoluteString, theError.localizedDescription);
     }
 
     [super failWithError:theError];

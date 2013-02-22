@@ -71,7 +71,7 @@ NSString * const kMicrosoftRepositoryVendorName = @"Microsoft Corporation";
 - (void)addRepositoryInfo:(RepositoryInfo *)repositoryInfo forAccountUuid:(NSString *)uuid tenantID:(NSString *)tenantID
 {
 	if (uuid == nil) {
-        NSLog(@"No uuid provided for the repositoryInfo");
+        AlfrescoLogDebug(@"No uuid provided for the repositoryInfo");
 		return;
 	}
     if (!tenantID) {

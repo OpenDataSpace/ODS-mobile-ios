@@ -73,7 +73,7 @@ NSString * const kCreateTag = @"kCreateTag";
 - (void)failWithError:(NSError *)theError
 {
     if (theError)
-        NSLog(@"Tagging HTTP Request Failure: %@", theError);
+        AlfrescoLogDebug(@"Tagging HTTP Request Failure: %@", theError);
     
     [super failWithError:theError];
 }

@@ -333,7 +333,7 @@
     }];
     [self.objectByIdRequest setFailedBlock:^{
         [self stopHUD];
-        NSLog(@"Could not fetch metadata for node %@", documentItem.nodeRef);
+        AlfrescoLogDebug(@"Could not fetch metadata for node %@", documentItem.nodeRef);
     }];
 
     [self startHUD];

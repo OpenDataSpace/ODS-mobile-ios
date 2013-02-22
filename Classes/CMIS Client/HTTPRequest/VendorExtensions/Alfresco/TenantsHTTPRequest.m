@@ -46,7 +46,7 @@ NSString * const kPaidBusinessClassName = @"PAID_BUSINESS";
 
 + (id)tenantsRequestForAccountUUID:(NSString *)uuid
 {
-    NSLog(@"Instance of TenantsHTTPRequest created with account UUID: %@", uuid);
+    AlfrescoLogDebug(@"Instance of TenantsHTTPRequest created with account UUID: %@", uuid);
     
     return [self requestForServerAPI:kServerAPINetworksCollection accountUUID:uuid];
 }

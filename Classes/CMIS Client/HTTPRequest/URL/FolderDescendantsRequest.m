@@ -54,7 +54,7 @@
 
 - (void)requestFinishedWithSuccessResponse
 {
-    NSLog(@"Folder Descendants Request Finished: %@", [self responseString]);
+    AlfrescoLogDebug(@"Folder Descendants Request Finished: %@", [self responseString]);
 	self.folderDescendants = [NSMutableArray array];
 	
 	// create a parser and parse the xml
@@ -82,7 +82,7 @@
 - (void)failWithError:(NSError *)theError
 {
     if (theError)
-        NSLog(@"Folder Descendants HTTP Request Failure: %@", theError);
+        AlfrescoLogDebug(@"Folder Descendants HTTP Request Failure: %@", theError);
     
     [super failWithError:theError];
 }
@@ -207,7 +207,7 @@
         //
         folderDescendantsUrl = [folderDescendantsUrl stringByAppendingString:@"?depth=-1"];
     }
-    NSLog(@"Folder Descendants\r\nGET:\t%@", folderDescendantsUrl);
+    AlfrescoLogDebug(@"Folder Descendants\r\nGET:\t%@", folderDescendantsUrl);
     
     FolderDescendantsRequest *request = [FolderDescendantsRequest requestWithURL:[NSURL URLWithString:folderDescendantsUrl] accountUUID:uuid];
     [request setRequestMethod:@"GET"];

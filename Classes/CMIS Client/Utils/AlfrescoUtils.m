@@ -62,7 +62,7 @@ static NSMutableDictionary *sharedInstances = nil;
 	NSString *port = [accountInfo port];
 	NSString *serviceDocRequestPath = [accountInfo serviceDocumentRequestPath];
 	NSString *serviceDocumentURLString = [NSString stringWithFormat:@"%@://%@:%@%@", protocol, host, port, serviceDocRequestPath];
-    NSLog(@"SERVICE DOC URL: %@", serviceDocumentURLString);
+    AlfrescoLogDebug(@"SERVICE DOC URL: %@", serviceDocumentURLString);
     
 	return [NSURL URLWithString:serviceDocumentURLString];
 }

@@ -47,7 +47,7 @@
             // if the value has changed
             if (![[orig objectForKey:key] isEqualToString:[edit objectForKey:key]]) {
                 
-                NSLog(@"%@ changed!  old value %@, new value %@", key, [orig objectForKey:key], [edit objectForKey:key]);
+                AlfrescoLogDebug(@"%@ changed!  old value %@, new value %@", key, [orig objectForKey:key], [edit objectForKey:key]);
                 
                 // if we know anything about this property
                 PropertyInfo *info = [propertyInfo objectForKey:key];
@@ -58,12 +58,12 @@
                         [propertyElements appendFormat:stringPropertyTemplate, info.displayName, info.localName, key, [edit objectForKey:key]];
                     }
                     else {
-                        NSLog(@"unsupported type '%@' for property '%@'", info.propertyType, key);
+                        AlfrescoLogDebug(@"unsupported type '%@' for property '%@'", info.propertyType, key);
                     }
                     
                 }
                 else {
-                    NSLog(@"property '%@' changed, but we don't know its datatype, so we're ignoring it", key);
+                    AlfrescoLogDebug(@"property '%@' changed, but we don't know its datatype, so we're ignoring it", key);
                 }
             }
         }
@@ -72,7 +72,7 @@
 		"<ns5:object><properties>%@</properties></ns5:object></ns3:entry>";
         
         NSString *body = [[NSString alloc] initWithFormat:entryTemplate, propertyElements];
-        NSLog(@"PUT: %@", body);
+        AlfrescoLogDebug(@"PUT: %@", body);
         // create a post request
         NSData *d = [body dataUsingEncoding:NSUTF8StringEncoding];
         [body release];

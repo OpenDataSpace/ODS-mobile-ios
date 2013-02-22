@@ -39,7 +39,7 @@
         
         if(error)
         {
-            NSLog(@"Failed to protect file %@, with error: %@", path, [error description]);
+            AlfrescoLogDebug(@"Failed to protect file %@, with error: %@", path, [error description]);
         }
     }
     
@@ -53,7 +53,7 @@
     {
         return [self setProtection:NSFileProtectionComplete toFileAtPath:path];
     } else {
-        NSLog(@"Protection not available, returning YES");
+        AlfrescoLogDebug(@"Protection not available, returning YES");
         return YES;
     }
 }
@@ -65,7 +65,7 @@
     {
         return [self setProtection:NSFileProtectionCompleteUnlessOpen toFileAtPath:path];
     } else {
-        NSLog(@"Protection not available, returning YES");
+        AlfrescoLogDebug(@"Protection not available, returning YES");
         return YES;
     }
 }

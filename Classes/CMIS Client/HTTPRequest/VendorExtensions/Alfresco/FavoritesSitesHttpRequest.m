@@ -60,7 +60,7 @@
 {
     if (theError)
     {
-        NSLog(@"FavoriteSites HTTP Request Failure: %@", theError);
+        AlfrescoLogDebug(@"FavoriteSites HTTP Request Failure: %@", theError);
     }
     
     [super failWithError:theError];

@@ -104,7 +104,7 @@ CGFloat const kVideoHeight = 200.0f;
     {
         [player play];
     }
-    NSLog(@"Video frame: %@", NSStringFromCGRect([[player view] frame]));
+    AlfrescoLogDebug(@"Video frame: %@", NSStringFromCGRect([[player view] frame]));
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
 }
 
@@ -150,13 +150,13 @@ CGFloat const kVideoHeight = 200.0f;
 	}
 	@catch (NSException *ex)
     {
-		NSLog(@"unable to become first responder");
+		AlfrescoLogDebug(@"unable to become first responder");
 	}
 }
 
 -(void)resignFirstResponder
 {
-	NSLog(@"resign first responder is noop for video cells");
+	AlfrescoLogDebug(@"resign first responder is noop for video cells");
 }
 
 #pragma mark - MovieControllerInternal
