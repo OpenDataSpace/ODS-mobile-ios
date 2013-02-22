@@ -43,26 +43,34 @@
 {
     // parse the returned JSON
     NSDictionary *responseJSONObject = [self mutableDictionaryFromJSONResponseWithOptions:NSJSONReadingMutableContainers];
-    NSArray *taskJSONArray = [responseJSONObject objectForKey:@"data"];
-
-    NSArray *workflowTypes = [NSArray arrayWithObjects:@"wf:adhocTask", @"wf:completedAdhocTask",
-                         @"wf:activitiReviewTask", @"wf:approvedTask", @"wf:rejectedTask", @"wf:reviewTask", @"wf:approvedParallelTask", @"wf:rejectedParallelTask", nil];
+    NSArray *taskJSONArray = responseJSONObject[@"data"];
+    NSArray *workflowTypes = @[@"wf:adhocTask", @"wf:completedAdhocTask",
+                         @"wf:activitiReviewTask", @"wf:approvedTask", @"wf:rejectedTask", @"wf:reviewTask", @"wf:approvedParallelTask", @"wf:rejectedParallelTask"];
+    NSArray *approvedOrRejectedTypes = @[@"wf:approvedTask", @"wf:rejectedTask", @"wf:approvedParallelTask", @"wf:rejectedParallelTask"];
     NSMutableArray *resultArray = [NSMutableArray array];
 
-    // Adding account uuid and tenantID to the response, as the consumers of the data will need it
-    for (id taskJson in taskJSONArray)
+    for (NSMutableDictionary *taskJson in taskJSONArray)
     {
-        NSString *workflowType = [taskJson valueForKey:@"name"];
+        NSString *workflowType = taskJson[@"name"];
         if ([workflowTypes containsObject:workflowType])
         {
+            // Adding account uuid and tenantID to the response, as the consumers of the data will need it
             if (self.accountUUID)
             {
-                [taskJson setObject:self.accountUUID forKey:@"accountUUID"];
+                taskJson[@"accountUUID"] = self.accountUUID;
             }
             if (self.tenantID)
             {
-                [taskJson setObject:self.tenantID forKey:@"tenantId"];
+                taskJson[@"tenantId"] = self.tenantID;
             }
+            
+            // JBPM doesn't expose anything useful in bpm_description for Review/Approve outcomes, so add it here
+            if ([taskJson[@"id"] hasPrefix:kJBPMWorkflowIdPrefix] && ([approvedOrRejectedTypes containsObject:workflowType]))
+            {
+                NSString *description = [NSString stringWithFormat:@"%@: %@", taskJson[@"description"], [taskJson valueForKeyPath:@"properties.bpm_description"]];
+                [taskJson setValue:description forKeyPath:@"properties.bpm_description"];
+            }
+            
             [resultArray addObject:taskJson];
         }
     }

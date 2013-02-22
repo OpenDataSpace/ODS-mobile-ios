@@ -76,9 +76,9 @@ NSString * const kFDHTTP_DefaultPort = @"80";
 NSString * const kFDHTTPS_DefaultPort = @"443";
 NSString * const kFDAlfresco_RepositoryVendorName = @"Alfresco";
 
-//
-// Sync Favorites Preference
-//
+/**
+ * Sync Favorites Preference
+ */
 NSString * const kSyncPreference = @"SyncDocs";
 NSString * const kSyncedFilesDirectory = @"SyncedDocs";
 NSString * const kSyncOnCellular = @"SyncOnCellular";
@@ -88,10 +88,9 @@ NSString * const kNotificationSyncObstacles = @"kNotificationSyncObstacles";
 
 NSTimeInterval const kSyncAfterDelay = 30;
 
-
-//
-// MDM "Lite"
-//
+/**
+ * MDM "Lite"
+ */
 NSString * const kMDMAspectKey = @"dp:restrictable";
 NSString * const kFileExpiryKey = @"dp:offlineExpiresAfter";
 NSString * const kNotificationExpiredFiles = @"kNotificationExpiredFiles";
@@ -187,6 +186,12 @@ unsigned int const kFileSuffixMaxAttempts = 1000;
 NSString * const kSiteVisibilityPublic = @"PUBLIC";
 NSString * const kSiteVisibilityPrivate = @"PRIVATE";
 NSString * const kSiteVisibilityModerated = @"MODERATED";
+
+/**
+ * Workflow Constants
+ */
+NSString * const kActivitiWorkflowIdPrefix = @"activiti$";
+NSString * const kJBPMWorkflowIdPrefix = @"jbpm$";
 
 @implementation Constants
 @end
