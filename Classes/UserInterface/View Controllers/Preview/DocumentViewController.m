@@ -1320,7 +1320,14 @@ NSInteger const kGetCommentsCountTag = 6;
     
     if (self.isDocumentExpired)
     {
-        [IpadSupport clearDetailController];
+        if (IS_IPAD)
+        {
+            [IpadSupport clearDetailController];
+        }
+        else
+        {
+            [self.navigationController popViewControllerAnimated:YES];
+        }
     }
 }
 
@@ -1549,7 +1556,14 @@ NSInteger const kGetCommentsCountTag = 6;
     
     if (!self.isEditingDocument && self.isDocumentExpired)
     {
-        [IpadSupport clearDetailController];
+        if (IS_IPAD)
+        {
+            [IpadSupport clearDetailController];
+        }
+        else
+        {
+            [self.navigationController popViewControllerAnimated:YES];
+        }
     }
 }
 
