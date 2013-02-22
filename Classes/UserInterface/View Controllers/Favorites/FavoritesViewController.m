@@ -703,7 +703,7 @@ static const NSInteger delayToShowErrors = 2.0f;
         NSIndexPath *selectedRow = [self.tableView indexPathForSelectedRow];
         
         [self showDocument];
-        [self.tableView reloadData];
+        [self loadFavorites:SyncTypeManual];
         [self.tableView selectRowAtIndexPath:selectedRow animated:YES scrollPosition:UITableViewScrollPositionNone];
     }
     else
