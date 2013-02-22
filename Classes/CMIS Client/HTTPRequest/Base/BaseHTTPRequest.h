@@ -112,6 +112,7 @@ extern NSString * const kServerAPIClasses;
 
 @property (nonatomic, assign) BOOL ignore500StatusError;
 @property (nonatomic, assign) BOOL suppressAllErrors;
+@property (nonatomic, assign) BOOL suppressAccountStatusUpdateOnError;
 @property (nonatomic, retain) NSString *serverAPI;
 @property (nonatomic, retain) NSString *accountUUID;
 @property (nonatomic, retain) AccountInfo *accountInfo;

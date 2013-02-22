@@ -508,6 +508,7 @@ BOOL shouldSetFirstResponderOnAppear;
                 self.emailSwitch.frame = CGRectMake(227, 6, 40, 30);
             }
             
+            [self.emailSwitch setOn:YES];
             [cell addSubview:self.emailSwitch];
             cell.accessoryType = UITableViewCellAccessoryNone;
             break;

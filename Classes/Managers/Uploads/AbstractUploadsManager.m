@@ -143,7 +143,7 @@
     [request setRequestMethod:method];
     [request setCancelledPromptPasswordSelector:@selector(cancelledPasswordPrompt:)];
     [request setPromptPasswordDelegate:self];
-    //[ASIHTTPRequest throttleBandwidthForWWANUsingLimit:14];
+    [request setSuppressAccountStatusUpdateOnError:YES];
     [uploadInfo setUploadStatus:UploadInfoStatusActive];
     [uploadInfo setUploadRequest:request];
     [self.uploadsQueue addOperation:request];
@@ -156,9 +156,7 @@
         [self saveUploadsData];
         // We call go to the queue to start it, if the queue has already started it will not have any effect in the queue.
         [self.uploadsQueue go];
-        AlfrescoLogTrace(@"Starting the upload for file %@ with uuid %@", [uploadInfo completeFileName], [uploadInfo uuid]);
-        
-     
+        AlfrescoLogTrace(@"Starting the upload for file %@ with uuid %@", uploadInfo.completeFileName, uploadInfo.uuid);
 }
 
 - (void)queueUploadArray:(NSArray *)uploads
