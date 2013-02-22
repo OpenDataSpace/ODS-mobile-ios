@@ -489,6 +489,8 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
 
 - (void)queueFinished:(ASINetworkQueue *)queue
 {
+    queue.delegate = nil;
+    
     //Checking if all the requests failed
     //NSLog(@"========Fails: %d =========Finished: %d =========== Total Count %d", requestsFailed, requestsFinished, requestCount);
     if (requestsFailed == requestCount)

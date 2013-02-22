@@ -340,27 +340,25 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
 - (void)updateFavoriteIndicator
 {
     FavoriteTableViewCell *cell = (FavoriteTableViewCell *)self.cell;
-    if (self.uploadInfo == nil)
+    
+    CGRect rect = cell.details.frame;
+    if (self.documentIsFavorite)
     {
-        CGRect rect = cell.details.frame;
-        if (self.documentIsFavorite)
-        {
-            rect.origin.x = cell.favoriteIcon.frame.origin.x + 16;
-            cell.details.frame = rect;
-
-            [cell.overlayView setHidden:YES];
-            [cell.favoriteIcon setImage:[UIImage imageNamed:@"favorite-indicator"]];
-            [cell.favoriteIcon setHighlightedImage:[UIImage imageNamed:@"selected-favorite-indicator"]];
-        }
-        else
-        {
-            rect.origin.x = cell.favoriteIcon.frame.origin.x;
-            cell.details.frame = rect;
-
-            [cell.overlayView setHidden:NO];
-            [cell.favoriteIcon setImage:nil];
-            [cell.favoriteIcon setHighlightedImage:nil];
-        }
+        rect.origin.x = cell.favoriteIcon.frame.origin.x + 16;
+        cell.details.frame = rect;
+        
+        [cell.overlayView setHidden:YES];
+        [cell.favoriteIcon setImage:[UIImage imageNamed:@"favorite-indicator"]];
+        [cell.favoriteIcon setHighlightedImage:[UIImage imageNamed:@"selected-favorite-indicator"]];
+    }
+    else
+    {
+        rect.origin.x = cell.favoriteIcon.frame.origin.x;
+        cell.details.frame = rect;
+        
+        [cell.overlayView setHidden:NO];
+        [cell.favoriteIcon setImage:nil];
+        [cell.favoriteIcon setHighlightedImage:nil];
     }
 }
 

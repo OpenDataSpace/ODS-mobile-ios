@@ -116,6 +116,7 @@
     CMISDownloadFileHTTPRequest *request = [CMISDownloadFileHTTPRequest cmisDownloadRequestWithDownloadInfo:downloadInfo]; 
     [request setCancelledPromptPasswordSelector:@selector(cancelledPasswordPrompt:)];
     [request setPromptPasswordDelegate:self];
+    [request setSuppressAccountStatusUpdateOnError:YES];
     [downloadInfo setDownloadStatus:DownloadInfoStatusActive];
     [downloadInfo setDownloadRequest:request];
     [self.downloadQueue addOperation:request withFileSize:downloadInfo.repositoryItem.contentStreamLength];
