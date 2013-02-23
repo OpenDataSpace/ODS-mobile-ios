@@ -168,8 +168,8 @@
     // Check if we got too many results
     if (self.searchStatusCode == 500) 
     {
-        mainText = NSLocalizedString(@"Too many search results", @"Server Error");
-        detailText = NSLocalizedString(@"refineSearchTermsMessage", @"refineSearchTermsMessage");
+        mainText = NSLocalizedString(@"search.results.error", @"The search request failed");
+        detailText = NSLocalizedString(@"search.results.error.detail", @"Problem whilst searching");
     }
     else 
     {

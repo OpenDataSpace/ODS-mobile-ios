@@ -24,7 +24,6 @@
 //
 
 #import "LikeHTTPRequest.h"
-#import "ASIHttpRequest+Alfresco.h"
 
 @implementation LikeHTTPRequest
 

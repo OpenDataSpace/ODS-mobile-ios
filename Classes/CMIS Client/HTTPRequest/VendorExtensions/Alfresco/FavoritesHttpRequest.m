@@ -24,7 +24,6 @@
 //
 
 #import "FavoritesHttpRequest.h"
-#import "ASIHttpRequest+Alfresco.h"
 
 @implementation FavoritesHttpRequest
 

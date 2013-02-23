@@ -25,7 +25,6 @@
 
 #import <Foundation/Foundation.h>
 #import "BaseHTTPRequest.h"
-#import "ASIHttpRequest+Alfresco.h"
 #import "NodeRef.h"
 
 

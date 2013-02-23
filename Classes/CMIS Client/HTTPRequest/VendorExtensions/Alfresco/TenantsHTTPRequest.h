@@ -29,9 +29,6 @@
 
 @interface TenantsHTTPRequest : BaseHTTPRequest
 
-@property (nonatomic, retain) NSArray *jsonObject;
-@property (nonatomic, retain) NSString *primaryTenantID;
-@property (nonatomic, retain) NSArray *secondaryTenantIDs;
 @property (nonatomic, retain) NSArray *allTenantIDs;
 @property (nonatomic, assign, getter = isPaidAccount) BOOL paidAccount;
 

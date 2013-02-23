@@ -133,9 +133,9 @@ extern NSString * const kTwisterClosedIcon_ImageName;
 extern NSString * const kTwisterOpenIcon_ImageName;
 extern NSString * const kImageUIButtonBarBadgeError;
 
-//
-// Sync Favorites Preference
-//
+/**
+ * Sync Favorites Preference
+ */
 extern NSString * const kSyncPreference;
 extern NSString * const kSyncedFilesDirectory;
 extern NSString * const kSyncOnCellular;
@@ -152,32 +152,33 @@ extern CGFloat const kTableCellTextLeftPadding;
 
 extern NSString * const kDefaultAccountsPlist_FileName;
 
-//
-// MDMLite
-//
+/**
+ * MDMLite
+ */
 extern NSString * const kMDMAspectKey;
 extern NSString * const kFileExpiryKey;
 // Custom Notifications
 extern NSString * const kNotificationExpiredFiles;
 extern NSString * const kNotificationViewedDocumentRestrictionStatus;
 
-//
-// User Preferences name constants
-// Search
+/**
+ * User Preferences name constants
+ * Search
+ */
 extern NSString * const kFDSearchSelectedUUID;
 extern NSString * const kFDSearchSelectedTenantID;
 extern NSString * const kFDSearchSelectedGuid;
 extern NSString * const kFDSearchSelectedTitle;
 
-//
-// CMIS Request Constants
-//
+/**
+ * CMIS Request Constants
+ */
 extern NSString * const kCMISDefaultPropertyFilterValue;
 extern NSString * const kCMISExtendedPropertyFilterValue;
 
-//
-// Create Document Constants
-//
+/**
+ * Create Document Constants
+ */
 extern NSString * const kCreateDocumentTemplateFilename;
 extern NSString * const kCreateDocumentDocExtension;
 extern NSString * const kCreateDocumentPresentationExtension;
@@ -195,6 +196,12 @@ extern unsigned int const kFileSuffixMaxAttempts;
 extern NSString * const kSiteVisibilityPublic;
 extern NSString * const kSiteVisibilityPrivate;
 extern NSString * const kSiteVisibilityModerated;
+
+/**
+ * Workflow Constants
+ */
+extern NSString * const kActivitiWorkflowIdPrefix;
+extern NSString * const kJBPMWorkflowIdPrefix;
 
 @interface Constants : NSObject
 @end

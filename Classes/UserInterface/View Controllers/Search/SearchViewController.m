@@ -213,7 +213,8 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     {
         [[FDKeychainUserDefaults standardUserDefaults] setObject:guid forKey:kFDSearchSelectedGuid];
         [[FDKeychainUserDefaults standardUserDefaults] setObject:title forKey:kFDSearchSelectedTitle];
-    } else
+    }
+    else
     {
         [[FDKeychainUserDefaults standardUserDefaults] removeObjectForKey:kFDSearchSelectedGuid];
         [[FDKeychainUserDefaults standardUserDefaults] removeObjectForKey:kFDSearchSelectedTitle];
@@ -451,7 +452,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     if ([request responseStatusCode] == 500)
     {
         RepositoryItem *errorResult = [[RepositoryItem alloc] init];
-		[errorResult setTitle:NSLocalizedString(@"Too many search results", @"Server Error")];
+		[errorResult setTitle:NSLocalizedString(@"search.results.error", @"The search request failed")];
 		[errorResult setContentLocation:nil];
         [self initRepositoryWrappersWithRepositoryItems:[NSArray arrayWithObject:errorResult]];
         [errorResult release];
@@ -552,13 +553,13 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     }
     RepositoryItemCellWrapper *cellWrapper = [self.results objectAtIndex:indexPath.row];
 	RepositoryItem *result = [cellWrapper repositoryItem];
-	if (([result contentLocation] == nil) && ([self.results count] == 1))
+	if (result.contentLocation == nil && self.results.count == 1)
     {
 		cell.filename.text = result.title;
         
-        if ([result.title isEqualToString:NSLocalizedString(@"search.too.many.results", @"Too many search results")])
+        if ([result.title isEqualToString:NSLocalizedString(@"search.results.error", @"The search request failed")])
         {
-            [[cell details] setText:NSLocalizedString(@"refineSearchTermsMessage", @"refineSearchTermsMessage")];
+            cell.details.text = NSLocalizedString(@"search.results.error.detail", @"Problem whilst searching");
         }
         else
         {
@@ -567,6 +568,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
         
 		cell.imageView.image = nil;
 		[cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+        [cell setAccessoryType:UITableViewCellAccessoryNone];
         [cell setAccessoryView:nil];
 	}
 	else
@@ -777,6 +779,10 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     {
         [self saveAccountUUIDSelection:[item accountUUID] tenantID:[item tenantID] guid:[item.value guid] title:[item.value title]];
     }
+    else if ([item.value isKindOfClass:[AccountInfo class]])
+    {
+        [self saveAccountUUIDSelection:[item accountUUID] tenantID:nil guid:nil title:nil];
+    }
     else if ([item.value isKindOfClass:[RepositoryInfo class]])
     {
         [self saveAccountUUIDSelection:[item accountUUID] tenantID:[item tenantID] guid:nil title:nil];
@@ -890,9 +896,14 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     if (self.selectedSearchNode && ([[self.selectedSearchNode accountUUID] isEqualToString:uuid] || isReset))
     {
         [self setResults:[NSMutableArray array]];
-        [self setSelectedSearchNode:nil];
-        [self selectDefaultAccount];
-        [self.table reloadData];
+        
+        AccountStatus *accountStatus = (AccountStatus *)userInfo[@"accountStatus"];
+        if (accountStatus && (accountStatus.accountStatus == FDAccountStatusInactive))
+        {
+            [self setSelectedSearchNode:nil];
+            [self selectDefaultAccount];
+            [self.table reloadData];
+        }
     }
 }
 

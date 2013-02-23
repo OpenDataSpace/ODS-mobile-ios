@@ -835,10 +835,6 @@
 		3C8203B714E1A82000A67645 /* ActivitiesHttpRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82026A14E1A82000A67645 /* ActivitiesHttpRequest.m */; };
 		3C8203B914E1A82000A67645 /* CommentsHttpRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82026C14E1A82000A67645 /* CommentsHttpRequest.m */; };
 		3C8203BA14E1A82000A67645 /* CommentsHttpRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82026C14E1A82000A67645 /* CommentsHttpRequest.m */; };
-		3C8203BC14E1A82000A67645 /* ASIHttpRequest+Alfresco.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82026F14E1A82000A67645 /* ASIHttpRequest+Alfresco.m */; };
-		3C8203BD14E1A82000A67645 /* ASIHttpRequest+Alfresco.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82026F14E1A82000A67645 /* ASIHttpRequest+Alfresco.m */; };
-		3C8203BF14E1A82000A67645 /* SearchResultsHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82027114E1A82000A67645 /* SearchResultsHTTPRequest.m */; };
-		3C8203C014E1A82000A67645 /* SearchResultsHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82027114E1A82000A67645 /* SearchResultsHTTPRequest.m */; };
 		3C8203C214E1A82000A67645 /* FavoritesSitesHttpRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82027314E1A82000A67645 /* FavoritesSitesHttpRequest.m */; };
 		3C8203C314E1A82000A67645 /* FavoritesSitesHttpRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82027314E1A82000A67645 /* FavoritesSitesHttpRequest.m */; };
 		3C8203C514E1A82000A67645 /* LikeHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82027514E1A82000A67645 /* LikeHTTPRequest.m */; };
@@ -2290,10 +2286,6 @@
 		3C82026A14E1A82000A67645 /* ActivitiesHttpRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActivitiesHttpRequest.m; sourceTree = "<group>"; };
 		3C82026B14E1A82000A67645 /* CommentsHttpRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentsHttpRequest.h; sourceTree = "<group>"; };
 		3C82026C14E1A82000A67645 /* CommentsHttpRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentsHttpRequest.m; sourceTree = "<group>"; };
-		3C82026E14E1A82000A67645 /* ASIHttpRequest+Alfresco.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ASIHttpRequest+Alfresco.h"; sourceTree = "<group>"; };
-		3C82026F14E1A82000A67645 /* ASIHttpRequest+Alfresco.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ASIHttpRequest+Alfresco.m"; sourceTree = "<group>"; };
-		3C82027014E1A82000A67645 /* SearchResultsHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchResultsHTTPRequest.h; sourceTree = "<group>"; };
-		3C82027114E1A82000A67645 /* SearchResultsHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchResultsHTTPRequest.m; sourceTree = "<group>"; };
 		3C82027214E1A82000A67645 /* FavoritesSitesHttpRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FavoritesSitesHttpRequest.h; sourceTree = "<group>"; };
 		3C82027314E1A82000A67645 /* FavoritesSitesHttpRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FavoritesSitesHttpRequest.m; sourceTree = "<group>"; };
 		3C82027414E1A82000A67645 /* LikeHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LikeHTTPRequest.h; sourceTree = "<group>"; };
@@ -4221,7 +4213,6 @@
 				FCFEAE5313F1E16F00453D8C /* AvatarHTTPRequest.m */,
 				3C82026B14E1A82000A67645 /* CommentsHttpRequest.h */,
 				3C82026C14E1A82000A67645 /* CommentsHttpRequest.m */,
-				3C82026D14E1A82000A67645 /* Deprecated */,
 				08D4E9EF15C945A300593E20 /* FavoritesHttpRequest.h */,
 				08D4E9F015C945A400593E20 /* FavoritesHttpRequest.m */,
 				3C82027214E1A82000A67645 /* FavoritesSitesHttpRequest.h */,
@@ -4280,17 +4271,6 @@
 				2700255716709C270012DD04 /* WorkflowDefinitionsHTTPRequest.m */,
 			);
 			path = Alfresco;
-			sourceTree = "<group>";
-		};
-		3C82026D14E1A82000A67645 /* Deprecated */ = {
-			isa = PBXGroup;
-			children = (
-				3C82026E14E1A82000A67645 /* ASIHttpRequest+Alfresco.h */,
-				3C82026F14E1A82000A67645 /* ASIHttpRequest+Alfresco.m */,
-				3C82027014E1A82000A67645 /* SearchResultsHTTPRequest.h */,
-				3C82027114E1A82000A67645 /* SearchResultsHTTPRequest.m */,
-			);
-			path = Deprecated;
 			sourceTree = "<group>";
 		};
 		3C82027E14E1A82000A67645 /* Resources */ = {
@@ -6739,8 +6719,6 @@
 				3C8203B314E1A82000A67645 /* ObjectByIdRequest.m in Sources */,
 				3C8203B614E1A82000A67645 /* ActivitiesHttpRequest.m in Sources */,
 				3C8203B914E1A82000A67645 /* CommentsHttpRequest.m in Sources */,
-				3C8203BC14E1A82000A67645 /* ASIHttpRequest+Alfresco.m in Sources */,
-				3C8203BF14E1A82000A67645 /* SearchResultsHTTPRequest.m in Sources */,
 				3C8203C214E1A82000A67645 /* FavoritesSitesHttpRequest.m in Sources */,
 				3C8203C514E1A82000A67645 /* LikeHTTPRequest.m in Sources */,
 				3C8203C814E1A82000A67645 /* NodeRef.m in Sources */,
@@ -7148,8 +7126,6 @@
 				3C8203B414E1A82000A67645 /* ObjectByIdRequest.m in Sources */,
 				3C8203B714E1A82000A67645 /* ActivitiesHttpRequest.m in Sources */,
 				3C8203BA14E1A82000A67645 /* CommentsHttpRequest.m in Sources */,
-				3C8203BD14E1A82000A67645 /* ASIHttpRequest+Alfresco.m in Sources */,
-				3C8203C014E1A82000A67645 /* SearchResultsHTTPRequest.m in Sources */,
 				3C8203C314E1A82000A67645 /* FavoritesSitesHttpRequest.m in Sources */,
 				3C8203C614E1A82000A67645 /* LikeHTTPRequest.m in Sources */,
 				3C8203C914E1A82000A67645 /* NodeRef.m in Sources */,

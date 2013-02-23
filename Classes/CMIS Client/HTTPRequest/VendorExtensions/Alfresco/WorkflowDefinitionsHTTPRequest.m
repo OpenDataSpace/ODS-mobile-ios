@@ -38,7 +38,8 @@
 - (void)requestFinishedWithSuccessResponse
 {
     BOOL activitiEnabled = NO;
-    if (self.responseString != nil && [self.responseString rangeOfString:@"activiti$"].location != NSNotFound)
+    // Look for the Activiti prefix anywhere in the response string
+    if (self.responseString != nil && [self.responseString rangeOfString:kActivitiWorkflowIdPrefix].location != NSNotFound)
     {
         activitiEnabled = YES;
     }

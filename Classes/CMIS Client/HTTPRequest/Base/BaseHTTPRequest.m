@@ -375,8 +375,7 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
                 }
                 else
                 {
-                    NSString *msg = [NSString stringWithFormat:@"%@ %@\n\n%@", NSLocalizedString(@"connectionErrorMessage", @"The server returned an error connecting to URL. Localized Error Message"),[self.url host], theError.localizedDescription];
-                    displayErrorMessageWithTitle(msg , NSLocalizedString(@"connectionErrorTitle", @"Connection error"));
+                    showConnectionErrorMessageWithError(self, theError);
                 }
             }
         }

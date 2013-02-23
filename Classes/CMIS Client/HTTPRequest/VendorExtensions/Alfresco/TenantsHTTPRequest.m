@@ -28,17 +28,9 @@
 NSString * const kPaidBusinessClassName = @"PAID_BUSINESS";
 
 @implementation TenantsHTTPRequest
-@synthesize jsonObject = _jsonObject;
-@synthesize primaryTenantID = _primaryTenantID;
-@synthesize secondaryTenantIDs= _secondaryTenantIDs;
-@synthesize allTenantIDs = _allTenantIDs;
-@synthesize paidAccount = _paidAccount;
 
 - (void)dealloc
 {
-    [_jsonObject release];
-    [_primaryTenantID release];
-    [_secondaryTenantIDs release];
     [_allTenantIDs release];
     
     [super dealloc];
@@ -47,30 +39,41 @@ NSString * const kPaidBusinessClassName = @"PAID_BUSINESS";
 + (id)tenantsRequestForAccountUUID:(NSString *)uuid
 {
     AlfrescoLogDebug(@"Instance of TenantsHTTPRequest created with account UUID: %@", uuid);
-    
     return [self requestForServerAPI:kServerAPINetworksCollection accountUUID:uuid];
 }
 
-#pragma mark - 
-#pragma mark ASIHTTPRequestDelegate methods
+#pragma mark - ASIHTTPRequestDelegate methods
 
 - (void)requestFinishedWithSuccessResponse
 {
     AlfrescoLogTrace(@"Tenants response: %@", [self responseString]);
 	NSArray *result = [self arrayFromJSONResponse];
     
-    [self setJsonObject:result];
-    [self setPrimaryTenantID:[result valueForKeyPath:@"data.home.tenant"]];
-    [self setSecondaryTenantIDs:[result valueForKeyPath:@"data.secondary.tenant"]];
-    [self setAllTenantIDs:[[NSArray arrayWithObject:self.primaryTenantID] arrayByAddingObjectsFromArray:self.secondaryTenantIDs]];
+    /**
+     * The home tenant might not be valid (e.g. for the case where a gmail.com user has been invited to a site)
+     * See MOBILE-1281: Configuring an account where the user has been invited with a GMail account causes multiple password prompts to appear
+     */
+    NSMutableArray *tenantIDs = [NSMutableArray array];
     
-    NSString *className = [result valueForKeyPath:@"data.home.className"];
-    [self setPaidAccount:[className isEqualToString:kPaidBusinessClassName]];
-}
+    // Primary enabled?
+    if ([[result valueForKeyPath:@"data.home.enabled"] boolValue])
+    {
+        [tenantIDs addObject:[result valueForKeyPath:@"data.home.tenant"]];
+    }
+    
+    // Secondaries
+    for (NSDictionary *secondary in [result valueForKeyPath:@"data.secondary"])
+    {
+        if ([secondary[@"enabled"] boolValue])
+        {
+            [tenantIDs addObject:secondary[@"tenant"]];
+        }
+    }
 
-- (void)failWithError:(NSError *)theError
-{
-    [super failWithError:theError];    
+    self.allTenantIDs = [NSArray arrayWithArray:tenantIDs];
+
+    // Account class
+    self.paidAccount = [[result valueForKeyPath:@"data.home.className"] isEqualToString:kPaidBusinessClassName];
 }
 
 @end

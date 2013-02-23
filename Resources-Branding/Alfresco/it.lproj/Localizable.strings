@@ -292,7 +292,8 @@
 "postprogressbar.error.uploadfailed.message" = "Errore di caricamento. Per favore riprova ancora";
 
 "search.unavailable.noaccount.alert" = "Selezionare account, rete o sito da cui avviare la ricerca";
-"search.too.many.results" = "Troppi risultati di ricerca";
+"search.results.error" = "Search Request Failed";
+"search.results.error.detail" = "A problem occurred whilst searching";
 "searchview.footer.displaying-30-results" = "Visualizzazione dei primi 30 risultati";
 "search.noAccounts" = "Nessun account selezionato";
 "search.sectionHeader.site" = "Cerca in:";

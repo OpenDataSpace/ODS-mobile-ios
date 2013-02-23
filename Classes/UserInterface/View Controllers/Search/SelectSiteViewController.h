@@ -33,12 +33,13 @@
 
 @protocol SelectSiteDelegate <NSObject>
 
--(void)selectSite:(SelectSiteViewController *)selectSite finishedWithItem:(TableViewNode *)item;
--(void)selectSiteDidCancel:(SelectSiteViewController *)selectSite;
+- (void)selectSite:(SelectSiteViewController *)selectSite finishedWithItem:(TableViewNode *)item;
+- (void)selectSiteDidCancel:(SelectSiteViewController *)selectSite;
 
 @end
 
-@interface SelectSiteViewController : UITableViewController <MultiAccountBrowseListener> {
+@interface SelectSiteViewController : UITableViewController <MultiAccountBrowseListener>
+{
     TableViewNode *selectedNode;
     TableViewNode *expandingNode;
     NSMutableArray *allItems;
@@ -56,6 +57,6 @@
 @property (nonatomic, readwrite, retain) MBProgressHUD *HUD;
 @property (nonatomic, copy) NSString *selectedAccountUUID;
 
-+(SelectSiteViewController *)selectSiteViewController;
++ (SelectSiteViewController *)selectSiteViewController;
 
 @end

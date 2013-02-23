@@ -40,8 +40,8 @@
 "connectionErrorTitle" = "Error de conexión";
 
 /* Downloading Document */
-"Downloading Document" = "Subiendo documento";
-"Downloading Documents" = "Subiendo documentos";
+"Downloading Document" = "Descargando documento";
+"Downloading Documents" = "Descargando documentos";
 
 /* Abbrevation for Gigabyte, used as follows: '1 GB' */
 "gb" = "GB";
@@ -292,7 +292,8 @@
 "postprogressbar.error.uploadfailed.message" = "La carga ha fallado, inténtelo de nuevo";
 
 "search.unavailable.noaccount.alert" = "Seleccione una cuenta, red o sitio para empezar a buscar";
-"search.too.many.results" = "Demasiados resultados";
+"search.results.error" = "Search Request Failed";
+"search.results.error.detail" = "A problem occurred whilst searching";
 "searchview.footer.displaying-30-results" = "Mostrando primeros 30 resultados";
 "search.noAccounts" = "Ninguna cuenta seleccionada";
 "search.sectionHeader.site" = "Buscar en:";

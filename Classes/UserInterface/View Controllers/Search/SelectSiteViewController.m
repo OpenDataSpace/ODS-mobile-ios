@@ -48,7 +48,8 @@
 @synthesize HUD;
 @synthesize selectedAccountUUID;
 
--(void)dealloc {
+-(void)dealloc
+{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     [selectedNode release];
@@ -59,13 +60,14 @@
     [super dealloc];
 }
 
--(void)viewDidLoad {
+-(void)viewDidLoad
+{
     [super viewDidLoad];
     NSArray *allAccounts = [[MultiAccountBrowseManager sharedManager] accounts];
     self.allItems = [NSMutableArray arrayWithCapacity:[allAccounts count]];
-
     
-    for(AccountInfo *account in allAccounts) {
+    for (AccountInfo *account in allAccounts)
+    {
         AccountNode *cellNode = [[AccountNode alloc] init];
         [cellNode setIndentationLevel:0];
         [cellNode setValue:account];
@@ -90,43 +92,41 @@
                                                  name:kNotificationAccountListUpdated object:nil];
 }
 
-- (void)viewDidUnload {
-    [super viewDidUnload];
-    self.allItems = nil;
-}
-
-- (void)viewWillDisappear:(BOOL)animated
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
 {
-    [super viewWillDisappear:animated];
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
     return YES;
 }
 
 #pragma mark - UITableViewControllerDelegate
-- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
+
+- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index
+{
     return 1;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
     return [allItems count];
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
     return 60;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView indentationLevelForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (NSInteger)tableView:(UITableView *)tableView indentationLevelForRowAtIndexPath:(NSIndexPath *)indexPath
+{
     TableViewNode *cellNode = [allItems objectAtIndex:indexPath.row];
     return [cellNode indentationLevel];
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
     TableViewNode *cellNode = [allItems objectAtIndex:indexPath.row];
     ExpandTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kExpandCellIdentifier];
     
-    if(!cell) {
+    if (!cell)
+    {
         NSArray *nibItems = [[NSBundle mainBundle] loadNibNamed:@"ExpandTableViewCell" owner:self options:nil];
 		cell = [nibItems objectAtIndex:0];
 		NSAssert(nibItems, @"Failed to load object from NIB");
@@ -137,22 +137,28 @@
     [cell.textLabel setHighlightedTextColor:[UIColor whiteColor]];
     [cell.imageView setImage:[cellNode cellImage]];
     
-    if([cellNode isEqual:selectedNode]) {
+    if ([cellNode isEqual:selectedNode])
+    {
         [tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionNone];
         [cell setAccessoryType:UITableViewCellAccessoryCheckmark];
-    } else {
+    }
+    else
+    {
         [cell setAccessoryType:UITableViewCellAccessoryNone];
     }
     
     [cell setIsExpanded:[cellNode isExpanded]];
-    if([cellNode canExpand]) {
-        //Set hidden not working for a UIButton?
-        //Using the alpha property instead
+    if ([cellNode canExpand])
+    {
+        // Set hidden not working for a UIButton?
+        // Using the alpha property instead
         [cell.expandView setHidden:NO];
         [cell setExpandTarget:self];
         [cell setExpandAction:@selector(expandOrCollapseCellNode:)];
         [cell setIndexPath:indexPath];
-    } else {
+    }
+    else
+    {
         [cell.expandView setHidden:YES];
         [cell setExpandTarget:nil];
         [cell setIndexPath:nil];
@@ -161,15 +167,18 @@
     return cell;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {    
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
     TableViewNode *cellNode = [allItems objectAtIndex:indexPath.row];
     AccountInfo *account = [cellNode value];
     
-    //We expand (or collapse) the nodes that cannot be selected like a Cloud account
-    if(![cellNode isKindOfClass:[AccountNode class]] || ![account isMultitenant]) {
+    // We expand (or collapse) the nodes that cannot be selected like a Cloud account
+    if (![cellNode isKindOfClass:[AccountNode class]] || ![account isMultitenant])
+    {
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
         [self setSelectedNode:cellNode];
-    } else 
+    }
+    else
     {
         [self expandOrCollapseTableNode:cellNode];
     }
@@ -179,33 +188,39 @@
 
 #pragma mark - Collapse/expand
 
-- (void)collapseNode:(TableViewNode *)node{
+- (void)collapseNode:(TableViewNode *)node
+{
     NSInteger itemIndex = [allItems indexOfObject:node];
     NSMutableArray *nodesToRemove = [NSMutableArray array];
     NSInteger index = itemIndex + 1;
     TableViewNode *nextItem = nil;
     
-    if(index < [allItems count]) {
+    if (index < [allItems count])
+    {
         nextItem = [allItems objectAtIndex:index];
     }
     
-    while(nextItem != nil) {
-        if([nextItem parent] == node)
+    while (nextItem != nil)
+    {
+        if ([nextItem parent] == node)
         {
             [nodesToRemove addObject:nextItem];
         }
         
         index++;
-        if(index < [allItems count]) {
+        if (index < [allItems count])
+        {
             nextItem = [allItems objectAtIndex:index];
-        } else {
+        }
+        else
+        {
             nextItem = nil;
         }
     }
     
-    for(TableViewNode *removeNode in nodesToRemove)
+    for (TableViewNode *removeNode in nodesToRemove)
     {
-        if([removeNode canExpand] && [removeNode isExpanded])
+        if ([removeNode canExpand] && [removeNode isExpanded])
         {
             [self collapseNode:removeNode];
         }
@@ -216,11 +231,13 @@
     [self.tableView reloadData];
 }
 
-- (void)expandNode:(TableViewNode *)node withNodes:(NSArray *)nodes {
+- (void)expandNode:(TableViewNode *)node withNodes:(NSArray *)nodes
+{
     NSInteger itemIndex = [allItems indexOfObject:node] + 1;
     [node setIsExpanded:YES];
     
-    for(TableViewNode *currNode in nodes) {
+    for (TableViewNode *currNode in nodes)
+    {
         [currNode setIndentationLevel:[node indentationLevel]+1];
         [currNode setParent:node];
         
@@ -230,40 +247,52 @@
     
     [self.tableView reloadData];
 }
+
 #pragma mark - Expand or Collapse target/action
--(void)expandOrCollapseCellNode:(ExpandTableViewCell *)tableCell {
+
+- (void)expandOrCollapseCellNode:(ExpandTableViewCell *)tableCell
+{
     TableViewNode *cellNode = [allItems objectAtIndex:[tableCell.indexPath row]];
     [self expandOrCollapseTableNode:cellNode];
 }
 
--(void)expandOrCollapseTableNode:(TableViewNode *)tableNode
+- (void)expandOrCollapseTableNode:(TableViewNode *)tableNode
 {
     [tableNode setIsExpanded:![tableNode isExpanded]];
     
-    if([tableNode isExpanded]) {
+    if ([tableNode isExpanded])
+    {
         [self retrieveChildNodes:tableNode];
-    } else {
+    }
+    else
+    {
         [self collapseNode:tableNode];
     }
-
 }
 
 #pragma mark - Requesting childs (sites/networks)
--(void)retrieveChildNodes:(TableViewNode *)node{
+
+- (void)retrieveChildNodes:(TableViewNode *)node
+{
     id value = [node value];
     AccountInfo *account = [node value];
     
-    if([value isKindOfClass:[AccountInfo class]] && ![account isMultitenant]) {
+    if ([value isKindOfClass:[AccountInfo class]] && ![account isMultitenant])
+    {
         [self startHUD];
         self.expandingNode = node;
         [[MultiAccountBrowseManager sharedManager] addListener:self];
         [[MultiAccountBrowseManager sharedManager] loadSitesForAccountUUID:[account uuid]];
-    } else if([value isKindOfClass:[AccountInfo class]] && [account isMultitenant]) {
+    }
+    else if ([value isKindOfClass:[AccountInfo class]] && [account isMultitenant])
+    {
         [self startHUD];
         self.expandingNode = node;
         [[MultiAccountBrowseManager sharedManager] addListener:self];
         [[MultiAccountBrowseManager sharedManager] loadNetworksForAccountUUID:[account uuid]];
-    } else if([node isKindOfClass:[NetworkNode class]]) {
+    }
+    else if ([node isKindOfClass:[NetworkNode class]])
+    {
         [self startHUD];
         self.expandingNode = node;
         RepositoryInfo *repoInfo = [node value];
@@ -272,16 +301,18 @@
     }
 }
 
-#pragma mark -
-#pragma mark MultiAccountBrowseListener methods
+#pragma mark - MultiAccountBrowseListener methods
 
--(void)multiAccountBrowseUpdated:(MultiAccountBrowseManager *)manager forType:(MultiAccountUpdateType)type {
-    if(type == MultiAccountUpdateTypeSites) {
+- (void)multiAccountBrowseUpdated:(MultiAccountBrowseManager *)manager forType:(MultiAccountUpdateType)type
+{
+    if (type == MultiAccountUpdateTypeSites)
+    {
         AccountInfo *account = [expandingNode value];
         NSArray *sites = [manager sitesForAccountUUID:[account uuid]];
         NSMutableArray *newNodes = [NSMutableArray arrayWithCapacity:[sites count]];
         
-        for(RepositoryItem *site in sites) {
+        for (RepositoryItem *site in sites)
+        {
             SiteNode *node = [[SiteNode alloc] init];
             [node setParent:expandingNode];
             [node setValue:site];
@@ -292,12 +323,15 @@
         }
         
         [self expandNode:expandingNode withNodes:newNodes];
-    } else if(type == MultiAccountUpdateTypeNetworks) {
+    }
+    else if (type == MultiAccountUpdateTypeNetworks)
+    {
         AccountInfo *account = [expandingNode value];
         NSArray *sites = [manager networksForAccountUUID:[account uuid]];
         NSMutableArray *newNodes = [NSMutableArray arrayWithCapacity:[sites count]];
         
-        for(RepositoryInfo *site in sites) {
+        for (RepositoryInfo *site in sites)
+        {
             NetworkNode *node = [[NetworkNode alloc] init];
             [node setParent:expandingNode];
             [node setValue:site];
@@ -308,14 +342,17 @@
         }
         
         [self expandNode:expandingNode withNodes:newNodes];
-    } else if(type == MultiAccountUpdateTypeNetworkSites) {
-        //Expanding node is a NetworkNode
+    }
+    else if (type == MultiAccountUpdateTypeNetworkSites)
+    {
+        // Expanding node is a NetworkNode
         RepositoryInfo *repositoryInfo = [expandingNode value];
         
         NSArray *sites = [manager sitesForAccountUUID:[expandingNode accountUUID] tenantID:[repositoryInfo tenantID]];
         NSMutableArray *newNodes = [NSMutableArray arrayWithCapacity:[sites count]];
         
-        for(RepositoryItem *site in sites) {
+        for (RepositoryItem *site in sites)
+        {
             NetworkSiteNode *node = [[NetworkSiteNode alloc] init];
             [node setParent:expandingNode];
             [node setValue:site];
@@ -334,28 +371,36 @@
     [manager removeListener:self];
 }
 
--(void)multiAccountBrowseFailed:(MultiAccountBrowseManager *)manager forType:(MultiAccountUpdateType)type {
+- (void)multiAccountBrowseFailed:(MultiAccountBrowseManager *)manager forType:(MultiAccountUpdateType)type
+{
     [self setExpandingNode:nil];
     [self stopHUD];
     [manager removeListener:self];
 }
 
 #pragma mark - Navbar buttons
--(void)saveSelection:(id)sender {
-    if(delegate && [delegate respondsToSelector:@selector(selectSite:finishedWithItem:)]) {
+
+- (void)saveSelection:(id)sender
+{
+    if (delegate && [delegate respondsToSelector:@selector(selectSite:finishedWithItem:)])
+    {
         [delegate selectSite:self finishedWithItem:selectedNode];
     }
 }
 
--(void)cancelSelection:(id)sender {
+- (void)cancelSelection:(id)sender
+{
     cancelled = YES;
-    if(delegate && [delegate respondsToSelector:@selector(selectSiteDidCancel:)]) {
+    if (delegate && [delegate respondsToSelector:@selector(selectSiteDidCancel:)])
+    {
         [delegate selectSiteDidCancel:self];
     } 
 }
 
 #pragma mark - static initializers
-+(SelectSiteViewController *)selectSiteViewController {
+
++ (SelectSiteViewController *)selectSiteViewController
+{
     SelectSiteViewController *select = [[[SelectSiteViewController alloc] initWithStyle:UITableViewStylePlain] autorelease];
     return select;
 }
@@ -379,11 +424,12 @@
 	}
 }
 
-#pragma mark -
-#pragma mark Notification methods
+#pragma mark - Notification methods
+
 - (void)handleAccountListUpdated:(NSNotification *) notification
 {
-    if (![NSThread isMainThread]) {
+    if (![NSThread isMainThread])
+    {
         [self performSelectorOnMainThread:@selector(handleAccountListUpdated:) withObject:notification waitUntilDone:NO];
         return;
     }
@@ -392,9 +438,8 @@
     NSString *uuid = [userInfo objectForKey:@"uuid"];
     BOOL isReset = [[userInfo objectForKey:@"reset"] boolValue];
     
-    if(self.selectedNode && ([[self.selectedNode accountUUID] isEqualToString:uuid] || isReset)) 
+    if (self.selectedNode && ([[self.selectedNode accountUUID] isEqualToString:uuid] || isReset))
     {
-        //[self setSelectedNode:nil];
         [self.tableView reloadData];
     }
 }

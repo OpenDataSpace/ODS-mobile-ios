@@ -292,7 +292,8 @@
 "postprogressbar.error.uploadfailed.message" = "Le téléchargement a échoué. Veuillez réessayer";
 
 "search.unavailable.noaccount.alert" = "Veuillez sélectionner un compte, un réseau ou un site pour débuter la recherche";
-"search.too.many.results" = "Trop de résultats de recherche";
+"search.results.error" = "Search Request Failed";
+"search.results.error.detail" = "A problem occurred whilst searching";
 "searchview.footer.displaying-30-results" = "Affichage des 30 premiers résultats";
 "search.noAccounts" = "Aucun compte sélectionné";
 "search.sectionHeader.site" = "Rechercher dans:";
