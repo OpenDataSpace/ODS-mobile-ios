@@ -26,11 +26,10 @@
 #import <Foundation/Foundation.h>
 #import "RepositoryItem.h"
 
-@interface VersionHistoryWrapper : RepositoryItem {
-    RepositoryItem *repositoryItem;
-}
+@interface VersionHistoryWrapper : RepositoryItem
 
 @property (nonatomic, retain) RepositoryItem *repositoryItem;
+@property (nonatomic, assign) BOOL useNonZeroInitialVersion;
 @property (nonatomic, readonly) NSString *lastAuthor;
 @property (nonatomic, readonly) NSString *comment;
 @property (nonatomic, readonly) NSString *versionLabel;

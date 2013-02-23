@@ -26,46 +26,51 @@
 #import "VersionHistoryWrapper.h"
 
 @implementation VersionHistoryWrapper
-@synthesize repositoryItem;
 
 - (void)dealloc
 {
-    [repositoryItem release];
+    [_repositoryItem release];
     [super dealloc];
 }
 
-- (id)init {
+- (id)initWithRepositoryItem:(RepositoryItem *)initialRepositoryItem
+{
     self = [super init];
-    if(self) {
-        repositoryItem = [[RepositoryItem alloc] init];
-    }
-    
-    return self;
-}
-
--(id)initWithRepositoryItem:(RepositoryItem *)initialRepositoryItem {
-    self = [super init];
-    if(self) {
+    if (self)
+    {
         self.repositoryItem = initialRepositoryItem;
+#if TARGET_ALFRESCO
+        self.useNonZeroInitialVersion = YES;
+#endif
     }
     
     return self;
 }
 
--(NSString *)lastAuthor {
-    return [repositoryItem.metadata objectForKey:@"cmis:lastModifiedBy"];
+- (NSString *)lastAuthor
+{
+    return [self.repositoryItem.metadata objectForKey:@"cmis:lastModifiedBy"];
 }
 
--(NSString *)comment {
-    return [repositoryItem.metadata objectForKey:@"cmis:checkinComment"];
+- (NSString *)comment
+{
+    return [self.repositoryItem.metadata objectForKey:@"cmis:checkinComment"];
 }
 
--(NSString *)versionLabel {
-    return [repositoryItem.metadata objectForKey:@"cmis:versionLabel"];
+- (NSString *)versionLabel
+{
+    
+    NSString *label = [self.repositoryItem.metadata objectForKey:@"cmis:versionLabel"];
+    if (self.useNonZeroInitialVersion && [label isEqual:@"0.0"])
+    {
+        label = @"1.0";
+    }
+    return label;
 }
 
--(BOOL)isLatestVersion {
-    return [[repositoryItem.metadata objectForKey:@"cmis:isLatestVersion"] boolValue];
+- (BOOL)isLatestVersion
+{
+    return [[self.repositoryItem.metadata objectForKey:@"cmis:isLatestVersion"] boolValue];
 }
 
 @end
