@@ -381,7 +381,7 @@
 "accountdetails.alert.save.fieldserror" = "Please review the fields marked in red";
 "accountdetails.alert.save.emailerror" = "Please input a valid email address";
 "accountdetails.alert.save.porterror" = "The port and protocol appear to be invalid. Are you sure you want to save?";
-"accountdetails.alert.save.validationerror" = "Failure to authenticate. Check your account settings.";
+"accountdetails.alert.save.validationerror" = "Failure to authenticate. Check your account settings with your system administrator.";
 "accountdetails.alert.delete.title" = "Delete Account";
 "accountdetails.alert.delete.confirm" = "Are you sure you want to remove this account?";
 "accountdetails.fields.status" = "Account";
