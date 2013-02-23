@@ -45,27 +45,33 @@
 - (id)initWithSearchPattern:(NSString *)pattern folderObjectId:(NSString *)objectId accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
     BOOL usingAlfresco = [[AccountManager sharedManager] isAlfrescoAccountForAccountUUID:uuid];
-	NSString *selectFromClause = [NSString stringWithFormat:@"SELECT %@ FROM cmis:document ", kCMISDefaultPropertyFilterValue];
+	NSString *selectFromClause = [NSString stringWithFormat:@"SELECT %@ FROM cmis:document WHERE ", kCMISDefaultPropertyFilterValue];
 	NSString *whereClauseTemplate = nil;
-	
-    if (userPrefFullTextSearch()) 
+
+	if (usingAlfresco)
     {
-		whereClauseTemplate = [NSString stringWithFormat:@"WHERE CONTAINS('%@') ", pattern];
-	}
-	else {
-        if (usingAlfresco) 
+        whereClauseTemplate = [NSString stringWithFormat:@"CONTAINS('~cmis:name:\\'*%@*\\'') ", pattern];
+
+        if (userPrefFullTextSearch())
         {
-            whereClauseTemplate = [NSString stringWithFormat:@"WHERE CONTAINS('~cmis:name:\\'*%@*\\'') ", pattern];
+            whereClauseTemplate = [whereClauseTemplate stringByAppendingFormat:@"OR CONTAINS('%@') ", pattern];
         }
-        else 
+
+        if (objectId.length > 0)
         {
-            whereClauseTemplate = [NSString stringWithFormat:@"WHERE cmis:name LIKE '%%%@%%' ", pattern];
+            whereClauseTemplate = [NSString stringWithFormat:@"(%@) AND IN_TREE('%@') ", whereClauseTemplate, objectId];
         }
-	}
-    
-    if (usingAlfresco && objectId && ([objectId length] > 0)) 
+    }
+    else
     {
-        whereClauseTemplate = [whereClauseTemplate stringByAppendingFormat:@"AND IN_TREE('%@') ", objectId];
+        if (userPrefFullTextSearch())
+        {
+            whereClauseTemplate = [NSString stringWithFormat:@"CONTAINS('%@') ", pattern];
+        }
+        else
+        {
+            whereClauseTemplate = [NSString stringWithFormat:@"cmis:name LIKE '%%%@%%' ", pattern];
+        }
     }
     
     NSString *cql = [NSString stringWithFormat:@"%@ %@", selectFromClause, whereClauseTemplate];

@@ -59,8 +59,8 @@
 - (BOOL)isEqual:(id)object
 {
     RepositoryItem *site = (RepositoryItem *)self.value;
-    //Same class, same accountUUID, same tenantID, same site guid
-    if([object isKindOfClass:[NetworkSiteNode class]])
+    // Same class, same accountUUID, same tenantID, same site guid
+    if ([object isKindOfClass:[NetworkSiteNode class]])
     {
         NetworkSiteNode *otherNode = (NetworkSiteNode *)object;
         RepositoryItem *otherSite = (RepositoryItem *)[otherNode value];

@@ -54,9 +54,4 @@
     return nil;
 }
 
-- (NSString *)tenantID
-{
-    return nil;
-}
-
 @end

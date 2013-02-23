@@ -292,7 +292,8 @@
 "postprogressbar.error.uploadfailed.message" = "The upload failed, please try again";
 
 "search.unavailable.noaccount.alert" = "Please select an account, network or site to start the search";
-"search.too.many.results" = "Too many search results";
+"search.results.error" = "Search Request Failed";
+"search.results.error.detail" = "A problem occurred whilst searching";
 "searchview.footer.displaying-30-results" = "Displaying the first 30 results";
 "search.noAccounts" = "No Account Selected";
 "search.sectionHeader.site" = "Search In:";

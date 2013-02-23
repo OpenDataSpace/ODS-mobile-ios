@@ -292,7 +292,8 @@
 "postprogressbar.error.uploadfailed.message" = "Der Upload ist fehlgeschlagen, versuchen Sie es noch einmal.";
 
 "search.unavailable.noaccount.alert" = "Wählen Sie ein Konto, ein Netzwerk oder eine Site aus, um mit der Suche zu beginnen.";
-"search.too.many.results" = "Zu viele Suchergebnisse";
+"search.results.error" = "Search Request Failed";
+"search.results.error.detail" = "A problem occurred whilst searching";
 "searchview.footer.displaying-30-results" = "Es werden die ersten 30 Ergebnisse angezeigt.";
 "search.noAccounts" = "Kein Konto ausgewählt";
 "search.sectionHeader.site" = "Suchen in:";
