@@ -39,6 +39,7 @@
 @property (nonatomic, assign) id<CreateFolderRequestDelegate> delegate;
 @property (nonatomic, retain) UIBarButtonItem *createButton;
 @property (nonatomic, retain) MBProgressHUD *progressHUD;
+@property (nonatomic, retain) NSRegularExpression *regexNameValidation;
 
 @property (nonatomic, retain) RepositoryItem *parentItem;
 @property (nonatomic, retain) NSString *accountUUID;
