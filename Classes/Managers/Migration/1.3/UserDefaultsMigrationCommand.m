@@ -27,9 +27,11 @@
 
 @implementation UserDefaultsMigrationCommand
 
-- (NSArray *) userPreferences {
+- (NSArray *)userPreferences
+{
     NSString *rootPlist = [[NSBundle mainBundle] pathForResource:@"Root" ofType:@"plist"];
-    if(!rootPlist) {
+    if (!rootPlist)
+    {
         AlfrescoLogDebug(@"Could not find Settings.bundle");
         return [NSArray array];
     }
@@ -41,7 +43,7 @@
 - (void)migrateKey:(NSString *)key
 {
     id currentValue = [[NSUserDefaults standardUserDefaults] objectForKey:key];
-    if(currentValue)
+    if (currentValue)
     {
         [[FDKeychainUserDefaults standardUserDefaults] setObject:currentValue forKey:key];
         [[NSUserDefaults standardUserDefaults] removeObjectForKey:key];
@@ -53,10 +55,10 @@
     NSArray *allPreferences = [self userPreferences];
 
     // We migrate all settings with the keys in the user preferences
-    for(NSDictionary *preference in allPreferences)
+    for (NSDictionary *preference in allPreferences)
     {
         NSString *key = [preference objectForKey:@"Key"];
-        if(key)
+        if (key)
         {
             [self migrateKey:key];
         }
@@ -90,7 +92,7 @@
     
     [[NSUserDefaults standardUserDefaults] setPersistentDomain:emptySettings forName:[[NSBundle mainBundle] bundleIdentifier]];
     //We need to keep the setting that tracks the first run of the app
-    [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"FirstRun"];
+    [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:kPreferenceApplicationFirstRun];
     [[NSUserDefaults standardUserDefaults] synchronize];
     return YES; 
 }

@@ -126,52 +126,55 @@ static NSArray *unsupportedDevices;
                                    @"iPod1,1",@"iPod2,1",@"iPod3,1",@"iPod4,1",@"iPad1,1",@"i386",@"x86_64", nil] retain];
 }
 
-- (void)applicationWillEnterForeground:(UIApplication *)application {
+- (void)applicationWillEnterForeground:(UIApplication *)application
+{
     AlfrescoLogDebug(@"applicationWillEnterForeground");
     // Usually we want to recreate everything that was freed from memory on the
     // applicationWillResignActive: or applicationDidEnterBackground: but we only
     // release objects that could be recreated lazy (viewDidLoad)
     
     // we reload the userDefault in case the user changed something
-    if(![[FDKeychainUserDefaults standardUserDefaults] synchronize]) {
+    if (![[FDKeychainUserDefaults standardUserDefaults] synchronize])
+    {
         AlfrescoLogDebug(@"There was an error saving/updating the userDefaults");
     }
     
     [ASIHTTPRequest setDefaultCacheIfEnabled];
 
-    //If native TV out is unsupported we want to use TVOutManager 
-    if ( [self isTVOutUnsupported] && [[UIScreen screens] count] > 1)
+    // If native TV out is unsupported we want to use TVOutManager
+    if ([self isTVOutUnsupported])
     {
         [[TVOutManager sharedInstance] setImplementation:kTVOutImplementationCADisplayLink];
-        [[TVOutManager sharedInstance] startTVOut];
-    }
-    else if([self isTVOutUnsupported])
-    {
-        [[TVOutManager sharedInstance] setImplementation:kTVOutImplementationCADisplayLink];
+        if ([UIScreen screens].count > 1)
+        {
+            [[TVOutManager sharedInstance] startTVOut];
+        }
     }
 }
 
-- (void) applicationDidEnterBackground:(UIApplication *)application {
-    // Simulate a memory warning in our view controllers so they are responsible
-    //  free up the memory
-    
-    
-    if(splitViewController) {
+- (void)applicationDidEnterBackground:(UIApplication *)application
+{
+    // Simulate a memory warning in our view controllers
+    if (splitViewController)
+    {
         [self sendDidRecieveMemoryWarning:splitViewController];
     }
     
     BOOL forgetSessionOnBackground = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"sessionForgetWhenInactive"] && [self shouldRemoveTemporaryPassword];
-    if(forgetSessionOnBackground)
+    if (forgetSessionOnBackground)
     {
         [[SessionKeychainManager sharedManager] clearSession];
     }
 }
 
-- (void)sendDidRecieveMemoryWarning:(UIViewController *) controller {
+- (void)sendDidRecieveMemoryWarning:(UIViewController *) controller
+{
     [controller didReceiveMemoryWarning];
     
-    if([controller respondsToSelector:@selector(viewControllers)]) {
-        for(UIViewController *subController in [controller performSelector:@selector(viewControllers)]) {
+    if ([controller respondsToSelector:@selector(viewControllers)])
+    {
+        for (UIViewController *subController in [controller performSelector:@selector(viewControllers)])
+        {
             [self sendDidRecieveMemoryWarning:subController];
         }
     }
@@ -186,12 +189,13 @@ static NSArray *unsupportedDevices;
 }
 
 /* Since iOS 4 this is rarely called */
-- (void)applicationWillTerminate:(UIApplication *)application {
+- (void)applicationWillTerminate:(UIApplication *)application
+{
     AlfrescoLogDebug(@"applicationWillTerminate");
-    //We will try to clean the session download cache
-    //Since we cannot rely on this method walways getting called
-    //there's no guarantee it gets cleared until the user starts the app again
-    //which it gets clearead automatically by ASIHTTPRequest
+    // We will try to clean the session download cache
+    // Since we cannot rely on this method walways getting called
+    // there's no guarantee it gets cleared until the user starts the app again
+    // which it gets clearead automatically by ASIHTTPRequest
     [[ASIDownloadCache sharedCache] clearCachedResponsesForStoragePolicy:ASICacheForSessionDurationCacheStoragePolicy];
 }
 
@@ -199,16 +203,12 @@ static NSArray *unsupportedDevices;
 {
     // Disabling the TVOutManager before the app goes into the background.
     // We should not call the method for the devices that support native TV out mirroring
-    if ( [self isTVOutUnsupported])
+    if ([self isTVOutUnsupported])
     {
         [[TVOutManager sharedInstance] stopTVOut];
     }
     
 	[[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
-
-    //ViewControllers should listen to this notification so it can cancel active
-    //network operations
-    
 }
 
 #pragma mark - Fatal error processing
@@ -226,7 +226,6 @@ void uncaughtExceptionHandler(NSException *exception)
     }
 }
 
-
 #pragma mark - Application lifecycle
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions 
@@ -238,8 +237,6 @@ void uncaughtExceptionHandler(NSException *exception)
 
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
     
-    [AlfrescoMDMLite sharedInstance];
-
     [[SessionKeychainManager sharedManager] clearSession];
     [self registerDefaultsFromSettingsBundle];
     [[self tabBarController] setDelegate:self];
@@ -253,7 +250,6 @@ void uncaughtExceptionHandler(NSException *exception)
     }
 
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:YES];
-	
 	[[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
 	[Theme setThemeForUINavigationBar:[documentsNavController navigationBar]];
     
@@ -300,33 +296,28 @@ void uncaughtExceptionHandler(NSException *exception)
 
     [window makeKeyAndVisible];
 
-	NSURL *url = (NSURL *)[launchOptions valueForKey:UIApplicationLaunchOptionsURLKey];
-	if ([url isFileURL] && [[[UIDevice currentDevice] systemVersion] hasPrefix:@"3.2"]) {
-		[[self tabBarController] setSelectedIndex:2];
-		[self application:[UIApplication sharedApplication] handleOpenURL:url];
-	}
-    
-    //If native TV out is unsupported we want to use TVOutManager 
-    //We don't need to start the TVOutManager when there's only one screen
-    if ([self isTVOutUnsupported] && [[UIScreen screens] count] > 1)
-    {
-        [[TVOutManager sharedInstance] setImplementation:kTVOutImplementationCADisplayLink];
-        [[TVOutManager sharedInstance] startTVOut];
-    }
-    else if([self isTVOutUnsupported])
+    // If native TV out is unsupported we want to use TVOutManager
+    if ([self isTVOutUnsupported])
     {
         // But we need to initialize the sharedInstance.
         // When we call the sharedInstance for the first time, the TVOutManager starts to listen to the
         // Screen notifications (screen connect/disconnect mode change) and will activate the TVOutManager
         // when a screen connects and stop it when it disconnects
         [[TVOutManager sharedInstance] setImplementation:kTVOutImplementationCADisplayLink];
+
+        // We don't need to start the TVOutManager when there's only one screen
+        if ([UIScreen screens].count > 1)
+        {
+            [[TVOutManager sharedInstance] startTVOut];
+        }
     }
-    
+
     [self detectReset];
     [ASIHTTPRequest setDefaultCacheIfEnabled];
     [[CMISServiceManager sharedManager] loadAllServiceDocumentsWithCredentials];
     [self setUserPreferencesHash:[self hashForUserPreferences]];
-    // Call to forze the initialize of the FileProtectionManager needed to 
+
+    // Call to force the initialize of the FileProtectionManager needed to
     // register the current data protection setting
     [FileProtectionManager initialize];
     
@@ -334,6 +325,8 @@ void uncaughtExceptionHandler(NSException *exception)
                                                  name:kKeychainUserDefaultsDidChangeNotification object:nil];
     
     [ConnectivityManager sharedManager];
+    [AlfrescoMDMLite sharedInstance];
+    
 	return YES;
 }
 
@@ -394,7 +387,7 @@ static BOOL applicationIsActive = NO;
 {
     BOOL sendDiagnosticData = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"sendDiagnosticData"];
     NSString *flurryKey = externalAPIKey(APIKeyFlurry);
-    return ( (nil != flurryKey && [flurryKey length] > 0) && sendDiagnosticData ) ;
+    return (nil != flurryKey && flurryKey.length > 0) && sendDiagnosticData;
 }
 
 - (void)startFlurrySession
@@ -406,7 +399,7 @@ static BOOL applicationIsActive = NO;
     NSString *flurryKey = externalAPIKey(APIKeyFlurry);
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
     
-    if(!flurrySessionStarted)
+    if (!flurrySessionStarted)
     {
         [FlurryAnalytics startSession:flurryKey];
         flurrySessionStarted = YES;
@@ -419,7 +412,7 @@ static BOOL applicationIsActive = NO;
 
 - (void)stopFlurrySession
 {
-    if(flurrySessionStarted)
+    if (flurrySessionStarted)
     {
         // Stopping the error reporting by removing the exception handler and disabling all 
         // session reporting
@@ -432,11 +425,11 @@ static BOOL applicationIsActive = NO;
 
 - (void)registerDefaultsFromSettingsBundle 
 {
-    if(![[NSUserDefaults standardUserDefaults] objectForKey:@"FirstRun"])
+    if (![[NSUserDefaults standardUserDefaults] objectForKey:kPreferenceApplicationFirstRun])
     {
         // This is the first run, we need to remove all the "past" user defaults and init them again
         [self resetUserPreferencesToDefault];
-        [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"FirstRun"];
+        [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:kPreferenceApplicationFirstRun];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
 }
@@ -448,9 +441,11 @@ static BOOL applicationIsActive = NO;
     NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
     [[FDKeychainUserDefaults standardUserDefaults] removePersistentDomainForName:appDomain];
 	
-    for (NSDictionary *prefSpecification in preferences) {
+    for (NSDictionary *prefSpecification in preferences)
+    {
         NSString *key = [prefSpecification objectForKey:@"Key"];
-        if (key) {
+        if (key)
+        {
             [[FDKeychainUserDefaults standardUserDefaults] setObject:[prefSpecification objectForKey:@"DefaultValue"] forKey:key];
         }
     }
@@ -470,19 +465,22 @@ static BOOL applicationIsActive = NO;
 - (id)defaultPreferenceForKey:(NSString *)key
 {
     NSArray *preferences = [self userPreferences];
-    for (NSDictionary *prefSpecification in preferences) {
+    for (NSDictionary *prefSpecification in preferences)
+    {
         NSString *prefKey = [prefSpecification objectForKey:@"Key"];
-        if (nil != prefKey && [prefKey isEqualToString:key]) {
+        if (nil != prefKey && [prefKey isEqualToString:key])
+        {
             return [prefSpecification objectForKey:@"DefaultValue"];
         }
     }
     return nil;
 }
 
-
-- (NSArray *) userPreferences {
+- (NSArray *)userPreferences
+{
     NSString *rootPlist = [[NSBundle mainBundle] pathForResource:@"Root" ofType:@"plist"];
-    if(!rootPlist) {
+    if (!rootPlist)
+    {
         AlfrescoLogDebug(@"Could not find Settings.bundle");
         return [NSArray array];
     }
@@ -563,10 +561,9 @@ static BOOL applicationIsActive = NO;
     {
         // Let's remove all the old values
         FDKeychainUserDefaults *userDefaults = [FDKeychainUserDefaults standardUserDefaults];
-        NSSet *keys = [[userDefaults dictionaryRepresentation] keysOfEntriesPassingTest:^BOOL(NSString *key, id obj, BOOL *stop)
-                       {
-                           return ([key hasPrefix:@"first_launch_"]);
-                       }];
+        NSSet *keys = [[userDefaults dictionaryRepresentation] keysOfEntriesPassingTest:^BOOL(NSString *key, id obj, BOOL *stop){
+           return ([key hasPrefix:@"first_launch_"]);
+       }];
         
         for (NSString *key in keys)
         {
@@ -620,7 +617,6 @@ static BOOL applicationIsActive = NO;
 {
     UIDeviceHardware *device = [[UIDeviceHardware alloc] init];
     BOOL unsupported = [unsupportedDevices containsObject:[device platform]];
-    
     [device release];
     
     return unsupported;
@@ -673,17 +669,16 @@ static BOOL applicationIsActive = NO;
 #pragma mark - Global notifications
 
 //This will only be called if the user preferences related to the repository connection changed.
-- (void)defaultsChanged:(NSNotification *)notification {
+- (void)defaultsChanged:(NSNotification *)notification
+{
     NSString *currentHash = [self hashForUserPreferences];
-    if(![userPreferencesHash isEqualToString:currentHash])
-    
-    if(![userPreferencesHash isEqualToString:[self hashForUserPreferences]])
+    if (![userPreferencesHash isEqualToString:currentHash])
     {
         [self setUserPreferencesHash:currentHash];
         [[NSNotificationCenter defaultCenter] postUserPreferencesChangedNotification];
     }
     
-    //Resetting the flurry configuration in case the user changed the send diagnostic data setting
+    // Resetting the flurry configuration in case the user changed the send diagnostic data setting
     if ([self usingFlurryAnalytics]) 
     {
         [self startFlurrySession];
@@ -694,7 +689,8 @@ static BOOL applicationIsActive = NO;
     }
 }
 
-- (NSString *)hashForUserPreferences {
+- (NSString *)hashForUserPreferences
+{
     BOOL showCompanyHome = userPrefShowCompanyHome();
     BOOL showHiddenFiles = userPrefShowHiddenFiles();
     BOOL useLocalComments = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"useLocalComments"];
@@ -706,34 +702,36 @@ static BOOL applicationIsActive = NO;
 
 #pragma mark - Misc Migration
 
-- (void)migrateApp {
-    if(![[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"migration.DownloadMetadata"])
+- (void)migrateApp
+{
+    if (![[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"migration.DownloadMetadata"])
+    {
         [self migrateMetadataFile];
+    }
     
     NSDictionary *allPreferences = [[FDKeychainUserDefaults standardUserDefaults] dictionaryRepresentation];
-    //Contains the latest version which the migration did run
+    // Contains the latest version which the migration did run
     NSString *currentVersion = nil;
     
-    /*
-     We have to be careful when trying to fetch the current version and search for it before the
-     isFirstLaunchOfThisAppVersion call anywhere in the app start since the method will delete the old verion
-     from the userDefaults and store the newer version
+    /**
+     * We have to be careful when trying to fetch the current version and search for it before the
+     * isFirstLaunchOfThisAppVersion call anywhere in the app start since the method will delete the old verion
+     * from the userDefaults and store the newer version
      */
-    NSSet *keys = [allPreferences keysOfEntriesPassingTest:^BOOL(NSString *key, id obj, BOOL *stop)
-                   {
-                       return ([key hasPrefix:@"first_launch_"]);
-                   }];
+    NSSet *keys = [allPreferences keysOfEntriesPassingTest:^BOOL(NSString *key, id obj, BOOL *stop) {
+        return ([key hasPrefix:@"first_launch_"]);
+    }];
     
-    //We must at any given point only have one key matching the search, but before the code to delete previous
-    //entries we kept all first_launch_ keys around, in that case we want to send nil as the current version so all of the migration
-    //commands are run
-    if([keys count] == 1)
+    // We must at any given point only have one key matching the search, but before the code to delete previous
+    // entries we kept all first_launch_ keys around, in that case we want to send nil as the current version so all of the migration
+    // commands are run
+    if (keys.count == 1)
     {
         NSString *key = [[keys objectEnumerator] nextObject];
         currentVersion = [key stringByReplacingOccurrencesOfString:@"first_launch_" withString:@""];
     }
     
-    if([self isFirstLaunchOfThisAppVersion])
+    if ([self isFirstLaunchOfThisAppVersion])
     {
         [[MigrationManager sharedManager] runMigrationWithCurrentVersion:currentVersion];
     }
@@ -742,29 +740,34 @@ static BOOL applicationIsActive = NO;
 /**
  * Look for the old download metadata file. If it exists, we move it to the new path and delete the "config" folder.
  */
-- (void)migrateMetadataFile {
+- (void)migrateMetadataFile
+{
     NSString *oldPath = [[FileDownloadManager sharedInstance] oldMetadataPath];
     NSFileManager *fileManager = [NSFileManager defaultManager];
     
-    if([fileManager fileExistsAtPath:oldPath isDirectory:NO]) {
+    if ([fileManager fileExistsAtPath:oldPath isDirectory:NO])
+    {
         NSError *error = nil;
         NSString *newPath = [[FileDownloadManager sharedInstance] metadataPath];
         [fileManager moveItemAtPath:oldPath toPath:newPath error:&error];
         
-        if(error) {
-            AlfrescoLogDebug(@"Cannot move the configuration file from the old location to the new");
+        if (error)
+        {
+            AlfrescoLogWarning(@"Cannot move the configuration file from the old location to the new");
         }
     }
     
     NSString *oldConfigDir = [oldPath stringByDeletingLastPathComponent];
     BOOL isDirectory;
     
-    if([fileManager fileExistsAtPath:oldConfigDir isDirectory:&isDirectory] && isDirectory) {
+    if ([fileManager fileExistsAtPath:oldConfigDir isDirectory:&isDirectory] && isDirectory)
+    {
         NSError *error = nil;
         [fileManager removeItemAtPath:oldConfigDir error:&error];
         
-        if(error) {
-            AlfrescoLogDebug(@"Error deleting the old config folder");
+        if (error)
+        {
+            AlfrescoLogWarning(@"Error deleting the old config folder");
         }
     }
     
@@ -773,7 +776,7 @@ static BOOL applicationIsActive = NO;
 }
 
 /**
- Alfresco app version contains isHidden flag in Root.plit. If set to yes - then the default values from Root.plist are used.
+ * Alfresco app version contains isHidden flag in Root.plist. If set to yes - then the default values from Root.plist are used.
  */
 - (void)resetHiddenPreferences
 {
@@ -785,7 +788,7 @@ static BOOL applicationIsActive = NO;
         BOOL isHidden = NO;
         if ([allKeys containsObject:@"isHidden"]) 
         {
-            isHidden = (nil != [setting objectForKey:@"isHidden"]) ? [[setting objectForKey:@"isHidden"]boolValue] : NO;            
+            isHidden = (nil != [setting objectForKey:@"isHidden"]) ? [[setting objectForKey:@"isHidden"] boolValue] : NO;            
         }
         if (isHidden) 
         {
@@ -795,4 +798,5 @@ static BOOL applicationIsActive = NO;
         }
     }
 }
+
 @end

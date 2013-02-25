@@ -203,5 +203,10 @@ extern NSString * const kSiteVisibilityModerated;
 extern NSString * const kActivitiWorkflowIdPrefix;
 extern NSString * const kJBPMWorkflowIdPrefix;
 
+/**
+ * System Preference Keys
+ */
+extern NSString * const kPreferenceApplicationFirstRun;
+
 @interface Constants : NSObject
 @end

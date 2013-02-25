@@ -193,5 +193,10 @@ NSString * const kSiteVisibilityModerated = @"MODERATED";
 NSString * const kActivitiWorkflowIdPrefix = @"activiti$";
 NSString * const kJBPMWorkflowIdPrefix = @"jbpm$";
 
+/**
+ * System Preference Keys
+ */
+NSString * const kPreferenceApplicationFirstRun = @"FirstRun";
+
 @implementation Constants
 @end
