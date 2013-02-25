@@ -110,20 +110,27 @@
     MetaDataCell *cellView;
     // TODO: MetaDataCell needs to handle indentation levels
 
-	if (nil == cell.view) {
+	if (nil == cell.view)
+    {
         CGFloat viewWidth = 280.0f - (20.0f * indentationLevel);
         CGRect frame = CGRectMake(0.0f, 0.0f, viewWidth, 22.0f);
         NSArray* nibViews =  [[NSBundle mainBundle] loadNibNamed:@"MetaDataCell" owner:self options:nil];
         cellView = (MetaDataCell *)[nibViews objectAtIndex:0];
         [cellView setFrame:frame];
         [cell setView:cellView];
-	} else {
+	}
+    else
+    {
         cellView = (MetaDataCell *)cell.view;
 	}
 	
+    /**
+     * General value cleaning
+     */
     id value = [model objectForKey:key];
 	NSString *valueText = @"";
-	if (nil == value) {
+	if (nil == value)
+    {
 		valueText = @"";
 	}
 	else if ([value isKindOfClass:[NSString class]])
@@ -135,11 +142,14 @@
         valueText = [value stringValue];
 	} 
     
-    if ([self.propertyType isEqualToString:@"datetime"] || [label hasPrefix:@"Date Time"]) {
+    /**
+     * Property-specific value cleaning
+     */
+    if ([self.propertyType isEqualToString:@"datetime"] || [label hasPrefix:NSLocalizedString(@"exif:dateTimeOriginal", @"Date Time")])
+    {
         valueText = formatDateTime(valueText);
     }
-	
-    if ([label hasPrefix:@"Exposure"]) 
+	else if ([label isEqual:NSLocalizedString(@"exif:exposureTime", @"Exposure Time")])
     {
         float fValue = [value floatValue];
         if (1.0 < fValue) 
@@ -151,10 +161,10 @@
             valueText = [NSString stringWithFormat:@"1/%d",(int)((1./fValue)+0.5)];
         }
     }
-    
-    if ([label hasPrefix:@"Orientation"]) 
+    else if ([label isEqual:NSLocalizedString(@"exif:orientation", @"Orientation")])
     {
-        switch ([value intValue]) {
+        switch ([value intValue])
+        {
             case 1:
                 valueText = NSLocalizedString(@"metadata.exif.orientation.landscape.left", @"Landscape left");
                 break;

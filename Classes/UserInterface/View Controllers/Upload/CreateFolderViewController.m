@@ -32,6 +32,7 @@
     _delegate = nil;
     [_createButton release];
     [_progressHUD release];
+    [_regexNameValidation release];
     [_parentItem release];
     [_accountUUID release];
     [super dealloc];
@@ -41,6 +42,8 @@
 {
     if (self = [super init])
     {
+        // Regex taken from Alfresco contentModel.xml and re-escaped for Objective-C
+        self.regexNameValidation = [NSRegularExpression regularExpressionWithPattern:@"(.*[\"*\\\\><\\\?/:|]+.*)|(.*[.]?.*[.]+$)|(.*[ ]+$)" options:0 error:nil];
         self.parentItem = parentItem;
         self.accountUUID = accountUUID;
     }
@@ -100,11 +103,8 @@
     
     if (isValid)
     {
-        NSError *error = nil;
-        // Regex taken from Alfresco Share's forms-runtime.js "node name" validation handler
-        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"([\"*\\><\?/:|]+)|([.]?[.]+$)" options:0 error:&error];
-        NSArray *matches = [regex matchesInString:folderName options:0 range:NSMakeRange(0, folderName.length)];
-
+        // Name check against regex - requires no match
+        NSArray *matches = [self.regexNameValidation matchesInString:folderName options:0 range:NSMakeRange(0, folderName.length)];
         isValid = (matches.count == 0);
     }
     

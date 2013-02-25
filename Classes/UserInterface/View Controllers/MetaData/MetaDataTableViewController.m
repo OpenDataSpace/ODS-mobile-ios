@@ -127,13 +127,6 @@ static NSArray * cmisPropertiesToDisplay = nil;
 
 #pragma mark - View lifecycle
 
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    
-    self.tableView = nil;
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -158,7 +151,7 @@ static NSArray * cmisPropertiesToDisplay = nil;
         }
         @catch (NSException *exception)
         {
-            AlfrescoLogDebug(@"FATAL: tagging request failed on viewDidload");
+            AlfrescoLogDebug(@"Tagging request failed on viewDidload");
         }
         @finally
         {
@@ -220,41 +213,32 @@ static NSArray * cmisPropertiesToDisplay = nil;
         NSArray *sortedKeys = [metadata allKeys];
         for (NSString *key in cmisPropertiesToDisplay)
         {
-            if (![sortedKeys containsObject:key]) 
-            {
-                continue;
-            }
             id value = [model objectForKey:key];
-            NSString *valueText = @"";
-            if (nil == value)
-            {
-                valueText = @"";
-            }
-            else if ([value isKindOfClass:[NSString class]])
-            {
-                valueText = value;
-            }
-            else if ([value isKindOfClass:[NSNumber class]])
-            {
-                valueText = [value stringValue];
-            } 
-            
-            if ([valueText isEqualToString:@""])
+
+            if (![sortedKeys containsObject:key] || [value isEqual:@""])
             {
                 continue;
             }
+
+#if TARGET_ALFRESCO
+            // Alfresco versioning
+            if ([key hasPrefix:@"cmis:versionLabel"] && [value isEqual:@"0.0"])
+            {
+                [model setObject:@"1.0" forKey:key];
+            }
+#endif
             
             // Geocoding
             if ([key hasPrefix:@"cm:longitude"])
             {
                 self.hasLongitude = YES;
-                self.longitude = [valueText floatValue];
+                self.longitude = [value floatValue];
                 continue;
             }
             if ([key hasPrefix:@"cm:latitude"])
             {
                 self.hasLatitude = YES;
-                self.latitude = [valueText floatValue];
+                self.latitude = [value floatValue];
                 continue;
             }
             
@@ -289,7 +273,6 @@ static NSArray * cmisPropertiesToDisplay = nil;
                 [metadataCellGroup addObject:cellController];
             }
             [cellController release];
-
         }
         
         // TODO: Handle Edit Mode

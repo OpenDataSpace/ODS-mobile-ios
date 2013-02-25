@@ -55,7 +55,7 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
     self = [super init];
     if (self)
     {
-        _cachedAccounts = [[[AccountKeychainManager sharedManager] accountList] retain ];
+        _cachedAccounts = [[[AccountKeychainManager sharedManager] accountList] retain];
     }
     return self;
 }
@@ -64,7 +64,7 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
 
 - (NSArray *)allAccounts
 {
-    return ( [NSArray arrayWithArray:self.cachedAccounts] );
+    return [NSArray arrayWithArray:self.cachedAccounts];
 }
 
 - (NSArray *)activeAccounts
@@ -126,8 +126,8 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
         NSString *password = [evaluatedObject password];
         return [password length] != 0;
     }];
+
     NSArray *array = [NSArray arrayWithArray:[self allAccounts]];
-    
     return [array filteredArrayUsingPredicate:uuidPredicate];
 }
 
@@ -142,10 +142,14 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
     // TODO Add some type of validation before we save the account list
     //
     BOOL success = [[AccountKeychainManager sharedManager] saveAccountList:[NSMutableArray arrayWithArray:accountArray]];
-    if (success && notification)
+    if (success)
     {
-        NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithObject:kAccountUpdateNotificationAllAccounts forKey:@"type"]; 
-        [[NSNotificationCenter defaultCenter] postAccountListUpdatedNotification:userInfo];
+        [self setCachedAccounts:[[accountArray mutableCopy] autorelease]];
+        if (notification)
+        {
+            NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithObject:kAccountUpdateNotificationAllAccounts forKey:@"type"];
+            [[NSNotificationCenter defaultCenter] postAccountListUpdatedNotification:userInfo];
+        }
     }
     return success;
 }
@@ -169,7 +173,7 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
     NSMutableArray *array = [NSMutableArray arrayWithArray:[self allAccounts]];
     NSArray *accountFiltered = [array filteredArrayUsingPredicate:uuidPredicate];
     
-    if([accountFiltered count] > 0)
+    if ([accountFiltered count] > 0)
     {
         // To preserve the position of the account in the array
         AccountInfo *oldAccount = [accountFiltered objectAtIndex:0];

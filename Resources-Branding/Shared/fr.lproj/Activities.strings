@@ -54,6 +54,10 @@
 "org.alfresco.documentlibrary.files-deleted" = "{0} documents supprimés par {1}";
 "org.alfresco.documentlibrary.file-updated" = "{0} document mis à jour par {1}";
 "org.alfresco.documentlibrary.files-updated" = "{0} documents mis à jour par {1}";
+"org.alfresco.documentlibrary.folder-added" = "{1} a ajouté le dossier {0}";
+"org.alfresco.documentlibrary.folder-deleted" = "{1} a supprimé le dossier {0}";
+"org.alfresco.documentlibrary.folders-added" = "{1} a ajouté {0} dossiers";
+"org.alfresco.documentlibrary.folders-deleted" = "{1} a supprimé {0} dossiers";
 "org.alfresco.documentlibrary.google-docs-checkout" = "{0} document réservé dans Google Docs par {1}";
 "org.alfresco.documentlibrary.google-docs-checkin" = "{0} document libéré de Google Docs par {1}";
 "org.alfresco.documentlibrary.inline-edit" = "{0} document modifié par {1}";
