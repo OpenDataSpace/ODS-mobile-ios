@@ -799,14 +799,14 @@ NSInteger const kGetCommentsCountTag = 6;
     if (self.likeBarButton.toggleState == YES)
     {
         self.likeRequest = [LikeHTTPRequest postHTTPRequestForNodeRef:nodeRef 
-                                                          accountUUID:self.fileMetadata.accountUUID
-                                                             tenantID:self.fileMetadata.tenantID];
+                                                          accountUUID:self.selectedAccountUUID
+                                                             tenantID:self.tenantID];
     }
     else
     {
         self.likeRequest = [LikeHTTPRequest deleteHTTPRequest:nodeRef 
-                                                  accountUUID:self.fileMetadata.accountUUID
-                                                     tenantID:self.fileMetadata.tenantID];
+                                                  accountUUID:self.selectedAccountUUID
+                                                     tenantID:self.tenantID];
     }
     
     [self.likeRequest setLikeDelegate:self];

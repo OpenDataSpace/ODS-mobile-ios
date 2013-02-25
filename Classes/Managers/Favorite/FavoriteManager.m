@@ -1243,12 +1243,16 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
  */
 - (void)accountsListChanged:(NSNotification *)notification
 {
-    NSString *accountID = [notification.userInfo objectForKey:@"uuid"];
+    NSString *accountUUID = [notification.userInfo objectForKey:@"uuid"];
     NSString *changeType = [notification.userInfo objectForKey:@"type"];
     
-    if (accountID != nil && ![accountID isEqualToString:@""] && changeType != kAccountUpdateNotificationDelete)
+    if (accountUUID != nil && ![accountUUID isEqualToString:@""] && changeType != kAccountUpdateNotificationDelete)
     {
-        [self favoriteUnfavoriteNode:@"" withAccountUUID:accountID andTenantID:nil favoriteAction:FavoriteManagerActionGetNodes];
+        AccountInfo *accountInfo = [[AccountManager sharedManager] accountInfoForUUID:accountUUID];
+        if (accountInfo.accountStatus == FDAccountStatusActive)
+        {
+            [self favoriteUnfavoriteNode:@"" withAccountUUID:accountUUID andTenantID:nil favoriteAction:FavoriteManagerActionGetNodes];
+        }
     }
 }
 

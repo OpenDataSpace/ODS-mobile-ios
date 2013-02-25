@@ -30,6 +30,7 @@
 #import "AccountInfo.h"
 #import "AccountManager.h"
 #import "SessionKeychainManager.h"
+#import "RepositoryServices.h"
 
 NSInteger const kFileDoesNotExpire = 0;
 NSInteger const kFileIsExpired = -1;
@@ -262,16 +263,21 @@ NSInteger const kFileIsExpired = -1;
 - (NSTimeInterval)calculateTimeRemainingToExpireForFile:(NSString *)fileName
 {
     NSDictionary *downloadInfo = [self downloadInfoForFilename:fileName];
-    AccountInfo *info = [[AccountManager sharedManager] accountInfoForUUID:[downloadInfo objectForKey:@"accountUUID"]];
-    NSDate *lastSuccessfulLogin = [NSDate dateWithTimeIntervalSince1970:[info.accountStatusInfo successTimestamp]];
-    NSTimeInterval interval = [[NSDate date] timeIntervalSinceDate:lastSuccessfulLogin];
+    RepositoryInfo *repositoryInfo = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:downloadInfo[@"accountUUID"] tenantID:nil];
     
-    // Expiry time property is stored in milliseconds
-    NSTimeInterval expiresAfter = [[[downloadInfo objectForKey:@"metadata"] objectForKey:kFileExpiryKey] doubleValue] / 1000.;
-
-    if (expiresAfter > 0)
+    if (!repositoryInfo.hasValidSession)
     {
-        return MAX(expiresAfter - interval, kFileIsExpired);
+        AccountInfo *info = [[AccountManager sharedManager] accountInfoForUUID:downloadInfo[@"accountUUID"]];
+        NSDate *lastSuccessfulLogin = [NSDate dateWithTimeIntervalSince1970:[info.accountStatusInfo successTimestamp]];
+        NSTimeInterval interval = [[NSDate date] timeIntervalSinceDate:lastSuccessfulLogin];
+        
+        // Expiry time property is stored in milliseconds
+        NSTimeInterval expiresAfter = [downloadInfo[@"metadata"][kFileExpiryKey] doubleValue] / 1000.;
+        
+        if (expiresAfter > 0)
+        {
+            return MAX(expiresAfter - interval, kFileIsExpired);
+        }
     }
     
     return kFileDoesNotExpire;
@@ -292,21 +298,18 @@ NSInteger const kFileIsExpired = -1;
     
     // We create an empty NSMutableDictionary if the file doesn't exists otherwise
     // we create it from the file
-    if ([fileManager fileExistsAtPath: path])
+    if ([fileManager fileExistsAtPath:path])
     {
-        //downloadMetadata = [[NSMutableDictionary alloc] initWithContentsOfFile: path];
-        NSPropertyListFormat format;
-        NSString *error;
+        NSError *error = nil;
         NSData *plistData = [NSData dataWithContentsOfFile:path];
         
         //We assume the stored data must be a dictionary
         [downloadMetadata release];
-        downloadMetadata = [[NSPropertyListSerialization propertyListFromData:plistData mutabilityOption:NSPropertyListMutableContainers format:&format errorDescription:&error] retain];
+        downloadMetadata = [[NSPropertyListSerialization propertyListWithData:plistData options:NSPropertyListMutableContainers format:NULL error:&error] retain];
         
         if (!downloadMetadata)
         {
-            AlfrescoLogDebug(@"Error reading plist from file '%s', error = '%s'", [path UTF8String], [error UTF8String]);
-            [error release];
+            AlfrescoLogDebug(@"Error reading plist from file '%@', error = '%@'", path, error.localizedDescription);
         }
     }
     else
@@ -320,12 +323,9 @@ NSInteger const kFileIsExpired = -1;
 - (BOOL)writeMetadata
 {
     NSString *path = [self metadataPath];
-    //[downloadMetadata writeToFile:path atomically:YES];
-    NSData *binaryData;
-    NSString *error;
-    
+    NSError *error = nil;
     NSDictionary *downloadPlist = [self readMetadata];
-    binaryData = [NSPropertyListSerialization dataFromPropertyList:downloadPlist format:NSPropertyListBinaryFormat_v1_0 errorDescription:&error];
+    NSData *binaryData = [NSPropertyListSerialization dataWithPropertyList:downloadPlist format:NSPropertyListBinaryFormat_v1_0 options:0 error:&error];
     if (binaryData)
     {
         [binaryData writeToFile:path atomically:YES];
@@ -334,8 +334,7 @@ NSInteger const kFileIsExpired = -1;
     }
     else
     {
-        AlfrescoLogDebug(@"Error writing plist to file '%s', error = '%s'", [path UTF8String], [error UTF8String]);
-        [error release];
+        AlfrescoLogDebug(@"Error writing plist to file '%@', error = '%@'", path, error.localizedDescription);
         return NO;
     }
     return YES;

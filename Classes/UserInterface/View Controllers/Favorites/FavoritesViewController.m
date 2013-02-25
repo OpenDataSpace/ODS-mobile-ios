@@ -685,11 +685,13 @@ static const NSInteger delayToShowErrors = 2.0f;
  */
 - (void)accountsListChanged:(NSNotification *)notification
 {
-    NSString *accountID = notification.userInfo[@"uuid"];
-    AccountStatus *accountStatus = notification.userInfo[@"accountStatus"];
-    if (accountID != nil && ![accountID isEqualToString:@""] && !accountStatus.isError && accountStatus.isActive)
+    NSString *accountUUID = notification.userInfo[@"uuid"];
+    NSString *changeType = notification.userInfo[@"type"];
+
+    if (accountUUID != nil && ![accountUUID isEqualToString:@""] && changeType != kAccountUpdateNotificationDelete)
     {
-        if (![self.favoritesRequest isExecuting])
+        AccountInfo *accountInfo = [[AccountManager sharedManager] accountInfoForUUID:accountUUID];
+        if (accountInfo.accountStatus == FDAccountStatusActive && ![self.favoritesRequest isExecuting])
         {
             [self loadFavorites:SyncTypeAutomatic];
         }
