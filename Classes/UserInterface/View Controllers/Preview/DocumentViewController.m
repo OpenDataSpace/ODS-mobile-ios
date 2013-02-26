@@ -49,6 +49,7 @@
 #import "SaveBackMetadata.h"
 #import "NodeLocationHTTPRequest.h"
 #import "DownloadInfo.h"
+#import "CustomLongPressGestureRecognizer.h"
 
 #define kToolbarSpacerWidth 7.5f
 #define kFrameLoadCodeError 102
@@ -281,6 +282,16 @@ NSInteger const kGetCommentsCountTag = 6;
     return YES;
 }
 
+/**
+ * CustomLongPressGesture Recognizer Action
+ */
+- (void)longPressDetected:(UIGestureRecognizer *)sender
+{
+    // Toggling the userInteractionEnabled flag will remove the UIMenuController from view
+    [self.webView setUserInteractionEnabled:NO];
+    [self.webView setUserInteractionEnabled:YES];
+}
+
 - (void)handleSyncObstaclesNotification:(NSNotification *)notification
 {
     // Only relevant if device is not iPad
@@ -355,11 +366,17 @@ NSInteger const kGetCommentsCountTag = 6;
     NSString *title = self.fileMetadata ? self.fileMetadata.filename : self.fileName;
     
     // Double-tap toggles the navigation bar
-    UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+    UITapGestureRecognizer *tapRecognizer = [[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)] autorelease];
     [tapRecognizer setDelegate:self];
     [tapRecognizer setNumberOfTapsRequired:2];
     [self.webView addGestureRecognizer:tapRecognizer];
-    [tapRecognizer release];
+    
+    // Optionally override long-press to suppress UIMenuController
+    if (self.isRestrictedDocument && [self.fileName.pathExtension isEqualToCaseInsensitiveString:@"pdf"])
+    {
+        CustomLongPressGestureRecognizer *longPressRecognizer = [[[CustomLongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressDetected:)] autorelease];
+        [self.webView addGestureRecognizer:longPressRecognizer];
+    }
     
     // For the ipad toolbar we don't have the flexible space as the first element of the toolbar items
 	NSInteger actionButtonIndex = IS_IPAD ? 0 : 1;

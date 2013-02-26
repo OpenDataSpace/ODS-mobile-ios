@@ -419,6 +419,8 @@
 		27D8F94C1593768A00BFC320 /* stop-transfer.png in Resources */ = {isa = PBXBuildFile; fileRef = 27D8F9491593768A00BFC320 /* stop-transfer.png */; };
 		27D8F94D1593768A00BFC320 /* stop-transfer@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27D8F94A1593768A00BFC320 /* stop-transfer@2x.png */; };
 		27D8F94E1593768A00BFC320 /* stop-transfer@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27D8F94A1593768A00BFC320 /* stop-transfer@2x.png */; };
+		27DB063716DD25EC0002B040 /* CustomLongPressGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 27DB063616DD25EC0002B040 /* CustomLongPressGestureRecognizer.m */; };
+		27DB063816DD25EC0002B040 /* CustomLongPressGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 27DB063616DD25EC0002B040 /* CustomLongPressGestureRecognizer.m */; };
 		27E1EFBA156DB8CF00E7BB07 /* DownloadNetworkQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 27E1EFB9156DB8CF00E7BB07 /* DownloadNetworkQueue.m */; };
 		27E1EFBB156DB8CF00E7BB07 /* DownloadNetworkQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 27E1EFB9156DB8CF00E7BB07 /* DownloadNetworkQueue.m */; };
 		27E659D315091BD300AD4B61 /* DownloadSummaryTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 27E659D215091BD300AD4B61 /* DownloadSummaryTableViewCell.m */; };
@@ -1936,6 +1938,8 @@
 		27D852EE160241D60046D56A /* send-email-link@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "send-email-link@2x.png"; sourceTree = "<group>"; };
 		27D8F9491593768A00BFC320 /* stop-transfer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stop-transfer.png"; sourceTree = "<group>"; };
 		27D8F94A1593768A00BFC320 /* stop-transfer@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stop-transfer@2x.png"; sourceTree = "<group>"; };
+		27DB063516DD25EC0002B040 /* CustomLongPressGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomLongPressGestureRecognizer.h; sourceTree = "<group>"; };
+		27DB063616DD25EC0002B040 /* CustomLongPressGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomLongPressGestureRecognizer.m; sourceTree = "<group>"; };
 		27E1EFB8156DB8CF00E7BB07 /* DownloadNetworkQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DownloadNetworkQueue.h; path = Download/DownloadNetworkQueue.h; sourceTree = "<group>"; };
 		27E1EFB9156DB8CF00E7BB07 /* DownloadNetworkQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DownloadNetworkQueue.m; path = Download/DownloadNetworkQueue.m; sourceTree = "<group>"; };
 		27E659D115091BD300AD4B61 /* DownloadSummaryTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadSummaryTableViewCell.h; sourceTree = "<group>"; };
@@ -4377,6 +4381,8 @@
 		3C8202A214E1A82000A67645 /* Controls */ = {
 			isa = PBXGroup;
 			children = (
+				27DB063516DD25EC0002B040 /* CustomLongPressGestureRecognizer.h */,
+				27DB063616DD25EC0002B040 /* CustomLongPressGestureRecognizer.m */,
 				FCFEAE5313F1E16F00453DA2 /* DateIconView.h */,
 				FCFEAE5313F1E16F00453D9F /* DateIconView.m */,
 				FCFEAE5313F1E16F00453D96 /* AsyncLoadingUIImageView.h */,
@@ -7029,6 +7035,7 @@
 				27D4728C16CA7D980080C7FB /* AlfrescoLog.m in Sources */,
 				27C5EEA916D574500075E70F /* CreateFolderViewController.m in Sources */,
 				27C5EEB016D594450075E70F /* CMISCreateFolderHTTPRequest.m in Sources */,
+				27DB063716DD25EC0002B040 /* CustomLongPressGestureRecognizer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7433,6 +7440,7 @@
 				27D4728D16CA7D980080C7FB /* AlfrescoLog.m in Sources */,
 				27C5EEAA16D574500075E70F /* CreateFolderViewController.m in Sources */,
 				27C5EEB116D594450075E70F /* CMISCreateFolderHTTPRequest.m in Sources */,
+				27DB063816DD25EC0002B040 /* CustomLongPressGestureRecognizer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
