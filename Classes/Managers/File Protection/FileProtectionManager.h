@@ -31,10 +31,6 @@
 @protocol FileProtectionStrategyProtocol;
 
 @interface FileProtectionManager : NSObject <UIAlertViewDelegate>
-{
-    id<FileProtectionStrategyProtocol> _strategy;
-    UIAlertView *_dataProtectionDialog;
-}
 
 /*
  Used to display a UI when the user is waiting that the app protects all of the current (unprotected) files in the download folder.
