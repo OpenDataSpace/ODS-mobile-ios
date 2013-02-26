@@ -32,26 +32,28 @@
 #import "ProgressAlertView.h"
 #import "FileUtils.h"
 
-FileProtectionManager *sharedInstance;
 static const BOOL isDevelopment = NO;
 static BOOL isDataProtectionEnabled = NO;
 
-static NSInteger const kFileProtectionAvailableTag = 0;
-static NSInteger const kProtectDownloadsTag = 1;
+static NSInteger const kDataProtectionDialogTag = 0;
+
+@interface FileProtectionManager ()
+@property (nonatomic, retain) id<FileProtectionStrategyProtocol> strategy;
+@property (nonatomic, retain) UIAlertView *dataProtectionDialog;
+@end
 
 @implementation FileProtectionManager
-@synthesize progressAlertView = _progressAlertView;
 
 + (void)initialize
 {
-    if(isDevelopment)
+    if (isDevelopment)
     {
         [[FDKeychainUserDefaults standardUserDefaults] setBool:NO forKey:@"dataProtectionPrompted"];
         [[FDKeychainUserDefaults standardUserDefaults] synchronize];
     }
     
     isDataProtectionEnabled = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"dataProtectionEnabled"];
-    //Creating the shared instance to initialize the notification observers
+    // Creating the shared instance to initialize the notification observers
     [self sharedInstance];
 }
 
@@ -67,7 +69,7 @@ static NSInteger const kProtectDownloadsTag = 1;
 - (id)init
 {
     self = [super init];
-    if(self)
+    if (self)
     {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clearDownloadCache) name:UIApplicationDidEnterBackgroundNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkDataProtection) name:kKeychainUserDefaultsDidChangeNotification object:nil];
@@ -75,20 +77,16 @@ static NSInteger const kProtectDownloadsTag = 1;
     return self;
 }
 
-/*
- * It chooses a given protection strategy depending if the file protection is enabled or not.
+/**
+ * Choose a given protection strategy depending if the file protection is enabled or not.
  */
 - (id<FileProtectionStrategyProtocol>)selectStrategy
 {
-    if([self isFileProtectionEnabled])
+    if ([self isFileProtectionEnabled])
     {
         return [[[FileProtectionDefaultStrategy alloc] init] autorelease];
     } 
-    else 
-    {
-        return [[[NoFileProtectionStrategy alloc] init] autorelease];
-    }
-
+    return [[[NoFileProtectionStrategy alloc] init] autorelease];
 }
 
 - (BOOL)completeProtectionForFileAtPath:(NSString *)path
@@ -112,76 +110,72 @@ static NSInteger const kProtectDownloadsTag = 1;
 {
     // We show the alert only if the dataProtectionEnabled user preference is not set
     BOOL dataProtectionPrompted = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"dataProtectionPrompted"];
-    if(!dataProtectionPrompted && !_dataProtectionDialog)
+    if (!dataProtectionPrompted && !self.dataProtectionDialog)
     {
-        _dataProtectionDialog = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"dataProtection.available.title", @"Data Protection")
-                                                           message:NSLocalizedString(@"dataProtection.available.message", @"Data protection is available. Do you want to enable it?")
-                                                          delegate:self
-                                                 cancelButtonTitle:NSLocalizedString(@"No", @"No")
-                                                 otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil];
-
-        [_dataProtectionDialog setTag:kFileProtectionAvailableTag];
-        [_dataProtectionDialog show];
+        self.dataProtectionDialog = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"dataProtection.available.title", @"Data Protection")
+                                                                message:NSLocalizedString(@"dataProtection.available.message", @"Data protection is available. Do you want to enable it?")
+                                                               delegate:self
+                                                      cancelButtonTitle:NSLocalizedString(@"No", @"No")
+                                                      otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil] autorelease];
+        [self.dataProtectionDialog setTag:kDataProtectionDialogTag];
+        [self.dataProtectionDialog show];
     }
 }
 
-#pragma mark -
-#pragma mark Alert View Delegate
+#pragma mark - Alert View Delegate
+
 - (void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex
 {
-    if([alertView tag] == kFileProtectionAvailableTag)
+    if (alertView.tag == kDataProtectionDialogTag)
     {
         BOOL dataProtectionEnabled = NO;
-        if(buttonIndex == 1)
+        if (buttonIndex != self.dataProtectionDialog.cancelButtonIndex)
         {
             dataProtectionEnabled = YES;
         }
         [[FDKeychainUserDefaults standardUserDefaults] setBool:dataProtectionEnabled forKey:@"dataProtectionEnabled"];
         [[FDKeychainUserDefaults standardUserDefaults] setBool:YES forKey:@"dataProtectionPrompted"];
         [[FDKeychainUserDefaults standardUserDefaults] synchronize];
-        [_dataProtectionDialog release];
-        _dataProtectionDialog = nil;
-    } 
-    else if([alertView tag] == kProtectDownloadsTag)
-    {
-        if(buttonIndex == 1)
-        {
-            
-        }
     }
 }
 
-#pragma mark -
-#pragma mark Notification methods
+#pragma mark - Notification methods
+
 - (void)checkDataProtection
 {
     BOOL currentDataProtection = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"dataProtectionEnabled"];
-    //Comparing the current data protection value with the previous data protection value
-    // If the new value is YES then we prompt the user if the app should protect all the existing downloads
-    if(currentDataProtection && !isDataProtectionEnabled)
+
+    // Comparing the current data protection value with the previous data protection value.
+    // If the values differ, then loop through and apply protection depending on the appropriate strategy.
+    if (currentDataProtection != isDataProtectionEnabled)
     {
-        ProgressAlertView *alertView = [[ProgressAlertView alloc] initWithMessage:NSLocalizedString(@"dataProtection.protectDownloadsProgress.message", @"Protecting downloaded documents")];
+        NSString *progressMessage = currentDataProtection ?
+            NSLocalizedString(@"dataProtection.protectDownloadsProgress.message", @"Protecting downloaded documents") :
+            NSLocalizedString(@"dataProtection.unprotectDownloadsProgress.message", @"Unprotecting downloaded documents");
+
+        ProgressAlertView *alertView = [[ProgressAlertView alloc] initWithMessage:progressMessage];
         [self setProgressAlertView:alertView];
         [alertView setMinTime:1.0f];
         [alertView show];
         
-        [FileUtils enumerateSavedFilesUsingBlock:^(NSString *path){
+        [FileUtils enumerateSavedFilesUsingBlock:^(NSString *path) {
             [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:path];
         }];
         
         [alertView hide];
-        
         [alertView release];
     }
+    
     isDataProtectionEnabled = currentDataProtection;
 }
-/*
- This manager is responsable of clearing the cache because we want to keep the File Protection
- related funcionality in this class.
+
+/**
+ * This manager is responsable of clearing the cache because we want to keep the File Protection
+ * related funcionality in this class.
  */
 - (void)clearDownloadCache
 {
-    if([self isFileProtectionEnabled])
+    if ([self isFileProtectionEnabled])
     {
         [[ASIDownloadCache sharedCache] clearCachedResponsesForStoragePolicy:ASICacheForSessionDurationCacheStoragePolicy];
     }
@@ -189,12 +183,12 @@ static NSInteger const kProtectDownloadsTag = 1;
 
 + (FileProtectionManager *)sharedInstance
 {
-    if(!sharedInstance)
-    {
-        sharedInstance = [[FileProtectionManager alloc] init];
-    }
-    
-    return sharedInstance;
+    static dispatch_once_t predicate = 0;
+    __strong static id sharedObject = nil;
+    dispatch_once(&predicate, ^{
+        sharedObject = [[self alloc] init];
+    });
+    return sharedObject;
 }
 
 @end

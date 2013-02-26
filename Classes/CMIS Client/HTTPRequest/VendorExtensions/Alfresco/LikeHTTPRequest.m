@@ -51,7 +51,7 @@
 //  KEYPATH: data.ratings.likesRatingScheme.[rating|appliedBy]
 + (id)getHTTPRequestForNodeRef:(NodeRef *)nodeRef accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
-    NSDictionary *infoDictionary = [NSDictionary dictionaryWithObject:nodeRef forKey:@"NodeRef"];
+    NSDictionary *infoDictionary = @{@"NodeRef" : nodeRef};
     LikeHTTPRequest *request = [LikeHTTPRequest requestForServerAPI:kServerAPIRatings accountUUID:uuid 
                                                            tenantID:aTenantID infoDictionary:infoDictionary];
     [request setTag:kLike_GET_Request];
@@ -67,24 +67,23 @@
 + (id)postHTTPRequestForNodeRef:(NodeRef *)nodeRef accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
     // JSON: {"rating":1, "ratingScheme":"likesRatingScheme"}
-    NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjectsAndKeys:@"1", @"rating",
-                                    @"likesRatingScheme", @"ratingScheme",
-                                    nil];
+    NSDictionary *jsonDictionary = @{@"rating" : @1,
+                                     @"ratingScheme" : @"likesRatingScheme"};
     
-    NSDictionary *infoDictionary = [NSDictionary dictionaryWithObject:nodeRef forKey:@"NodeRef"];
+    NSDictionary *infoDictionary = @{@"NodeRef" : nodeRef};
 
     LikeHTTPRequest *request = [LikeHTTPRequest requestForServerAPI:kServerAPIRatings accountUUID:uuid tenantID:aTenantID infoDictionary:infoDictionary];
     [request setTag:kLike_POST_Request];
     [request setNodeRef:nodeRef];
     [request setPostBody:[request mutableDataFromJSONObject:jsonDictionary]];
     [request setContentLength:[request.postBody length]];
+    [request addRequestHeader:@"Content-Type" value:@"application/json"];
     [request setRequestMethod:@"POST"];
 
     return request;
 }
 
 //  DELETE  /api/node/{store_type}/{store_id}/{id}/ratings/likeRatingsScheme
-// {}
 + (id)deleteHTTPRequest:(NodeRef *)nodeRef accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
     static NSString *likesRatingSchemeURLPathComponent = @"likesRatingScheme";
@@ -98,6 +97,7 @@
     
     [request setTag:kLike_DELETE_Request];
     [request setNodeRef:nodeRef];
+    [request setShouldAttemptPersistentConnection:NO]; // workaround for multiple DELETE requests observed with Wireshark
     [request setRequestMethod:@"DELETE"];
 
     return request;
@@ -157,8 +157,10 @@
     {
         [self.likeDelegate performSelector:@selector(likeRequest:failedWithError:) withObject:self withObject:theError];
     }
-
-    [super failWithError:theError];
+    else
+    {
+        [super failWithError:theError];
+    }
 }
 
 @end

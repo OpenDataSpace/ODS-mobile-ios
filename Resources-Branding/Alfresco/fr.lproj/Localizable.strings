@@ -456,6 +456,7 @@
 "dataProtection.protectDownloads.title" = "Protection des données";
 "dataProtection.protectDownloads.message" = "Protéger les téléchargements existants maintenant? Les nouveaux téléchargements seront toujours protégés";
 "dataProtection.protectDownloadsProgress.message" = "Protection des documents téléchargés";
+"dataProtection.unprotectDownloadsProgress.message" = "Unprotecting the downloaded documents";
 
 "migration.migrateApp.message" = "Migration des paramètres d'application";
 

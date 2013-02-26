@@ -58,6 +58,9 @@
         MBProgressHUD *tmpHud = [[MBProgressHUD alloc] initWithView:alertView];
         [alertView addSubview:tmpHud];
         
+        // Move the hud down a little to make room for two lines of text
+        [tmpHud setYOffset:20.0f];
+        
         [tmpHud setRemoveFromSuperViewOnHide:YES];
         [tmpHud setTaskInProgress:YES];
         [tmpHud setMinShowTime:kHUDMinShowTime];
