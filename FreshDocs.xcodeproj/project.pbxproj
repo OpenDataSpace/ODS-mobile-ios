@@ -11,6 +11,8 @@
 		083098A6161DC546002BB3BA /* AbstractPreviewManagerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 083098A4161DC546002BB3BA /* AbstractPreviewManagerDelegate.m */; };
 		083098AA161DC862002BB3BA /* SearchPreviewManagerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 083098A9161DC861002BB3BA /* SearchPreviewManagerDelegate.m */; };
 		083098AB161DC862002BB3BA /* SearchPreviewManagerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 083098A9161DC861002BB3BA /* SearchPreviewManagerDelegate.m */; };
+		08325D7E16DCD6490087B772 /* CustomLongPressGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 08325D7D16DCD6490087B772 /* CustomLongPressGestureRecognizer.m */; };
+		08325D7F16DCD6490087B772 /* CustomLongPressGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 08325D7D16DCD6490087B772 /* CustomLongPressGestureRecognizer.m */; };
 		0854777115E395CD002E9944 /* AbstractUploadsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0854777015E395CD002E9944 /* AbstractUploadsManager.m */; };
 		0854777A15E3BAA0002E9944 /* FavoritesUploadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0854777915E3BAA0002E9944 /* FavoritesUploadManager.m */; };
 		0854778215E3E3AD002E9944 /* AbstractUploadsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0854777015E395CD002E9944 /* AbstractUploadsManager.m */; };
@@ -1668,6 +1670,8 @@
 		083098A4161DC546002BB3BA /* AbstractPreviewManagerDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AbstractPreviewManagerDelegate.m; path = Preview/AbstractPreviewManagerDelegate.m; sourceTree = "<group>"; };
 		083098A8161DC861002BB3BA /* SearchPreviewManagerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchPreviewManagerDelegate.h; sourceTree = "<group>"; };
 		083098A9161DC861002BB3BA /* SearchPreviewManagerDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchPreviewManagerDelegate.m; sourceTree = "<group>"; };
+		08325D7C16DCD6490087B772 /* CustomLongPressGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomLongPressGestureRecognizer.h; sourceTree = "<group>"; };
+		08325D7D16DCD6490087B772 /* CustomLongPressGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomLongPressGestureRecognizer.m; sourceTree = "<group>"; };
 		0854776F15E395CD002E9944 /* AbstractUploadsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbstractUploadsManager.h; sourceTree = "<group>"; };
 		0854777015E395CD002E9944 /* AbstractUploadsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = AbstractUploadsManager.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		0854777815E3BAA0002E9944 /* FavoritesUploadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FavoritesUploadManager.h; sourceTree = "<group>"; };
@@ -4673,6 +4677,8 @@
 				3C7CD8AB15D5BE2C0031A6B6 /* EditTextDocumentViewController.xib */,
 				08E1AFC316ADAC91000F3298 /* CustomWebView.h */,
 				08E1AFC416ADAC91000F3298 /* CustomWebView.m */,
+				08325D7C16DCD6490087B772 /* CustomLongPressGestureRecognizer.h */,
+				08325D7D16DCD6490087B772 /* CustomLongPressGestureRecognizer.m */,
 			);
 			path = Preview;
 			sourceTree = "<group>";
@@ -7029,6 +7035,7 @@
 				27D4728C16CA7D980080C7FB /* AlfrescoLog.m in Sources */,
 				27C5EEA916D574500075E70F /* CreateFolderViewController.m in Sources */,
 				27C5EEB016D594450075E70F /* CMISCreateFolderHTTPRequest.m in Sources */,
+				08325D7E16DCD6490087B772 /* CustomLongPressGestureRecognizer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7433,6 +7440,7 @@
 				27D4728D16CA7D980080C7FB /* AlfrescoLog.m in Sources */,
 				27C5EEAA16D574500075E70F /* CreateFolderViewController.m in Sources */,
 				27C5EEB116D594450075E70F /* CMISCreateFolderHTTPRequest.m in Sources */,
+				08325D7F16DCD6490087B772 /* CustomLongPressGestureRecognizer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
