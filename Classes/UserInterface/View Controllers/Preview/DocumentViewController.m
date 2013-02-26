@@ -49,6 +49,7 @@
 #import "SaveBackMetadata.h"
 #import "NodeLocationHTTPRequest.h"
 #import "DownloadInfo.h"
+#import "CustomLongPressGestureRecognizer.h"
 
 #define kToolbarSpacerWidth 7.5f
 #define kFrameLoadCodeError 102
@@ -337,6 +338,12 @@ NSInteger const kGetCommentsCountTag = 6;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleFilesExpired:) name:kNotificationExpiredFiles object:nil];
     
     self.webView.isRestrictedDocument = self.isRestrictedDocument;
+    
+    if (self.isRestrictedDocument && [[self.fileName pathExtension] isEqualToCaseInsensitiveString:@"pdf"])
+    {
+        CustomLongPressGestureRecognizer * longPress = [[CustomLongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressDetected)];
+        [self.webView addGestureRecognizer:longPress];
+    }
     
     RepositoryInfo *repoInfo = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:self.selectedAccountUUID tenantID:self.tenantID];
     AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:self.selectedAccountUUID];
@@ -1329,6 +1336,15 @@ NSInteger const kGetCommentsCountTag = 6;
             [self.navigationController popViewControllerAnimated:YES];
         }
     }
+}
+
+/**
+ * CustomLongPressGesture Recognizer Action
+ */
+-(void)longPressDetected
+{
+    [self.webView setUserInteractionEnabled:NO];
+    [self.webView setUserInteractionEnabled:YES];
 }
 
 #pragma mark - UIWebViewDelegate
