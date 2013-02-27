@@ -54,6 +54,9 @@
 {
     [super viewDidLoad];
 
+    // Title
+    [self.navigationItem setTitle:NSLocalizedString(@"add.actionsheet.create-folder", @"Create Folder")];
+    
     // Cancel button
     UIBarButtonItem *cancelButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(handleCancelButton:)] autorelease];
     cancelButton.title = NSLocalizedString(@"cancelButton", @"Cancel");
