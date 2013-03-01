@@ -1104,16 +1104,20 @@ static NSInteger kAlertDeleteAccountTag = 1;
     }
     else if ([updateType isEqualToString:kAccountUpdateNotificationEdit] && [uuid isEqualToString:self.accountInfo.uuid])
     {
-        //will invalidate the sitesmanagerservice and also will remove RepositoryInfo objects
+        // Will invalidate the sitesmanagerservice and also will remove RepositoryInfo objects
+        // Keeping the cached tenants and RepositoryInfo caused problems when the change in the account involved the host,
+        // service document or credentials. It basically it tried to use the cached URL's but with the new credentials causing
+        // password prompts to appear through the app.
         NSDictionary *tenants = [SitesManagerService sharedInstancesForAccountUUID:self.accountInfo.uuid];
         
         for( NSString *key in tenants.allKeys)
         {
             [[SitesManagerService sharedInstanceForAccountUUID:self.accountInfo.uuid tenantID:key] invalidateResults];
         }
-        CMISServiceManager *serviceManager = [CMISServiceManager sharedManager];
-        [serviceManager deleteRepositoriesAndCachedTenantId:self.accountInfo.uuid];
+        [[CMISServiceManager sharedManager] deleteRepositoriesAndCachedTenantId:self.accountInfo.uuid];
 
+        // Updated the AccountInfo so that the account information in this read-only controller
+        // updates with the changes
         [self setAccountInfo:[[AccountManager sharedManager] accountInfoForUUID:uuid]];
         [self setModel:[self accountInfoToModel:accountInfo]];
         [self setTitle:[self.accountInfo description]];
