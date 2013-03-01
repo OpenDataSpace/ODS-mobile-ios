@@ -284,6 +284,12 @@ NSString * const kProductNameEnterprise = @"Enterprise";
     [self startServiceRequestsForAccountUUIDs:[NSArray arrayWithObject:uuid] isForRestrictedFiles:isForRestrictedFiles];
 }
 
+- (void)deleteRepositoriesAndCachedTenantId:(NSString *)uuid
+{
+    [[RepositoryServices shared] removeRepositoriesForAccountUuid:uuid];
+    [[self cachedTenantIDDictionary] removeObjectForKey:uuid];
+}
+
 - (void)deleteServiceDocumentForAccountUuid:(NSString *)uuid 
 {
     if ([self queueIsRunning])

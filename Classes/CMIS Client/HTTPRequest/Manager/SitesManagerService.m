@@ -557,17 +557,7 @@ static NSMutableDictionary *sharedInstances;
  */
 + (SitesManagerService *)sharedInstanceForAccountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
-    if (sharedInstances == nil)
-    {
-        sharedInstances = [[NSMutableDictionary alloc] init];
-    }
-    
-    NSMutableDictionary *tenants = [sharedInstances objectForKey:uuid];
-    if (tenants == nil)
-    {
-        tenants = [NSMutableDictionary dictionary];
-        [sharedInstances setObject:tenants forKey:uuid];
-    }
+    NSMutableDictionary *tenants = [self sharedInstancesForAccountUUID:uuid];
     
     if (aTenantID == nil)
     {
@@ -584,5 +574,19 @@ static NSMutableDictionary *sharedInstances;
     }
                            
     return sharedInstance;
+}
+
++ (NSMutableDictionary *)sharedInstancesForAccountUUID:(NSString *)uuid;
+{
+    if (sharedInstances == nil) {
+        sharedInstances = [[NSMutableDictionary alloc] init];
+    }
+    NSMutableDictionary *tenants = [sharedInstances objectForKey:uuid];
+    if (tenants == nil)
+    {
+        tenants = [NSMutableDictionary dictionary];
+        [sharedInstances setObject:tenants forKey:uuid];
+    }
+    return tenants;
 }
 @end
