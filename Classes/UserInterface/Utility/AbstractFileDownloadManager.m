@@ -31,6 +31,7 @@
 #import "AccountManager.h"
 #import "SessionKeychainManager.h"
 #import "RepositoryServices.h"
+#import "ConnectivityManager.h"
 
 NSInteger const kFileDoesNotExpire = 0;
 NSInteger const kFileIsExpired = -1;
@@ -265,7 +266,7 @@ NSInteger const kFileIsExpired = -1;
     NSDictionary *downloadInfo = [self downloadInfoForFilename:fileName];
     RepositoryInfo *repositoryInfo = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:downloadInfo[@"accountUUID"] tenantID:nil];
     
-    if (!repositoryInfo.hasValidSession)
+    if (!repositoryInfo.hasValidSession || ![[ConnectivityManager sharedManager] hasInternetConnection])
     {
         AccountInfo *info = [[AccountManager sharedManager] accountInfoForUUID:downloadInfo[@"accountUUID"]];
         NSDate *lastSuccessfulLogin = [NSDate dateWithTimeIntervalSince1970:[info.accountStatusInfo successTimestamp]];
