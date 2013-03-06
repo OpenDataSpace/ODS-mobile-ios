@@ -36,6 +36,7 @@
 #import "DownloadFailureSummaryTableViewCell.h"
 #import "AccountManager.h"
 #import "SessionKeychainManager.h"
+#import "ConnectivityManager.h"
 
 @interface DownloadsViewController (Private)
 
@@ -148,9 +149,16 @@
     
     if ([[AlfrescoMDMLite sharedInstance] isDownloadExpired:fileName withAccountUUID:[downloadMetadata accountUUID]])
     {
-        [[RepositoryServices shared] removeRepositoriesForAccountUuid:[downloadMetadata accountUUID]];
-        [[AlfrescoMDMLite sharedInstance] setServiceDelegate:self];
-        [[AlfrescoMDMLite sharedInstance] loadRepositoryInfoForAccount:[downloadMetadata accountUUID]];
+        if ([[ConnectivityManager sharedManager] hasInternetConnection])
+        {
+            [[RepositoryServices shared] removeRepositoriesForAccountUuid:[downloadMetadata accountUUID]];
+            [[AlfrescoMDMLite sharedInstance] setServiceDelegate:self];
+            [[AlfrescoMDMLite sharedInstance] loadRepositoryInfoForAccount:[downloadMetadata accountUUID]];
+        }
+        else
+        {
+            [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+        }
     }
     else
     {
