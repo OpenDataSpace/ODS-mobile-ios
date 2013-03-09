@@ -91,7 +91,7 @@
 
 /* Please wait...
  Please Wait... */
-"pleaseWaitMessage" = "Bitte warten...";
+"pleaseWaitMessage" = "Bitte warten ...";
 
 /* Company Home */
 "rootSectionHeaderCompanyHome" = "Firmen-Home";
@@ -123,7 +123,7 @@
 "email.footer.html" = "Gesendet von <a href=\"http://itunes.apple.com/app/alfresco/id459242610?mt=8\">Alfresco Mobile</a>";
 
 /*  */
-"serviceDocumentRequestFailureMessage" = "Alfresco Mobile konnte keine Verbindung zu %@ herstellen. Entweder sind Ihre Einstellungen fehlerhaft oder Sie sind nicht mit dem Internet verbunden. Sie können im Offline-Modus trotzdem auf Ihre Synchronized Dokumente und Downloads zugreifen.";
+"serviceDocumentRequestFailureMessage" = "Alfresco Mobile konnte keine Verbindung zu %@ herstellen. Entweder sind Ihre Einstellungen fehlerhaft oder Sie sind nicht mit dem Internet verbunden. Sie können im Offline-Modus weiterhin auf Ihre synchronisierten Favoriten und Downloads zugreifen.";
 
 /* Error */
 "serviceDocumentRequestFailureTitle" = "Offline-Modus";
@@ -136,7 +136,7 @@
 "favorite-view.no-documents" = "Keine Dokumente";
 
 "favorite-errors.title" = "Synchronisierungs-Fehler";
-"favorite-errors.unfavorited-on-server-with-local-changes.header" = "The following documents have been unfavorited since you edited them. Tap Sync to upload your edited version to the server, or Save to save it to the \"Downloads\" folder.\n\nPlease note that syncing here does not restore to Favorites.";
+"favorite-errors.unfavorited-on-server-with-local-changes.header" = "Die folgenden Dokumente wurden aus Ihren Dokumentfavoriten entfernt, da sie von Ihnen bearbeitet wurden. Tippen Sie auf \"Synchronisieren\", um die bearbeitete Version auf den Server hochzuladen, oder auf \"Speichern\", um sie im Ordner \"Downloads\" zu speichern.\n\nBitte beachten Sie, dass die Dokumente durch eine Synchronisierung in diesem Ordner nicht automatisch unter \"Dokumentfavoriten\" wiederhergestellt werden.";
 "favorite-errors.deleted-on-server-with-local-changes.header" = "Die folgenden Dokumente wurden vom Server gelöscht. Es wurden jedoch Kopien im Bereich \"Downloads\" gespeichert.";
 "favorite-errors.pending-sync-on-server-with-local-changes.header" = "Die folgenden Dokumente werden derzeit synchronisiert und wurden lokal geändert. Bitte wählen Sie, wie Sie mit den einzelnen Dateien weiter vorgehen möchten.\n\nDie Dateien werden im Bereich \"Downloads\" gespeichert.";
 "favorite-errors.button.sync" = "Synchronisieren";
@@ -146,7 +146,7 @@
 
 "Settings" = "Einstellungen";
 "about.build.date.time" = "Build: %s %s (%@.%@)";
-"about.body" = "Alfresco ist eine offene Plattform für Social Content Management. Diese mobile Anwendung wurde in Zusammenarbeit mit Zia Consulting, einem Alfresco Platinum Partner, entwickelt.\n\nAlfresco Mobile stellt eine Verbindung zu Alfresco Enterprise (3.4 und höher) her und bietet Zugriff auf Unternehmensdokumente und Inhalte von unterwegs. Diese mobile Anwendung stellt mithilfe Ihrer Alfresco Zugangsdaten eine Verbindung zu Ihrem Alfresco Repository her (über HTTP oder HTTPS) und verwaltet den Zugriff entsprechend Ihren Berechtigungen.";
+"about.body" = "Alfresco ist eine offene Plattform für Social Content Management. Diese mobile Anwendung wurde in Zusammenarbeit mit Zia Consulting, einem Alfresco Platinum Partner, entwickelt.\n\nAlfresco Mobile stellt eine Verbindung zu Alfresco in der Cloud und lokalen Alfresco Servern (3.4 und höher) her, um Ihnen unterwegs sicheren Zugang zu den Dokumenten Ihres Unternehmens zu bieten. Diese mobile Anwendung stellt mithilfe Ihrer Alfresco Zugangsdaten eine Verbindung zu Ihrem Alfresco Repository her (über HTTP oder HTTPS) und verwaltet den Zugriff entsprechend Ihren Berechtigungen.";
 "about.libraries" = "Alfresco Mobile verwendet die folgenden Bibliotheken von Drittanbietern";
 
 "comments.view.title" = "Kommentare";
@@ -168,7 +168,7 @@
 "edit-document.failed.title" = "Dokument speichern";
 "edit-document.savefailed.message" = "Dokument konnte nicht auf dem Server gespeichert werden. Möchten Sie das Dokument in Ihrem Download-Bereich speichern?";
 "edit-document.writefailed.message" = "Beim Speichern der Datei ist ein Fehler aufgetreten, versuchen Sie es später noch einmal.";
-"edit-document.savesuccess.message" = "Document saved successfully";
+"edit-document.savesuccess.message" = "Dokument erfolgreich gespeichert";
 "cancelButton" = "Abbrechen";
 "comments.save.button" = "Speichern";
 
@@ -206,16 +206,16 @@
 "relative.date.one-hour-ago" = "vor 1 Stunde";
 "relative.date.n-hours-ago" = "vor %d Stunden";
 "relative.date.one-day-ago" = "vor 1 Tag";
-"relative.date.n-days-ago" = "vor %d Tage";
+"relative.date.n-days-ago" = "vor %d Tagen";
 
-"relative.interval.n-seconds" = "%d seconds";
-"relative.interval.one-second" = "1 second";
-"relative.interval.n-minutes" = "%d minutes";
-"relative.interval.one-minute" = "1 minute";
-"relative.interval.n-hours" = "%d hours";
-"relative.interval.one-hour" = "1 hour";
-"relative.interval.n-days" = "%d days";
-"relative.interval.one-day" = "1 day";
+"relative.interval.n-seconds" = "%d Sekunden";
+"relative.interval.one-second" = "1 Sekunde";
+"relative.interval.n-minutes" = "%d Minuten";
+"relative.interval.one-minute" = "1 Minute";
+"relative.interval.n-hours" = "%d Stunden";
+"relative.interval.one-hour" = "1 Stunde";
+"relative.interval.n-days" = "%d Tage";
+"relative.interval.one-day" = "1 Tag";
 
 "add.comment.failure.title" = "";
 "add.comment.failure.message" = "Neuer Kommentar konnte nicht hinzugefügt werden, versuchen Sie es später noch einmal.";
@@ -242,7 +242,7 @@
 "documentview.like.failure.message" = "Dokument konnte nicht als \"Gefällt mir\" markiert werden.";
 "documentview.unlike.failure.message" = "Dokument konnte nicht als \"Gefällt mir nicht mehr\" markiert werden.";
 
-"documentview.action.openin" = "Öffnen mit...";
+"documentview.action.openin" = "Öffnen mit ...";
 "documentview.action.email.attachment" = "E-Mail als Anlage";
 "documentview.action.email.link" = "E-Mail als Link";
 "documentview.action.download" = "Herunterladen";
@@ -275,13 +275,13 @@
 "create.actionsheet.presentation" = "Präsentation";
 "create.actionsheet.text-file" = "Textdatei erstellen";
 
-"create-folder.header.details" = "New Folder Details";
+"create-folder.header.details" = "Neuer Ordner – Details";
 "create-folder.fields.name" = "Name";
-"create-folder.placeholder.required" = "Required";
-"create-folder.in-progress" = "Creating folder...";
-"create-folder.success" = "Created new folder named \"%@\"";
-"create-folder.failure" = "Failed to create new folder named \"%@\"";
-"create-folder.duplicate" = "A file or folder named \"%@\" already exists";
+"create-folder.placeholder.required" = "Erforderlich";
+"create-folder.in-progress" = "Ordner wird erstellt ...";
+"create-folder.success" = "Neuer Ordner mit dem Namen \"%@\" erstellt";
+"create-folder.failure" = "Erstellen des neuen Ordners \"%@\" fehlgeschlagen";
+"create-folder.duplicate" = "Eine Datei oder ein Ordner mit dem Namen \"%@\" existiert bereits";
 
 "postprogressbar.upload.picture" = "Foto wird hochgeladen";
 "postprogressbar.upload.video" = "Video wird hochgeladen";
@@ -292,8 +292,8 @@
 "postprogressbar.error.uploadfailed.message" = "Der Upload ist fehlgeschlagen, versuchen Sie es noch einmal.";
 
 "search.unavailable.noaccount.alert" = "Wählen Sie ein Konto, ein Netzwerk oder eine Site aus, um mit der Suche zu beginnen.";
-"search.results.error" = "Search Request Failed";
-"search.results.error.detail" = "A problem occurred whilst searching";
+"search.results.error" = "Suchanfrage fehlgeschlagen";
+"search.results.error.detail" = "Während des Suchvorgangs ist ein Problem aufgetreten.";
 "searchview.footer.displaying-30-results" = "Es werden die ersten 30 Ergebnisse angezeigt.";
 "search.noAccounts" = "Kein Konto ausgewählt";
 "search.sectionHeader.site" = "Suchen in:";
@@ -336,7 +336,7 @@
 "metadata.error.cell.notsaved" = "Keine Metadaten verfügbar";
 "metadata.error.alert.title" = "Fehler";
 "metadata.button.redownload" = "Datei erneut herunterladen";
-"metadata.button.loadMapApp" = "In Karten öffnen...";
+"metadata.button.loadMapApp" = "In Karten öffnen ...";
 "metadata.button.view.loadImageMap" = "Karte laden";
 "metadata.exif.orientation.landscape.left" = "Querformat links";
 "metadata.exif.orientation.landscape.right" = "Querformat rechts";
@@ -381,7 +381,7 @@
 "accountdetails.alert.save.fieldserror" = "Bitte überprüfen Sie die rot markierten Felder.";
 "accountdetails.alert.save.emailerror" = "Bitte geben Sie eine gültige E-Mail-Adresse ein.";
 "accountdetails.alert.save.porterror" = "Anschluss und Protokoll sind ungültig. Möchten Sie wirklich speichern?";
-"accountdetails.alert.save.validationerror" = "Authentifizierung fehlgeschlagen. Überprüfen Sie Ihre Konto-Einstellungen.";
+"accountdetails.alert.save.validationerror" = "Authentifizierung fehlgeschlagen. Überprüfen Sie gemeinsam mit Ihrem Systemadministrator Ihre Kontoeinstellungen.";
 "accountdetails.alert.delete.title" = "Konto löschen";
 "accountdetails.alert.delete.confirm" = "Möchten Sie dieses Konto wirklich entfernen?";
 "accountdetails.fields.status" = "Konto";
@@ -397,7 +397,7 @@
 "accountdetails.fields.protocol" = "HTTPS";
 "accountdetails.fields.vendor" = "Anbieter";
 "accountdetails.fields.servicedoc" = "Service-Dokument";
-"accountdetails.buttons.client-certificate"="Client Certificate";
+"accountdetails.buttons.client-certificate" = "Client-Zertifikat";
 "accountdetails.buttons.browse" = "Dokumente durchsuchen";
 "accountdetails.buttons.delete" = "Konto löschen";
 "accountdetails.header.status" = "Status";
@@ -416,8 +416,8 @@
 "accountdetails.fields.invalid-credentials" = "Benutzername/Passwort ist nicht korrekt.";
 "accountdetails.fields.no-password-warning" = "Die Einstellung \"Synchronisierung\" ist aktiviert, es ist aber kein Passwort gespeichert. Als Favoriten markierte Dokumente werden daher nicht automatisch für dieses Konto synchronisiert.";
 "accountdetails.fields.no-password-set" = "Nicht eingestellt";
-"accountdetails.fields.invalid-certificate" = "The client certificate is invalid.";
-"accountdetails.fields.staging-cloud" = "Configured with a Cloud Staging server at %@";
+"accountdetails.fields.invalid-certificate" = "Das Client-Zertifikat ist ungültig.";
+"accountdetails.fields.staging-cloud" = "Mit einem Cloud-Staging-Server auf %@ konfiguriert";
 
 "serverlist.cell.noaccounts" = "Keine Konten";
 "serverlist.footer.noaccounts" = "";
@@ -428,7 +428,7 @@
 "account.inactive.cell.subtitle" = "Inaktiv";
 "account.connection-error.cell.subtitle" = "Verbindung zu Server konnte nicht hergestellt werden.";
 "account.invalid-credentials.cell.subtitle" = "Falsche Zugangsdaten";
-"account.invalid-certificate.cell.subtitle" = "Invalid client certificate";
+"account.invalid-certificate.cell.subtitle" = "Ungültiges Client-Zertifikat";
 
 "accounttype.button.alfresco" = "Alfresco Server";
 "accounttype.button.alfrescome" = "Alfresco Cloud";
@@ -447,7 +447,7 @@
 
 "passwordPrompt.title" = "Sichere Zugangsdaten";
 "passwordPrompt.header.title" = "Bitte geben Sie das Passwort für das folgende Konto ein:";
-"passwordPrompt.header.restrictedTitle" = "You're trying to access a restricted document that has expired. To unlock the file, enter your password:";
+"passwordPrompt.header.restrictedTitle" = "Sie versuchen, auf ein beschränktes Dokument zuzugreifen, das abgelaufen ist. Geben Sie Ihr Passwort ein, um die Datei zu entsperren:";
 
 "dataProtection.available.title" = "Datenschutz";
 "dataProtection.available.message" = "Datenschutz ist verfügbar. Möchten Sie den Datenschutz aktivieren?";
@@ -456,7 +456,7 @@
 "dataProtection.protectDownloads.title" = "Datenschutz";
 "dataProtection.protectDownloads.message" = "Möchten Sie die bereits vorhandenen Downloads jetzt schützen? Die neuen Downloads werden automatisch geschützt.";
 "dataProtection.protectDownloadsProgress.message" = "Heruntergeladene Dokumente werden geschützt.";
-"dataProtection.unprotectDownloadsProgress.message" = "Unprotecting the downloaded documents";
+"dataProtection.unprotectDownloadsProgress.message" = "Schutz für heruntergeladene Dokumente wird aufgehoben.";
 
 "migration.migrateApp.message" = "App-Einstellungen werden migriert";
 
@@ -531,12 +531,13 @@
 "awaitingverification.alert.refresh.awaiting" = "Ihr Konto wartet immer noch auf Überprüfung.";
 "awaitingverification.alert.refresh.verified" = "Ihr Konto ist jetzt überprüft.";
 
-"homescreen.header" = "Los geht es...";
+"homescreen.header" = "Los geht es ...";
 "homescreen.button.signup" = "Anmelden bei Alfresco Cloud";
 "homescreen.description.signup" = "Neu bei Alfresco? Erstellen Sie ein kostenloses Online-Konto, um Ihre Dokumente zu speichern und von überall darauf zuzugreifen.";
 "homescreen.button.account" = "Ich habe bereits ein Konto.";
 "homescreen.description.account" = "";
 "homescreen.footer" = "Weitere Informationen zur Mobile App von Alfresco finden Sie in unseren Leitfäden im Bereich \"Hilfe\".";
+/** NOTE TO TRANSLATORS: the phrase "homescreen.footer.textRangeToLink" must match a phrase in the "homescreen.footer" string above. */
 "homescreen.footer.textRangeToLink" = "Leitfäden";
 
 "splashscreen.disclaimer.title" = "Helfen Sie uns dabei, unsere Apps zu verbessern.";
@@ -556,7 +557,7 @@
 "uploads.items.singular" = "Element";
 "uploads.items.plural" = "Elemente";
 "uploads.retry.cannotRetry" = "Der Upload ist dauerhaft fehlgeschlagen. Bitte starten Sie den Upload erneut.";
-"Waiting to upload..." = "Warten auf Upload...";
+"Waiting to upload..." = "Warten auf Upload ...";
 "Close" = "Schließen";
 "Clear" = "Löschen";
 "Dismiss" = "Verwerfen";
@@ -583,8 +584,8 @@
 "sync.failureDetail.title" = "Synchronisierung fehlgeschlagen";
 
 /* MDMLite strings */
-"mdm-file-expiry-alert-title" = "Warning";
-"mdm-file-expiry-alert-message" = "This file will expire in %@";
+"mdm-file-expiry-alert-title" = "Warnung";
+"mdm-file-expiry-alert-message" = "Diese Datei läuft ab in %@";
 
 /* Metadata definitions and their mapped display names */
 "cmis:name" = "Name"; 
@@ -613,7 +614,7 @@
 "exif:software" = "Software";
 "exif:xResolution" = "X-Auflösung"; 
 "exif:yResolution" = "Y-Auflösung";
-"dp:offlineExpiresAfter" = "Offline Expires After (hours)";
+"dp:offlineExpiresAfter" = "Offline läuft ab nach (Stunden)";
 
 "multiselect.button.delete" = "Löschen";
 "multiselect.button.delete.counter" = "Löschen (%u)";
@@ -629,8 +630,8 @@
 "download.failures.clearAll" = "Alle löschen";
 "download.failuresView.title" = "Fehlgeschlagen";
 "download.failureDetail.title" = "Fehlgeschlagener Download";
-"download.progress.waiting" = "Warten auf Download...";
-"download.progress.starting" = "Download starten...";
+"download.progress.waiting" = "Warten auf Download ...";
+"download.progress.starting" = "Download starten ...";
 "download.progress.failed" = "Download fehlgeschlagen";
 "download.progress.stopAll" = "Alle anhalten";
 "download.progress.details" = "%@ von %@";
@@ -647,9 +648,9 @@
 "imagequality.actual" = "Wirkliche Größe";
 
 /* EGOTableViewPullRefresh labels */
-"Release to refresh..." = "Zum Aktualisieren loslassen...";
-"Pull down to refresh..." = "Zum Aktualisieren ziehen...";
-"Loading..." = "Laden...";
+"Release to refresh..." = "Zum Aktualisieren loslassen ...";
+"Pull down to refresh..." = "Zum Aktualisieren ziehen ...";
+"Loading..." = "Laden ...";
 "Last Updated: %@" = "Letzte Aktualisierung: %@";
 
 /* Localizations for IFGeneric Tables */
@@ -681,7 +682,7 @@
 "task.detail.less" = "Weniger";
 "task.detail.full.description" = "Ausführliche Beschreibung";
 "task.detail.initiator" = "Initiator";
-"task.detail.initiator.loading" = "Details werden geladen...";
+"task.detail.initiator.loading" = "Details werden geladen ...";
 "task.detail.no.documents" = "Keine Dokumente angehängt";
 
 /* Document Preview URL handler */
@@ -741,14 +742,14 @@
 "task.create.assignee" = "Bevollmächtigter";
 "task.create.assignees" = "Bevollmächtigte";
 "task.create.assignee.placeholder" = "Kein Bevollmächtigter";
-"task.create.assignee.select" = "Bevollmächtigten auswählen...";
-"task.create.assignees.select" = "Bevollmächtigte auswählen...";
+"task.create.assignee.select" = "Bevollmächtigten auswählen ...";
+"task.create.assignees.select" = "Bevollmächtigte auswählen ...";
 "task.create.noassignees.title" = "Keine Bevollmächtigten";
 "task.create.noassignees.message" = "Wählen Sie mindestens einen Bevollmächtigten aus.";
 "task.create.attachment" = "Anlage";
 "task.create.attachments" = "Anlagen";
 "task.create.attachments.placeholder" = "Keine Anlagen";
-"task.create.attachment.select" = "Anlagen auswählen...";
+"task.create.attachment.select" = "Anlagen auswählen ...";
 "task.create.attachment.edit" = "Bearbeiten";
 "task.create.priority" = "Priorität";
 "task.create.priority.high" = "Hoch";
@@ -784,7 +785,7 @@
 "workflow.priority.high" = "Hohe Priorität";
 "workflow.task.table.title" = "Aufgaben";
 "workflow.document.table.title" = "Dokumente";
-"workflow.documents.loading" = "Dokumente werden abgerufen...";
+"workflow.documents.loading" = "Dokumente werden abgerufen ...";
 "workflow.task.user.approved" = "hat die Dokumente genehmigt";
 "workflow.task.user.rejected" = "hat die Dokumente abgelehnt";
 "workflow.task.user.commented" = " und kommentiert:";
@@ -817,70 +818,70 @@
 "An Error Occurred" = "Es ist ein Fehler aufgetreten.";
 
 /* Client Certificate */
-"certificate-manage.add-cell.label" = "Import Client Certificate";
-"certificate-location.title" = "Import Client Certificate";
-"certificate-location.local-cell.label" = "Choose from download folder";
-"certificate-location.network-cell.label" = "Download from server";
-"certificate-location.noDocumentsFooterTitle" = "No PKCS 12 File Available";
-"certificate-location.document-picker.title" = "Select File";
-"certificate-network.title" = "Download From Server";
-"certificate-network.next" = "Next";
-"certificate-network.connection-error.message" = "Could not download the certificate file";
+"certificate-manage.add-cell.label" = "Client-Zertifikat importieren";
+"certificate-location.title" = "Client-Zertifikat importieren";
+"certificate-location.local-cell.label" = "Aus Download-Ordner auswählen";
+"certificate-location.network-cell.label" = "Vom Server herunterladen";
+"certificate-location.noDocumentsFooterTitle" = "Keine PKCS 12-Datei verfügbar";
+"certificate-location.document-picker.title" = "Datei auswählen";
+"certificate-network.title" = "Vom Server herunterladen";
+"certificate-network.next" = "Weiter";
+"certificate-network.connection-error.message" = "Zertifikatdatei konnte nicht heruntergeladen werden";
 "certificate-network.fields.url" = "URL";
-"certificate-network.fields.username" = "Username";
-"certificate-network.fields.password" = "Password";
-"certificate-import.tableHeader" = "PCKS 12 Passcode";
-"certificate-import.fields.passcode" = "Passcode";
-"certificate-import.tableFooter" = "Please enter the passcode for the PKCS 12 file";
-"certificate-import.button.import" = "Import";
-"certificate-import.error.title" = "Import Certificate";
-"certificate-import.error.authentication" = "The passcode provided for the certificate is invalid";
-"certificate-import.error.format" = "The certificate file is incorrect and cannot be imported";
-"certificate-details.title" = "Client Certificate";
-"certificate-details.identities.header" = "Identity";
-"certificate-details.certificates.header" = "Client Certificate";
-"certificate-details.issuer" = "Issuer: %@";
-"certificate-details.delete.title" = "Remove Client Certificate";
-"certificate-details.delete.message" = "Removing this client certificate cannot be undone. Are you sure you want to continue?";
-"certificate-manage.change-cell.label" = "Change Client Certificate";
-"certificate-details.importSuccess" = "The certificate was imported successfully";
-"certificate-details.buttons.delete" = "Remove Certificate";
-"certificate-details.delete.confirm" = "Remove";
+"certificate-network.fields.username" = "Benutzername";
+"certificate-network.fields.password" = "Passwort";
+"certificate-import.tableHeader" = "PCKS 12-Passwort";
+"certificate-import.fields.passcode" = "Passwort";
+"certificate-import.tableFooter" = "Geben Sie das Passwort für die Datei PKCS 12 ein.";
+"certificate-import.button.import" = "Importieren";
+"certificate-import.error.title" = "Zertifikat importieren";
+"certificate-import.error.authentication" = "Das Passwort für das Zertifikat ist ungültig.";
+"certificate-import.error.format" = "Die Zertifikatdatei ist fehlerhaft und kann nicht importiert werden.";
+"certificate-details.title" = "Client-Zertifikat";
+"certificate-details.identities.header" = "Identität";
+"certificate-details.certificates.header" = "Client-Zertifikat";
+"certificate-details.issuer" = "Erteilt von: %@";
+"certificate-details.delete.title" = "Client-Zertifikat entfernen";
+"certificate-details.delete.message" = "Das Entfernen des Client-Zertifikats kann nicht rückgängig gemacht werden. Möchten Sie wirklich fortfahren?";
+"certificate-manage.change-cell.label" = "Client-Zertifikat ändern";
+"certificate-details.importSuccess" = "Das Zertifikat wurde erfolgreich importiert";
+"certificate-details.buttons.delete" = "Zertifikat entfernen";
+"certificate-details.delete.confirm" = "Entfernen";
 
 /* External Library: ASIHTTPRequest */
-"asihttprequest.connection.failure" = "A connection failure occurred";
-"asihttprequest.ssl.problem" = "%@: SSL problem (Possible causes may include a bad/expired/self-signed certificate, clock set to wrong date)";
-"asihttprequest.request.timedout" = "The request timed out";
-"asihttprequest.authentication.needed" = "Authentication needed";
-"asihttprequest.request.cancelled" = "The request was cancelled";
-"asihttprequest.request.create.failed" = "Unable to create request (bad url?)";
-"asihttprequest.request.failed" = "The request failed because it redirected too many times";
-"asihttprequest.file.attributes.failed" = "Failed to get attributes for file at path '%@'";
-"asihttprequest.readstream.failed" = "Unable to create read stream";
-"asihttprequest.httpconnection.failed" = "Unable to start HTTP connection";
-"asihttprequest.authentication.failed" = "Failed to get authentication object from response headers";
-"asihttprequest.proxycredentials.failed" = "Failed to apply proxy credentials to request";
-"asihttprequest.file.move.failed" = "Failed to move file from '%@' to '%@'";
-"asihttprequest.file.delete.failed" = "Failed to delete file at path '%@'";
-"asihttprequest.proxyserver.info.failed" = "Unable to obtain information on proxy servers needed for request";
-"asiauthentication.password.sent.inclear" = "Password will be sent in the clear.";
-"asiauthentication.password.sent.securely" = "Password will be sent securely.";
-"asidatacompressor.file.create.failed" = "Compression of %@ failed because we were unable to create a file at %@";
-"asidatacompressor.file.doesnot.exist" = "Compression of %@ failed the file does not exist";
-"asidatacompressor.read.failed" = "Compression of %@ failed because we were unable to read from the source data file";
-"asidatacompressor.write.failed" = "Compression of %@ failed because we were unable to write to the destination data file at %@";
-"asidatacompressor.failed" = "Compression of data failed with code %i";
-"asidatadecompressor.file.create.failed" = "Decompression of %@ failed because we were unable to create a file at %@";
-"asidatadecompressor.file.doesnot.exist" = "Decompression of %@ failed because the file does not exist";
-"asidatadecompressor.read.failed" = "Decompression of %@ failed because we were unable to read from the source data file";
-"asidatadecompressor.write.failed" = "Decompression of %@ failed because we were unable to write to the destination data file at %@";
-"asidatadecompressor.failed" = "Decompression of data failed with code %i";
-"asiformrequest.file.doesnot.exist" = "No file exists at %@";
+"asihttprequest.connection.failure" = "Ein Verbindungsfehler ist aufgetreten.";
+"asihttprequest.ssl.problem" = "%@: SSL-Problem (möglicherweise verursacht durch ein fehlerhaftes/ausgelaufenes/selbst signiertes Zertifikat oder Uhr auf falsches Datum eingestellt)";
+"asihttprequest.request.timedout" = "Die Anfrage ist abgelaufen.";
+"asihttprequest.authentication.needed" = "Authentifizierung erforderlich";
+"asihttprequest.request.cancelled" = "Anfrage wurde abgebrochen";
+"asihttprequest.request.create.failed" = "Anfrage konnte nicht erstellt werden (falsche URL?)";
+"asihttprequest.request.failed" = "Die Anfrage ist aufgrund zu vieler Weiterleitungen fehlgeschlagen.";
+"asihttprequest.file.attributes.failed" = "Empfangen von Dateiattributen unter dem Pfad '%@' fehlgeschlagen";
+"asihttprequest.readstream.failed" = "Erstellen von Lese-Stream nicht möglich";
+"asihttprequest.httpconnection.failed" = "Starten von HTTP-Verbindung nicht möglich";
+"asihttprequest.authentication.failed" = "Abruf des Authentifizierungsobjekts von Response-Headern fehlgeschlagen";
+"asihttprequest.proxycredentials.failed" = "Anwenden von Proxy-Zugangsdaten für Anfrage fehlgeschlagen";
+"asihttprequest.file.move.failed" = "Verschieben von Datei aus '%@' nach '%@' fehlgeschlagen";
+"asihttprequest.file.delete.failed" = "Löschen von Datei unter dem Pfad '%@' fehlgeschlagen";
+"asihttprequest.proxyserver.info.failed" = "Abruf von Informationen zu für die Abfrage erforderlichen Proxy-Servern fehlgeschlagen";
+"asiauthentication.password.sent.inclear" = "Passwort wird unverschlüsselt versendet.";
+"asiauthentication.password.sent.securely" = "Passwort wird verschlüsselt versendet.";
+"asidatacompressor.file.create.failed" = "Komprimierung von %@ fehlgeschlagen, da keine Datei auf %@ erstellt werden konnte.";
+"asidatacompressor.file.doesnot.exist" = "Komprimierung von %@ fehlgeschlagen, da die Datei nicht existiert.";
+"asidatacompressor.read.failed" = "Komprimierung von %@ fehlgeschlagen, da die Quelldatendatei nicht gelesen werden konnte.";
+"asidatacompressor.write.failed" = "Komprimierung von %@ fehlgeschlagen, da der Schreibzugriff für die Datendatei nicht verfügbar ist.";
+"asidatacompressor.failed" = "Komprimierung der Daten mit Code %i fehlgeschlagen";
+"asidatadecompressor.file.create.failed" = "Dekomprimierung von %@ fehlgeschlagen, da keine Datei auf %@ erstellt werden konnte.";
+"asidatadecompressor.file.doesnot.exist" = "Dekomprimierung von %@ fehlgeschlagen, da die Datei nicht existiert.";
+"asidatadecompressor.read.failed" = "Dekomprimierung von %@ fehlgeschlagen, da die Quelldatendatei nicht gelesen werden konnte.";
+"asidatadecompressor.write.failed" = "Dekomprimierung von %@ fehlgeschlagen, da der Schreibzugriff für die Datendatei nicht verfügbar ist.";
+"asidatadecompressor.failed" = "Dekomprimierung der Daten mit Code %i fehlgeschlagen";
+"asiformrequest.file.doesnot.exist" = "Unter %@ ist keine Datei vorhanden.";
 
 /* External Library: AGImagePickerController */
 "agipc.albums" = "Album auswählen";
 "agipc.select.items" = "Elemente auswählen";
 "agipc.selected.items" = "%d Elemente ausgewählt";
-"agipc.loading" = "Laden...";
-"agipc.select.all" = "Select All";
+"agipc.loading" = "Laden ...";
+"agipc.select.all" = "Alle auswählen";
 "agipc.deselect.all" = "Auswahl aufheben";

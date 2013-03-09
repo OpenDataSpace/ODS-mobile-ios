@@ -81,4 +81,4 @@
 "org.alfresco.datalists.list-deleted" = "{0} liste de données supprimée par {1}";
 "org.alfresco.subscriptions.followed" = "{1} suit maintenant {5}";
 "org.alfresco.subscriptions.subscribed" = "{1} s'est abonné à {2}";
-"org.alfresco.profile.status-changed" = "{1} : {6}";
+"org.alfresco.profile.status-changed" = "{1}: {6}";

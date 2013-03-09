@@ -397,7 +397,7 @@
 "accountdetails.fields.protocol" = "HTTPS";
 "accountdetails.fields.vendor" = "CMIS Provider Vendor";
 "accountdetails.fields.servicedoc" = "Service Document";
-"accountdetails.buttons.client-certificate"="Client Certificate";
+"accountdetails.buttons.client-certificate" = "Client Certificate";
 "accountdetails.buttons.browse" = "Browse Documents";
 "accountdetails.buttons.delete" = "Delete Account";
 "accountdetails.header.status" = "Status";
@@ -435,7 +435,7 @@
 "accounttype.footer.alfresco" = "Connect to a CMIS Provider";
 "accounttype.footer.alfrescome" = "Access your Alfresco in the cloud account";
 "accounttype.footer.signuplink" = "New to Alfresco? Sign up for a free account";
-/** NOTE: the phrase "accounttype.footer.signuplink.linktext" must match a phrase in the "accounttype.footer.signuplink" string above. */
+/** NOTE TO TRANSLATORS: the phrase "accounttype.footer.signuplink.linktext" must match a phrase in the "accounttype.footer.signuplink" string above. */
 "accounttype.footer.signuplink.linktext" = "Sign up";
 
 "updatefailed.alert.title" = "Save Failed";
@@ -510,16 +510,16 @@
 "cloudsignup.unsuccessful.message" = "The cloud sign up was unsuccessful, please try again later";
 "cloudsignup.footer.firstLine" = "By tapping Sign Up, you are agreeing to the";
 "cloudsignup.footer.secondLine" = "Alfresco Terms of Service and Privacy Policy";
-/** NOTE: the phrase "cloudsignup.footer.termsOfService" must match a phrase in the "cloudsignup.footer.secondLine" string above. */
+/** NOTE TO TRANSLATORS: the phrase "cloudsignup.footer.termsOfService" must match a phrase in the "cloudsignup.footer.secondLine" string above. */
 "cloudsignup.footer.termsOfService" = "Terms of Service";
-/** NOTE: the phrase "cloudsignup.footer.privacyPolicy" must match a phrase in the "cloudsignup.footer.secondLine" string above. */
+/** NOTE TO TRANSLATORS: the phrase "cloudsignup.footer.privacyPolicy" must match a phrase in the "cloudsignup.footer.secondLine" string above. */
 "cloudsignup.footer.privacyPolicy" = "Privacy Policy";
 "cloudsignup.blockedEmail.message" = "Alfresco requires you to use your company email address so you can be added to your company collaboration network.";
 
 "awaitingverification.description" = "Account waiting for email verification\n\nYou've signed up for Alfresco in the cloud using the email address %@\n\nPlease check your email. We've sent you a link that you'll need to use to complete the registration process.\n\nHaving trouble activating?\n\nPlease let us know if you are unable to activate your account.";
 "awaitingverification.description.title" = "Account waiting for email verification";
 "awaitingverification.description.subtitle" = "Having trouble activating?";
-/** NOTE: the phrase "awaitingverification.description.customerCare" must match a phrase in the "awaitingverification.description" string above. */
+/** NOTE TO TRANSLATORS: the phrase "awaitingverification.description.customerCare" must match a phrase in the "awaitingverification.description" string above. */
 "awaitingverification.description.customerCare" = "Please let us know";
 "awaitingverification.title" = "Alfresco in the cloud";
 "awaitingverification.buttons.refresh" = "Refresh";
@@ -537,7 +537,8 @@
 "homescreen.button.account" = "I already have an account";
 "homescreen.description.account" = "";
 "homescreen.footer" = "";
-"homescreen.footer.textRangeToLink" = "*UNUSED*";
+/** NOTE TO TRANSLATORS: the phrase "homescreen.footer.textRangeToLink" must match a phrase in the "homescreen.footer" string above. */
+"homescreen.footer.textRangeToLink" = "";
 
 "splashscreen.disclaimer.title" = "Help us to improve our apps";
 "splashscreen.disclaimer.body" = "To help us improve Fresh Docs, we collect anonymous technical diagnostic data. You may disable this feature in the Settings area within the app.";
