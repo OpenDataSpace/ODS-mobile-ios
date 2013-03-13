@@ -856,13 +856,13 @@
 "asihttprequest.request.cancelled" = "La richiesta è stata annullata";
 "asihttprequest.request.create.failed" = "Impossibile creare la richiesta (URL non valido?)";
 "asihttprequest.request.failed" = "Errore durante la richiesta a causa di un numero eccessivo di reindirizzamenti";
-"asihttprequest.file.attributes.failed" = "Impossibile ottenere gli attributi per il file dal percorso "%@"";
+"asihttprequest.file.attributes.failed" = "Impossibile ottenere gli attributi per il file dal percorso \"%@\"";
 "asihttprequest.readstream.failed" = "Impossibile creare il flusso di lettura";
 "asihttprequest.httpconnection.failed" = "Impossibile avviare la connessione HTTP";
 "asihttprequest.authentication.failed" = "Impossibile ottenere l'oggetto di autenticazione dalle intestazioni di risposta";
 "asihttprequest.proxycredentials.failed" = "Impossibile applicare credenziali proxy alla richiesta";
-"asihttprequest.file.move.failed" = "Impossibile spostare il file da "%@" a "%@"";
-"asihttprequest.file.delete.failed" = "Impossibile eliminare il file nel percorso "%@"";
+"asihttprequest.file.move.failed" = "Impossibile spostare il file da \"%@\" a \"%@\"";
+"asihttprequest.file.delete.failed" = "Impossibile eliminare il file nel percorso \"%@\"";
 "asihttprequest.proxyserver.info.failed" = "Impossibile ottenere informazioni sui server proxy necessari per la richiesta";
 "asiauthentication.password.sent.inclear" = "La password verrà inviata in chiaro.";
 "asiauthentication.password.sent.securely" = "La password verrà inviata in maniera protetta.";
