@@ -50,7 +50,6 @@
     [super dealloc];
 }
 
-
 - (id)init
 {
     if (self = [super init])
@@ -73,7 +72,7 @@
 
 #pragma mark - Download Manager Notifications 
 
-- (void) downloadCancelled:(NSNotification *)notification
+- (void)downloadCancelled:(NSNotification *)notification
 {
     NSIndexPath *indexPath = [self indexPathForNodeWithGuid:[notification.userInfo objectForKey:@"downloadObjectId"]];
     FavoriteTableCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
@@ -83,7 +82,7 @@
     [cellWrapper setActivityType:SyncActivityTypeDownload];
     [cellWrapper setIsActivityInProgress:NO];
     
-    if([notification.userInfo objectForKey:@"isPreview"] == nil)
+    if ([notification.userInfo objectForKey:@"isPreview"] == nil)
     {
         [self updateSyncStatus:SyncStatusCancelled forRow:indexPath];
     }
@@ -98,7 +97,7 @@
     [self setPresentNewDocumentPopover:NO];
 }
 
-- (void) downloadFailed:(NSNotification *)notification
+- (void)downloadFailed:(NSNotification *)notification
 {
     NSIndexPath *indexPath = [self indexPathForNodeWithGuid:[notification.userInfo objectForKey:@"downloadObjectId"]];
     FavoriteTableCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
@@ -108,7 +107,7 @@
     [cellWrapper setActivityType:SyncActivityTypeDownload];
     [cellWrapper setIsActivityInProgress:NO];
     
-    if([notification.userInfo objectForKey:@"isPreview"] == nil)
+    if ([notification.userInfo objectForKey:@"isPreview"] == nil)
     {
         [self updateSyncStatus:SyncStatusFailed forRow:indexPath];
     }
@@ -174,7 +173,7 @@
     [self setPresentNewDocumentPopover:NO];
 }
 
-- (void) downloadStarted:(NSNotification *)notification
+- (void)downloadStarted:(NSNotification *)notification
 {
     NSIndexPath *indexPath = [self indexPathForNodeWithGuid:[notification.userInfo objectForKey:@"downloadObjectId"]];
     FavoriteTableViewCell *cell = (FavoriteTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
@@ -187,7 +186,7 @@
     [cellWrapper setActivityType:SyncActivityTypeDownload];
     [cellWrapper setIsActivityInProgress:YES];
     
-    if([notification.userInfo objectForKey:@"isPreview"] == nil)
+    if ([notification.userInfo objectForKey:@"isPreview"] == nil)
     {
         [self updateSyncStatus:SyncStatusLoading forRow:indexPath];
     }
@@ -203,6 +202,7 @@
 }
 
 #pragma mark - Preview Manager Delegates
+
 - (void)previewManager:(PreviewManager *)manager downloadCancelled:(DownloadInfo *)info
 {
     NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:info, @"downloadInfo", info.cmisObjectId, @"downloadObjectId",@"Yes", @"isPreview", nil];
@@ -269,6 +269,7 @@
 
     [cellWrapper setActivityType:SyncActivityTypeIdle];
     [cellWrapper setIsActivityInProgress:NO];
+    [cellWrapper setRepositoryItem:uploadInfo.repositoryItem];
 
     [self updateSyncStatus:SyncStatusSuccessful forRow:indexPath];
     [self updateCellDetails:indexPath];
@@ -316,12 +317,12 @@
     
 }
 
-
 #pragma mark - helper Methods
+
 - (NSIndexPath *)indexPathForNodeWithGuid:(NSString *)itemGuid
 {
     NSIndexPath *indexPath = nil;
-    NSMutableArray *items = [self repositoryItems];
+    NSArray *items = [self repositoryItems];
     
     if (itemGuid != nil && items != nil)
     {
@@ -349,16 +350,15 @@
     return indexPath;
 }
 
-- (void) updateSyncStatus:(SyncStatus) status forRow:(NSIndexPath *) indexPath
+- (void)updateSyncStatus:(SyncStatus)status forRow:(NSIndexPath *)indexPath
 {
     FavoriteTableViewCell *cell = (FavoriteTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
     FavoriteTableCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
     
     [cellWrapper updateSyncStatus:status forCell:cell];
-    
 }
 
--(void) updateCellDetails:(NSIndexPath *) indexPath
+- (void)updateCellDetails:(NSIndexPath *)indexPath
 {
     FavoriteTableViewCell *cell = (FavoriteTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
     FavoriteTableCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];

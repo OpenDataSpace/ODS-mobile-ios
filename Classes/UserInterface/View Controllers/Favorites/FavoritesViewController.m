@@ -146,7 +146,7 @@ static const NSInteger delayToShowErrors = 2.0f;
     
     FavoritesTableViewDataSource *dataSource = [[FavoritesTableViewDataSource alloc] init];
     [self setFolderDatasource:dataSource];
-    [[self tableView] setDataSource:dataSource];
+    [self.tableView setDataSource:dataSource];
     [dataSource release];
     
     FavoriteManager *favoriteManager = [FavoriteManager sharedManager];
@@ -189,7 +189,6 @@ static const NSInteger delayToShowErrors = 2.0f;
     [self startHUDInTableView:self.tableView];
     [[FavoriteManager sharedManager] setDelegate:self];
     [[FavoriteManager sharedManager] startFavoritesRequest:syncType];
-    
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -199,19 +198,20 @@ static const NSInteger delayToShowErrors = 2.0f;
 
 - (void)dataSourceFinishedLoadingWithSuccess:(BOOL)wasSuccessful
 {
+    [self.refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
+
     if (wasSuccessful)
     {
         [self setLastUpdated:[NSDate date]];
         [self.refreshHeaderView refreshLastUpdatedDate];
-    }
-    [self.refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
     
-    if (IS_IPAD)
-    {
-        NSIndexPath *indexPath = [self indexPathForNodeWithGuid:[IpadSupport getCurrentDetailViewControllerObjectID]];
-        if (indexPath && self.tableView)
+        if (IS_IPAD)
         {
-            [self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionNone];
+            NSIndexPath *indexPath = [self indexPathForNodeWithGuid:[IpadSupport getCurrentDetailViewControllerObjectID]];
+            if (indexPath && self.tableView)
+            {
+                [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+            }
         }
     }
 }
@@ -489,13 +489,11 @@ static const NSInteger delayToShowErrors = 2.0f;
 
 - (void)favoriteManager:(FavoriteManager *)favoriteManager requestFinished:(NSArray *)favorites
 {
-    [self.favoriteDownloadManagerDelegate setRepositoryItems:[[favorites mutableCopy] autorelease]];
+    [self.favoriteDownloadManagerDelegate setRepositoryItems:favorites];
     
     FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)[self.tableView dataSource];
     
-    dataSource.favorites = nil;
     [dataSource setFavorites:favorites];
-    
     [dataSource refreshData];
     [self.tableView reloadData];
     
@@ -529,7 +527,9 @@ static const NSInteger delayToShowErrors = 2.0f;
 
 - (void)favoriteManagerMDMInfoReceived
 {
+    NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
     [self.tableView reloadData];
+    [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
 }
 
 - (void)requestFinished:(ASIHTTPRequest *)request
@@ -648,6 +648,7 @@ static const NSInteger delayToShowErrors = 2.0f;
 {
     NSIndexPath *indexPath = nil;
     NSMutableArray *items = self.folderDatasource.children;
+    itemGuid = [itemGuid lastPathComponent];
     
     if (itemGuid != nil && items != nil)
     {
@@ -690,8 +691,7 @@ static const NSInteger delayToShowErrors = 2.0f;
 
     if (accountUUID != nil && ![accountUUID isEqualToString:@""] && changeType != kAccountUpdateNotificationDelete)
     {
-        AccountInfo *accountInfo = [[AccountManager sharedManager] accountInfoForUUID:accountUUID];
-        if (accountInfo.accountStatus == FDAccountStatusActive && ![self.favoritesRequest isExecuting])
+        if (![self.favoritesRequest isExecuting])
         {
             [self loadFavorites:SyncTypeAutomatic];
         }

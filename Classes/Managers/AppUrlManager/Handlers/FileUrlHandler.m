@@ -126,13 +126,18 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
             {
                 FavoriteFileDownloadManager *fileDownloadManager = [FavoriteFileDownloadManager sharedInstance];
                 NSDictionary *downloadInfo = [favoriteManager downloadInfoForDocumentWithID:saveBackMetadata.objectId];
+                RepositoryItem *repositoryItem = [[[RepositoryItem alloc] initWithDictionary:downloadInfo] autorelease];
                 NSString *generatedFileName = [fileDownloadManager generatedNameForFile:[downloadInfo objectForKey:@"filename"] withObjectID:saveBackMetadata.objectId];
                 NSString *syncedFilePath = [fileDownloadManager pathToFileDirectory:generatedFileName];
 
                 // Save the file back where it came from (or to a temp folder)
                 saveToURL = [self saveIncomingFileWithURL:url toFilePath:syncedFilePath];
-
-                [favoriteManager forceSyncForFileURL:saveToURL objectId:saveBackMetadata.objectId accountUUID:saveBackMetadata.accountUUID];
+                if (saveToURL != nil)
+                {
+                    // display the contents of the saved file
+                    [self displayRepositoryFileWithURL:saveToURL repositoryItem:repositoryItem];
+                    [favoriteManager forceSyncForFileURL:saveToURL objectId:saveBackMetadata.objectId accountUUID:saveBackMetadata.accountUUID];
+                }
             }
             else
             {
@@ -169,7 +174,7 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
             if (saveToURL != nil)
             {
                 // display the contents of the saved file
-                [self displayContentsOfFileWithURL:saveToURL];
+                [self displayDownloadedFileWithURL:saveToURL];
             }
         }
     }
@@ -184,7 +189,7 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
         if (saveToURL != nil)
         {
             // display the contents of the saved file
-            [self displayContentsOfFileWithURL:saveToURL];
+            [self displayDownloadedFileWithURL:saveToURL];
         }
     }
 }
@@ -224,65 +229,82 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
     return incomingFileMovedSuccessfully ? saveToURL : nil;
 }
 
-- (void)displayContentsOfFileWithPath:(NSString *)path
+- (void)displayDownloadedFileWithPath:(NSString *)path
 {
-    [self displayContentsOfFileWithURL:[NSURL fileURLWithPath:path]];
+    [self displayDownloadedFileWithURL:[NSURL fileURLWithPath:path]];
 }
 
-- (void)displayContentsOfFileWithURL:(NSURL *)url
-{
-    [self displayContentsOfFileWithURL:url repositoryItem:nil];
-}
-
-- (void)displayContentsOfFileWithURL:(NSURL *)url repositoryItem:(RepositoryItem *)repositoryItem
+- (void)displayDownloadedFileWithURL:(NSURL *)url
 {
     NSString *incomingFilePath = [url path];
-	NSString *incomingFileName = [[incomingFilePath pathComponents] lastObject];
-    
-    DocumentViewController *viewController = [[[DocumentViewController alloc] 
-                                               initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]] autorelease];
-    
-    NSString *filename = incomingFileName;
+	NSString *filename = [[incomingFilePath pathComponents] lastObject];
     AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    if (repositoryItem)
+    DocumentViewController *viewController = [[[DocumentViewController alloc] initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]] autorelease];
+    [viewController setIsDownloaded:YES];
+    
+    /**
+     * Ensure DownloadsViewController is either visible (iPad) or in the navigation stack (iPhone)
+     */
+    UINavigationController *moreNavController = appDelegate.moreNavController;
+    [moreNavController popToRootViewControllerAnimated:NO];
+    
+    MoreViewController *moreViewController = (MoreViewController *)[moreNavController.viewControllers objectAtIndex:0];
+    [moreViewController view]; // Ensure the controller's view is loaded
+    [moreViewController showDownloadsViewWithSelectedFileURL:[NSURL fileURLWithPath:incomingFilePath]];
+    [appDelegate.tabBarController setSelectedViewController:moreNavController];
+    
+    if (IS_IPAD)
     {
-        DownloadInfo *downloadInfo = [[[DownloadInfo alloc] initWithRepositoryItem:repositoryItem] autorelease];
-        DownloadMetadata *fileMetadata = downloadInfo.downloadMetadata;
-        [fileMetadata setAccountUUID:self.saveBackMetadata.accountUUID];
-        [fileMetadata setTenantID:self.saveBackMetadata.tenantID];
-        
-        if (fileMetadata.key)
-        {
-            filename = fileMetadata.key;
-        }
-        [viewController setFileMetadata:fileMetadata];
-        [viewController setCmisObjectId:fileMetadata.objectId];
-        [viewController setCanEditDocument:YES];
-        [viewController setContentMimeType:fileMetadata.contentStreamMimeType];
-        [viewController setSelectedAccountUUID:fileMetadata.accountUUID];
-        [viewController setTenantID:fileMetadata.tenantID];
-        [viewController setIsRestrictedDocument:[[AlfrescoMDMLite sharedInstance] isRestrictedDocument:fileMetadata]];
+        [IpadSupport clearDetailController];
+        [IpadSupport showMasterPopover];
+    }
+    
+    NSData *fileData = [NSData dataWithContentsOfFile:incomingFilePath];
+    [viewController setFileName:filename];
+    [viewController setFileData:fileData];
+    [viewController setFilePath:incomingFilePath];
+    [viewController setHidesBottomBarWhenPushed:YES];
+    
+    if (IS_IPAD)
+    {
+        [IpadSupport pushDetailController:viewController withNavigation:moreNavController andSender:self];
     }
     else
     {
-        [viewController setIsDownloaded:YES];
-
-        // Ensure DownloadsViewController is either visible (iPad) or in the navigation stack (iPhone)
-        UINavigationController *moreNavController = appDelegate.moreNavController;
-        [moreNavController popToRootViewControllerAnimated:NO];
-        
-        MoreViewController *moreViewController = (MoreViewController *)[moreNavController.viewControllers objectAtIndex:0];
-        [moreViewController view]; // Ensure the controller's view is loaded
-        [moreViewController showDownloadsViewWithSelectedFileURL:[NSURL fileURLWithPath:incomingFilePath]];
-        [appDelegate.tabBarController setSelectedViewController:moreNavController];
-        
-        if (IS_IPAD)
-        {
-            [IpadSupport clearDetailController];
-            [IpadSupport showMasterPopover];
-        }
+        [moreNavController pushViewController:viewController animated:NO];
     }
+
+    // Updated document parameters notification
+    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:@"", @"objectId",
+                              [url path], @"newPath", nil];
+    [[NSNotificationCenter defaultCenter] postDocumentUpdatedNotificationWithUserInfo:userInfo];
+}
+
+- (void)displayRepositoryFileWithURL:(NSURL *)url repositoryItem:(RepositoryItem *)repositoryItem
+{
+    NSString *incomingFilePath = [url path];
+	NSString *filename = [[incomingFilePath pathComponents] lastObject];
+    AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
+
+    DocumentViewController *viewController = [[[DocumentViewController alloc] initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]] autorelease];
+    
+    DownloadInfo *downloadInfo = [[[DownloadInfo alloc] initWithRepositoryItem:repositoryItem] autorelease];
+    DownloadMetadata *fileMetadata = downloadInfo.downloadMetadata;
+    [fileMetadata setAccountUUID:self.saveBackMetadata.accountUUID];
+    [fileMetadata setTenantID:self.saveBackMetadata.tenantID];
+    
+    if (fileMetadata.key)
+    {
+        filename = fileMetadata.key;
+    }
+    [viewController setFileMetadata:fileMetadata];
+    [viewController setCmisObjectId:fileMetadata.objectId];
+    [viewController setCanEditDocument:YES];
+    [viewController setContentMimeType:fileMetadata.contentStreamMimeType];
+    [viewController setSelectedAccountUUID:fileMetadata.accountUUID];
+    [viewController setTenantID:fileMetadata.tenantID];
+    [viewController setIsRestrictedDocument:[[AlfrescoMDMLite sharedInstance] isRestrictedDocument:fileMetadata]];
     
     NSData *fileData = [NSData dataWithContentsOfFile:incomingFilePath];
     [viewController setFileName:filename];
@@ -299,12 +321,6 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
         {
             [IpadSupport pushDetailController:viewController withNavigation:currentNavController andSender:self];
         }
-
-        // Also get the master view updated
-        NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:repositoryItem.guid, @"objectId",
-                                  [url path], @"newPath",
-                                  repositoryItem, @"repositoryItem", nil];
-        [[NSNotificationCenter defaultCenter] postDocumentUpdatedNotificationWithUserInfo:userInfo];
     }
     else
     {
@@ -319,12 +335,12 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
             }
         }
         [currentNavController pushViewController:viewController animated:NO];
-
-        // Also get the master view updated - don't send "newPath" in this case
-        NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:repositoryItem.guid, @"objectId",
-                                  repositoryItem, @"repositoryItem", nil];
-        [[NSNotificationCenter defaultCenter] postDocumentUpdatedNotificationWithUserInfo:userInfo];
     }
+
+    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:repositoryItem.guid, @"objectId",
+                              [url path], @"newPath",
+                              repositoryItem, @"repositoryItem", nil];
+    [[NSNotificationCenter defaultCenter] postDocumentUpdatedNotificationWithUserInfo:userInfo];
 }
 
 - (BOOL)updateRepositoryNodeFromFileAtURL:(NSURL *)fileURLToUpload
@@ -374,7 +390,7 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
     if (data != nil)
     {
         NSURL *url = (NSURL *)data;
-        [self displayContentsOfFileWithURL:url repositoryItem:bar.repositoryItem];
+        [self displayRepositoryFileWithURL:url repositoryItem:bar.repositoryItem];
     }
 }
 
@@ -424,7 +440,7 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
         
         if (savedFile != nil)
         {
-            [self displayContentsOfFileWithPath:savedFile];
+            [self displayDownloadedFileWithPath:savedFile];
         }
         else
         {

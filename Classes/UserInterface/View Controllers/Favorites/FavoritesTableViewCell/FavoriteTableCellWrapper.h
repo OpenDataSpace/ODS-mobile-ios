@@ -69,10 +69,6 @@ typedef enum
 @property (nonatomic, assign) SyncActivityType activityType;
 
 /*
- Use this initializer to create an repository item from a current/failed upload
- */
-- (id)initWithUploadInfo:(UploadInfo *)uploadInfo;
-/*
  Use this initializer to create a repository item wreapper from an existing repository item
  */
 - (id)initWithRepositoryItem:(RepositoryItem *)repositoryItem;
