@@ -30,7 +30,6 @@
 #import "FavoriteTableViewCell.h"
 #import "Utility.h"
 #import "AppProperties.h"
-//#import "PreviewManager.h"
 #import "FavoriteDownloadManager.h"
 #import "FavoritesUploadManager.h"
 #import "PreviewManager.h"
@@ -71,16 +70,6 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
     [_accountUUID release];
     [_tenantID release];
     [super dealloc];
-}
-
-- (id)initWithUploadInfo:(UploadInfo *)uploadInfo
-{
-    self = [super init];
-    if (self)
-    {
-        [self setUploadInfo:uploadInfo];
-    }
-    return self;
 }
 
 - (id)initWithRepositoryItem:(RepositoryItem *)repositoryItem
@@ -248,10 +237,10 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
         // TODO: Externalize to a configurable property?
         cell.imageView.image = imageForFilename(child.title);
         
-        if([[FDKeychainUserDefaults standardUserDefaults] boolForKey:kSyncPreference])
+        if ([[FDKeychainUserDefaults standardUserDefaults] boolForKey:kSyncPreference])
         {
-            FavoriteDownloadManager * downloadManager = [FavoriteDownloadManager sharedManager];
-            FavoritesUploadManager * uploadManager = [FavoritesUploadManager sharedManager];
+            FavoriteDownloadManager *downloadManager = [FavoriteDownloadManager sharedManager];
+            FavoritesUploadManager *uploadManager = [FavoritesUploadManager sharedManager];
             if ([downloadManager isManagedDownload:child.guid])
             {
                 [self setIsActivityInProgress:YES];
@@ -259,18 +248,21 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
                 [downloadManager setProgressIndicator:cell.progressBar forObjectId:child.guid];
                 [cell.progressBar setProgress:[downloadManager currentProgressForObjectId:child.guid]];
                 
-                if(self.syncStatus != SyncStatusLoading)
+                if (self.syncStatus != SyncStatusLoading)
                 {
                     self.syncStatus = SyncStatusWaiting;
                     [cell.details setText:NSLocalizedString(@"Waiting to sync...", @"")];
                 }
             }
             
-            if (self.activityType == SyncActivityTypeUpload && ([[uploadManager uploadsQueue] operationCount] > 0))
+            if (self.activityType == SyncActivityTypeUpload)
             {
-                [self setIsActivityInProgress:YES];
-                [self.uploadInfo.uploadRequest setUploadProgressDelegate:cell.progressBar];
-                if(self.syncStatus != SyncStatusLoading)
+                if ([[uploadManager uploadsQueue] operationCount] > 0)
+                {
+                    [self setIsActivityInProgress:YES];
+                    [self.uploadInfo.uploadRequest setUploadProgressDelegate:cell.progressBar];
+                }
+                if (self.syncStatus != SyncStatusLoading)
                 {
                     self.syncStatus = SyncStatusWaiting;
                     [cell.details setText:NSLocalizedString(@"Waiting to sync...", @"")];
@@ -313,6 +305,9 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
             break;
 
         case SyncStatusOffline:
+            /**
+             * NOTE: This image doesn't actually exist in the current codebase!
+             */
             [cell.status setImage:[UIImage imageNamed:@"sync-status-offline"]];
             break;
 
@@ -364,25 +359,24 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
 
 - (void)updateCellDetails:(UITableViewCell *)cell
 {
-    FavoriteTableViewCell * favoriteCell = (FavoriteTableViewCell *) cell;
-    
+    FavoriteTableViewCell *favoriteCell = (FavoriteTableViewCell *)cell;
     RepositoryItem *child = [self anyRepositoryItem];
-    NSString * modificationDate = @"";
+    NSString *modificationDate = @"";
     
     if (self.activityType == SyncActivityTypeUpload)
     {
-        FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
-        NSError *dateerror;
-        
-        NSString * pathToSyncedFile = [fileManager pathToFileDirectory:[fileManager generatedNameForFile:child.title withObjectID:child.guid]];
-        NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:pathToSyncedFile error:&dateerror];
+        FavoriteFileDownloadManager *fileManager = [FavoriteFileDownloadManager sharedInstance];
+        NSError *dateError = nil;
+        NSString *pathToSyncedFile = [fileManager pathToFileDirectory:[fileManager generatedNameForFile:child.title withObjectID:child.guid]];
+        NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:pathToSyncedFile error:&dateError];
+
         modificationDate = formatDocumentDateFromDate([fileAttributes objectForKey:NSFileModificationDate]);
     }
     else 
     {
         if ([child.lastModifiedDate isKindOfClass:[NSDate class]])
         {
-            modificationDate = formatDocumentDateFromDate((NSDate*)child.lastModifiedDate);
+            modificationDate = formatDocumentDateFromDate((NSDate *)child.lastModifiedDate);
         }
         else 
         {
@@ -390,9 +384,9 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
         }
     }
     
-    if(self.syncStatus != SyncStatusWaiting)
+    if (self.syncStatus != SyncStatusWaiting)
     {
-        favoriteCell.details.text = [NSString stringWithFormat:@"%@ • %@", modificationDate,self.fileSize];
+        favoriteCell.details.text = [NSString stringWithFormat:@"%@ • %@", modificationDate ,self.fileSize];
     }
     
     

@@ -93,7 +93,6 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
         [self setDownloadManagerActive:[[[FavoriteDownloadManager sharedManager] allDownloads] count] > 0];
 		[self setChildren:[NSMutableArray array]];
         [self setDownloadsMetadata:[NSMutableDictionary dictionary]];
-		[self refreshData];	
 	}
 	return self;
 }
@@ -124,9 +123,7 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
 
 - (UITableViewCell *)tableView:(UITableView *)tableView downloadedFileCellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    FavoriteTableCellWrapper *cellWrapper = nil;
-    cellWrapper = [self.children objectAtIndex:indexPath.row];
-    
+    FavoriteTableCellWrapper *cellWrapper = [self.children objectAtIndex:indexPath.row];
     return [cellWrapper createCellInTableView:tableView];
 }
 
@@ -239,12 +236,11 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
     {
         NSString *newName = [fileManager generatedNameForFile:item.repositoryItem.title withObjectID:item.repositoryItem.guid];
         NSString *pathToSyncedFile = [fileManager pathToFileDirectory:newName];
-        
         NSString *contentStreamLengthStr = [item.repositoryItem contentStreamLengthString];
         
-        if([[NSFileManager defaultManager] fileExistsAtPath:pathToSyncedFile])
+        if ([[NSFileManager defaultManager] fileExistsAtPath:pathToSyncedFile])
         {
-            NSError *error;
+            NSError *error = nil;
             NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:pathToSyncedFile error:&error];
             totalFilesSize += [[fileAttributes objectForKey:NSFileSize] longValue];
             
@@ -255,7 +251,7 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
             item.fileSize = [FileUtils stringForLongFileSize:[contentStreamLengthStr longLongValue]];
             totalFilesSize += [contentStreamLengthStr longLongValue];
         }
-        
+
         [self.children addObject:item];
     }
     

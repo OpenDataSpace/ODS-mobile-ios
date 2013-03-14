@@ -319,6 +319,12 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
 
 - (void)failWithError:(NSError *)theError
 {
+    if (![NSThread isMainThread])
+    {
+        [self performSelectorOnMainThread:@selector(failWithError:) withObject:theError waitUntilDone:NO];
+        return;
+    }
+    
     AlfrescoLogTrace(@"\n\n***\nRequestFailure\t%@: StatusCode:%d StatusMessage:%@\n\t%@\nURL:%@\n***\n\n", self.class, [self responseStatusCode], [self responseStatusMessage], theError, self.url);
     AlfrescoLogTrace(@"%@", [self responseString]);
     

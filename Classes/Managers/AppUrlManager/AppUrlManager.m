@@ -93,22 +93,27 @@
 }
 
 #pragma mark - Shared instance
-static AppUrlManager *_sharedInstance;
 
 + (AppUrlManager *)sharedManager
 {
-    if (!_sharedInstance)
-    {
-        AddAccountUrlHandler *addAccountHandler = [[[AddAccountUrlHandler alloc] init] autorelease];
-        FileUrlHandler *fileHandler = [[[FileUrlHandler alloc] init] autorelease];
-        ActivateAccountUrlHandler *activateAccountHandler = [[[ActivateAccountUrlHandler alloc] init] autorelease];
-        DocumentPreviewUrlHandler *documentPreviewUrlHandler = [[[DocumentPreviewUrlHandler alloc] init] autorelease];
-
-        NSArray *handlers = [NSArray arrayWithObjects:addAccountHandler, fileHandler, activateAccountHandler, documentPreviewUrlHandler, nil];
-        _sharedInstance = [[AppUrlManager alloc] initWithHandlers:handlers];
-    }
-    
-    return _sharedInstance;
+    static dispatch_once_t predicate = 0;
+    __strong static id sharedObject = nil;
+    dispatch_once(&predicate, ^{
+        NSArray *handlers = @[
+#if DEBUG
+              /**
+               * The "add-account" URL handler is henceforth only active for DEBUG builds due to security concerns.
+               */
+              [[[AddAccountUrlHandler alloc] init] autorelease],
+#endif
+              [[[FileUrlHandler alloc] init] autorelease],
+              [[[ActivateAccountUrlHandler alloc] init] autorelease],
+              [[[DocumentPreviewUrlHandler alloc] init] autorelease]
+              ];
+        
+        sharedObject = [[self alloc] initWithHandlers:handlers];
+    });
+    return sharedObject;
 }
 
 @end
