@@ -624,7 +624,7 @@ static BOOL applicationIsActive = NO;
 
 - (void)presentModalViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
-    [self.mainViewController presentModalViewController:viewController animated:animated];
+    [self.mainViewController presentViewController:viewController animated:animated completion:NULL];
 }
 
 - (BOOL)shouldRemoveTemporaryPassword

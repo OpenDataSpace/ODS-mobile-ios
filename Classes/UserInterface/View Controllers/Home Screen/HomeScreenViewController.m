@@ -236,7 +236,7 @@ static inline UIColor *kBackgroundColor()
 // were the more tab is blank after dismissing the homescreen
 - (void)handleAppEntersBackground:(NSNotification *)notification
 {
-    [self dismiss];
+    [self dismissViewControllerAnimated:NO completion:NULL];
 }
 
 @end
