@@ -558,6 +558,7 @@
 "uploads.items.plural" = "elementi";
 "uploads.retry.cannotRetry" = "Errore permanente di upload. Riavviare l'upload.";
 "Waiting to upload..." = "Upload in attesa...";
+"Failed to Upload" = "Upload non riusc.";
 "Close" = "Chiudi";
 "Clear" = "Cancella";
 "Dismiss" = "Ignora";

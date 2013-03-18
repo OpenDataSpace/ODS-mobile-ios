@@ -558,6 +558,7 @@
 "uploads.items.plural" = "Elemente";
 "uploads.retry.cannotRetry" = "Der Upload ist dauerhaft fehlgeschlagen. Bitte starten Sie den Upload erneut.";
 "Waiting to upload..." = "Warten auf Upload ...";
+"Failed to Upload" = "Fehlgeschlagener Upload";
 "Close" = "Schließen";
 "Clear" = "Löschen";
 "Dismiss" = "Verwerfen";
