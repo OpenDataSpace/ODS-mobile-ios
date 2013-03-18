@@ -558,6 +558,7 @@
 "uploads.items.plural" = "elementos";
 "uploads.retry.cannotRetry" = "La carga ha fallado permanentemente. Inicie la carga de nuevo.";
 "Waiting to upload..." = "Esperando a subir...";
+"Failed to Upload" = "Carga fallida";
 "Close" = "Cerrar";
 "Clear" = "Borrar";
 "Dismiss" = "Rechazar";

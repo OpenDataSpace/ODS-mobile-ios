@@ -107,6 +107,7 @@ static const NSInteger delayToShowErrors = 2.0f;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
+    [self.tableView reloadData];
     
     if ([[FavoriteManager sharedManager] isFirstUse])
     {

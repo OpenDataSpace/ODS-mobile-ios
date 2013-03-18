@@ -27,7 +27,6 @@
 #import "Theme.h"
 #import "GradientView.h"
 #import "ThemeProperties.h"
-#import "HomeScreenViewController.h"
 #import "AlfrescoAppDelegate.h"
 
 static BOOL launchViewPresented = NO;

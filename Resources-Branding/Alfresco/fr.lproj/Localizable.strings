@@ -558,6 +558,7 @@
 "uploads.items.plural" = "éléments";
 "uploads.retry.cannotRetry" = "Echec définitif du téléchargement. Redémarrez le téléchargement.";
 "Waiting to upload..." = "Ajout en attente...";
+"Failed to Upload" = "Echec de l'ajout";
 "Close" = "Fermer";
 "Clear" = "Supprimer";
 "Dismiss" = "Ignorer";
