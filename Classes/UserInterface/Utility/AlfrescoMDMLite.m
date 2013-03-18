@@ -72,32 +72,32 @@ NSTimeInterval const kDocExpiryCheckingInterval = 5;
     return [[FileDownloadManager sharedInstance] isFileRestricted:fileName];
 }
 
-- (BOOL)isRestrictedSync:(NSString*) fileName
+- (BOOL)isRestrictedSync:(NSString *)fileName
 {
     return [[FavoriteFileDownloadManager sharedInstance] isFileRestricted:fileName];
 }
 
-- (BOOL)isRestrictedDocument:(DownloadMetadata*)metadata
+- (BOOL)isRestrictedDocument:(DownloadMetadata *)metadata
 {
     return [metadata.aspects containsObject:kMDMAspectKey];
 }
 
-- (BOOL)isRestrictedRepoItem:(RepositoryItem*)repoItem
+- (BOOL)isRestrictedRepoItem:(RepositoryItem *)repoItem
 {
     return [repoItem.aspects containsObject:kMDMAspectKey];
 }
 
-- (BOOL)isDownloadExpired:(NSString*)fileName withAccountUUID:(NSString*)accountUUID
+- (BOOL)isDownloadExpired:(NSString *)fileName withAccountUUID:(NSString *)accountUUID
 {
     return [self isRestrictedDownload:fileName] && [[FileDownloadManager sharedInstance] isFileExpired:fileName];
 }
 
-- (BOOL)isSyncExpired:(NSString*)fileName withAccountUUID:(NSString*)accountUUID
+- (BOOL)isSyncExpired:(NSString *)fileName withAccountUUID:(NSString *)accountUUID
 {
     return [self isRestrictedSync:fileName] && [[FavoriteFileDownloadManager sharedInstance] isFileExpired:fileName];
 }
 
-- (NSTimeInterval)getSyncFileExpiryTime:(DownloadMetadata*)downloadMetadata
+- (NSTimeInterval)getSyncFileExpiryTime:(DownloadMetadata *)downloadMetadata
 {
     FavoriteFileDownloadManager *fileManager = [FavoriteFileDownloadManager sharedInstance];
     return [fileManager calculateTimeRemainingToExpireForFile:[fileManager generatedNameForFile:downloadMetadata.filename withObjectID:downloadMetadata.objectId]];
@@ -105,7 +105,7 @@ NSTimeInterval const kDocExpiryCheckingInterval = 5;
 
 #pragma mark - Utility Methods
 
-- (void)setRestrictedAspect:(BOOL)setAspect forItem:(RepositoryItem*)repoItem
+- (void)setRestrictedAspect:(BOOL)setAspect forItem:(RepositoryItem *)repoItem
 {
     if (setAspect)
     {
@@ -156,7 +156,7 @@ NSTimeInterval const kDocExpiryCheckingInterval = 5;
 
 #pragma mark - Load MDM Info
 
-- (void)loadMDMInfo:(NSArray*)nodes withAccountUUID:(NSString*)accountUUID andTenantId:(NSString*)tenantID delegate:(id<AlfrescoMDMLiteDelegate>)delegate
+- (void)loadMDMInfo:(NSArray*)nodes withAccountUUID:(NSString *)accountUUID andTenantId:(NSString *)tenantID delegate:(id<AlfrescoMDMLiteDelegate>)delegate
 {
     if (![self isMDMEnabledForAccountUUID:accountUUID tenantID:tenantID])
     {
