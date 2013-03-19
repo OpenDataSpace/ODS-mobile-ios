@@ -35,15 +35,22 @@
 
 @implementation IpadSupport
 
-DetailNavigationController * detailController;
+DetailNavigationController *detailController;
 
 + (void)clearDetailController 
 {
     if (detailController != nil)
     {
-        PlaceholderViewController *viewController = [[PlaceholderViewController alloc] init];
-        [IpadSupport pushDetailController:viewController withNavigation:nil andSender:nil dismissPopover:NO];
-        [viewController release];
+        if (detailController.fullScreenModalController != nil)
+        {
+            [detailController performCloseAction:nil];
+        }
+        else
+        {
+            PlaceholderViewController *viewController = [[PlaceholderViewController alloc] init];
+            [IpadSupport pushDetailController:viewController withNavigation:nil andSender:nil dismissPopover:NO];
+            [viewController release];
+        }
     }
 }
 

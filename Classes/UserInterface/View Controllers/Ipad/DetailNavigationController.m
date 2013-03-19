@@ -30,7 +30,6 @@
 
 @interface DetailNavigationController ()
 @property (nonatomic, retain, readwrite) UIViewController *detailViewController;
-@property (nonatomic, retain) UIViewController *fullScreenModalController;
 - (void)configureView;
 @end
 

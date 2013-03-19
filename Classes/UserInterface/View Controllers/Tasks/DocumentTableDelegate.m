@@ -182,9 +182,11 @@
     }
 }
 
-- (void)objectByIdRequestFailed: (ASIHTTPRequest *)request
+- (void)objectByIdRequestFailed:(ASIHTTPRequest *)request
 {
     self.objectByIdRequest = nil;
+    [self stopHUD];
+    [self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:YES];
 }
 
 - (void)startDownloadRequest:(ObjectByIdRequest *)request
