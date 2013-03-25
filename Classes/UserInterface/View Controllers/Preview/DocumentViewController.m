@@ -1233,7 +1233,8 @@ NSInteger const kGetCommentsCountTag = 6;
 
 - (void)commentsHttpRequestDidFinish:(id)sender
 {
-    CommentsHttpRequest * request = (CommentsHttpRequest *)sender;
+    CommentsHttpRequest *request = (CommentsHttpRequest *)sender;
+    request.delegate = nil;
     
     if (request.tag == kGetCommentsCountTag)
     {
@@ -1249,6 +1250,9 @@ NSInteger const kGetCommentsCountTag = 6;
 
 - (void)commentsHttpRequestDidFail:(id)sender
 {
+    CommentsHttpRequest *request = (CommentsHttpRequest *)sender;
+    request.delegate = nil;
+    
     AlfrescoLogDebug(@"commentsHttpRequestDidFail!");
     [self stopHUD];
 }
@@ -1257,6 +1261,8 @@ NSInteger const kGetCommentsCountTag = 6;
 
 - (void)nodeLocationHttpRequestDidFinish:(NodeLocationHTTPRequest *)request
 {
+    request.delegate = nil;
+    
     // We have the document's location
     self.hasNodeLocation = YES;
     
@@ -1267,8 +1273,10 @@ NSInteger const kGetCommentsCountTag = 6;
     [self.actionButton setEnabled:YES];
 }
 
-- (void)nodeLocationHttpRequestDidFail:(id)sender
+- (void)nodeLocationHttpRequestDidFail:(NodeLocationHTTPRequest *)request
 {
+    request.delegate = nil;
+    
     // We didn't get the node's location
     self.hasNodeLocation = NO;
 
@@ -1400,11 +1408,9 @@ NSInteger const kGetCommentsCountTag = 6;
 
 #pragma mark - LikeHTTPRequest Delegate
 
-- (void)likeRequest:(LikeHTTPRequest *)request likeRatingServiceDefined:(NSString *)isDefined 
-{
-}
 - (void)likeRequest:(LikeHTTPRequest *)request documentIsLiked:(NSString *)isLiked 
 {
+    request.likeDelegate = nil;
     BOOL boolLiked = [isLiked boolValue];
     
     if (self.likeBarButton.toggleState != boolLiked)
@@ -1416,23 +1422,26 @@ NSInteger const kGetCommentsCountTag = 6;
 
 - (void)likeRequest:(LikeHTTPRequest *)request likeDocumentSuccess:(NSString *)isLiked 
 {
+    request.likeDelegate = nil;
     [self.likeBarButton.barButton setEnabled:YES];
 }
 
 - (void)likeRequest:(LikeHTTPRequest *)request unlikeDocumentSuccess:(NSString *)isUnliked
 {
+    request.likeDelegate = nil;
     [self.likeBarButton.barButton setEnabled:YES];
 }
 
 - (void)likeRequest:(LikeHTTPRequest *)request failedWithError:(NSError *)theError 
 {
+    request.likeDelegate = nil;
     AlfrescoLogDebug(@"likeRequest:failedWithError:%@", [theError description]);
     if (request.tag == kLike_GET_Request)
     {
         return;
     }
     
-    NSString* errorMessage = nil;
+    NSString *errorMessage = nil;
     if (self.likeBarButton.toggleState)
     {
         errorMessage = NSLocalizedString(@"documentview.like.failure.message", @"Failed to like the document" );
