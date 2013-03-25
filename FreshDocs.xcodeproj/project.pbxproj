@@ -421,6 +421,10 @@
 		27D8F94E1593768A00BFC320 /* stop-transfer@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27D8F94A1593768A00BFC320 /* stop-transfer@2x.png */; };
 		27DB063716DD25EC0002B040 /* CustomLongPressGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 27DB063616DD25EC0002B040 /* CustomLongPressGestureRecognizer.m */; };
 		27DB063816DD25EC0002B040 /* CustomLongPressGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 27DB063616DD25EC0002B040 /* CustomLongPressGestureRecognizer.m */; };
+		27DEC61A17008AD3009DFEE3 /* key.png in Resources */ = {isa = PBXBuildFile; fileRef = 27DEC61817008AD3009DFEE3 /* key.png */; };
+		27DEC61B17008AD3009DFEE3 /* key.png in Resources */ = {isa = PBXBuildFile; fileRef = 27DEC61817008AD3009DFEE3 /* key.png */; };
+		27DEC61C17008AD3009DFEE3 /* key@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27DEC61917008AD3009DFEE3 /* key@2x.png */; };
+		27DEC61D17008AD3009DFEE3 /* key@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27DEC61917008AD3009DFEE3 /* key@2x.png */; };
 		27E1EFBA156DB8CF00E7BB07 /* DownloadNetworkQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 27E1EFB9156DB8CF00E7BB07 /* DownloadNetworkQueue.m */; };
 		27E1EFBB156DB8CF00E7BB07 /* DownloadNetworkQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 27E1EFB9156DB8CF00E7BB07 /* DownloadNetworkQueue.m */; };
 		27E659D315091BD300AD4B61 /* DownloadSummaryTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 27E659D215091BD300AD4B61 /* DownloadSummaryTableViewCell.m */; };
@@ -1940,6 +1944,8 @@
 		27D8F94A1593768A00BFC320 /* stop-transfer@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stop-transfer@2x.png"; sourceTree = "<group>"; };
 		27DB063516DD25EC0002B040 /* CustomLongPressGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomLongPressGestureRecognizer.h; sourceTree = "<group>"; };
 		27DB063616DD25EC0002B040 /* CustomLongPressGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomLongPressGestureRecognizer.m; sourceTree = "<group>"; };
+		27DEC61817008AD3009DFEE3 /* key.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = key.png; sourceTree = "<group>"; };
+		27DEC61917008AD3009DFEE3 /* key@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "key@2x.png"; sourceTree = "<group>"; };
 		27E1EFB8156DB8CF00E7BB07 /* DownloadNetworkQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DownloadNetworkQueue.h; path = Download/DownloadNetworkQueue.h; sourceTree = "<group>"; };
 		27E1EFB9156DB8CF00E7BB07 /* DownloadNetworkQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DownloadNetworkQueue.m; path = Download/DownloadNetworkQueue.m; sourceTree = "<group>"; };
 		27E659D115091BD300AD4B61 /* DownloadSummaryTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadSummaryTableViewCell.h; sourceTree = "<group>"; };
@@ -5261,6 +5267,8 @@
 		AA7F9A48144D0EE60047FA9F /* apple */ = {
 			isa = PBXGroup;
 			children = (
+				27DEC61817008AD3009DFEE3 /* key.png */,
+				27DEC61917008AD3009DFEE3 /* key@2x.png */,
 				AA7F9A49144D0EE60047FA9F /* keynote.png */,
 				AA7F9A4A144D0EE60047FA9F /* keynote@2x.png */,
 				AA7F9A4B144D0EE60047FA9F /* numbers.png */,
@@ -6238,6 +6246,8 @@
 				275442BA16CC82B5000A4FCF /* red-flag.png in Resources */,
 				275442BC16CC82B5000A4FCF /* red-flag@2x.png in Resources */,
 				27C5EEAD16D589540075E70F /* CreateFolderConfiguration.plist in Resources */,
+				27DEC61B17008AD3009DFEE3 /* key.png in Resources */,
+				27DEC61D17008AD3009DFEE3 /* key@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6629,6 +6639,8 @@
 				275442B916CC82B5000A4FCF /* red-flag.png in Resources */,
 				275442BB16CC82B5000A4FCF /* red-flag@2x.png in Resources */,
 				27C5EEAC16D589540075E70F /* CreateFolderConfiguration.plist in Resources */,
+				27DEC61A17008AD3009DFEE3 /* key.png in Resources */,
+				27DEC61C17008AD3009DFEE3 /* key@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

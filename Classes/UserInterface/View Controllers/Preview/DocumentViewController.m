@@ -523,6 +523,10 @@ NSInteger const kGetCommentsCountTag = 6;
             
             self.presentMediaViewController = YES;
         }
+        else if (self.previewRequest)
+        {
+            [self.webView loadRequest:self.previewRequest];
+        }
         else
         {
             [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:path];
@@ -1350,7 +1354,7 @@ NSInteger const kGetCommentsCountTag = 6;
 
 #pragma mark - UIWebViewDelegate
 
-- (void) webViewDidFinishLoad:(UIWebView *)webView
+- (void)webViewDidFinishLoad:(UIWebView *)webView
 {
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationDuration:kDocumentFadeInTime];
