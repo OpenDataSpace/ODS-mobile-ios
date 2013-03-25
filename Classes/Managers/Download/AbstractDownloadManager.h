@@ -51,6 +51,7 @@
 
 // Returns all the failed downloads managed by this object
 - (NSArray *)failedDownloads;
+- (BOOL)isFailedDownload:(NSString *)cmisObjectId;
 
 // Is the CMIS Object in the managed downloads queue?
 - (BOOL)isManagedDownload:(NSString *)cmisObjectId;

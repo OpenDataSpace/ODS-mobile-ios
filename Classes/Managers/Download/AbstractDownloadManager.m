@@ -76,6 +76,14 @@
     return [allDownloads filteredArrayUsingPredicate:predicate];
 }
 
+- (BOOL)isDownloadState:(DownloadInfoStatus)downloadState forManagedDownload:(NSString *)cmisObjectId
+{
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"downloadStatus == %@ AND cmisObjectId MATCHES %@", [NSNumber numberWithInt:downloadState], cmisObjectId];
+    NSArray *matchingDownloads = [self filterDownloadsWithPredicate:predicate];
+    
+    return matchingDownloads.count > 0;
+}
+
 - (NSArray *)activeDownloads
 {
     NSPredicate *activePredicate = [NSPredicate predicateWithFormat:@"downloadStatus == %@ OR downloadStatus == %@", [NSNumber numberWithInt:DownloadInfoStatusActive], [NSNumber numberWithInt:DownloadInfoStatusDownloading]];
@@ -88,6 +96,11 @@
     return [self filterDownloadsWithPredicate:failedPredicate];
 }
 
+- (BOOL)isFailedDownload:(NSString *)cmisObjectId
+{
+    return [self isDownloadState:DownloadInfoStatusFailed forManagedDownload:cmisObjectId];
+}
+
 - (BOOL)isManagedDownload:(NSString *)cmisObjectId
 {
     return [_allDownloads objectForKey:cmisObjectId] != nil;
@@ -95,10 +108,7 @@
 
 - (BOOL)isDownloading:(NSString *)cmisObjectId
 {
-    NSPredicate *isDownloadingPredicate = [NSPredicate predicateWithFormat:@"downloadStatus == %@ AND cmisObjectId MATCHES %@", [NSNumber numberWithInt:DownloadInfoStatusDownloading], cmisObjectId];
-    NSArray *matchingDownloads = [self filterDownloadsWithPredicate:isDownloadingPredicate];
-    
-    return matchingDownloads.count > 0;
+    return [self isDownloadState:DownloadInfoStatusDownloading forManagedDownload:cmisObjectId];
 }
 
 - (DownloadInfo *)managedDownload:(NSString *)cmisObjectId
