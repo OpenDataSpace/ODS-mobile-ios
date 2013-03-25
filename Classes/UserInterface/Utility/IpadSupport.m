@@ -153,7 +153,6 @@ DetailNavigationController *detailController;
 
 + (void)presentModalViewController:(UIViewController *)newController withNavigation:(UINavigationController *)navController
 {
-    
     if (IS_IPAD || navController == nil) 
     {
         AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];

@@ -195,4 +195,9 @@
     [self postNotificationName:kNotificationViewedDocumentRestrictionStatus object:nil userInfo:userInfo];
 }
 
+- (void)postSessionClearedNotificationWithUserInfo:(NSDictionary *)userInfo
+{
+    [self postNotificationName:kNotificationSessionCleared object:nil userInfo:userInfo];
+}
+
 @end

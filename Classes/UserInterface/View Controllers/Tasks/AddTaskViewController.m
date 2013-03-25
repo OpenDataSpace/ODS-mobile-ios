@@ -37,6 +37,7 @@
 #import "DocumentItem.h"
 #import "Kal.h"
 #import "AccountManager.h"
+#import "NSNotificationCenter+CustomNotification.h"
 
 @interface AddTaskViewController () <ASIHTTPRequestDelegate, DocumentPickerViewControllerDelegate, DatePickerDelegate, PeoplePickerDelegate, MBProgressHUDDelegate>
 
@@ -96,6 +97,12 @@ BOOL shouldSetFirstResponderOnAppear;
 
 - (void)dealloc
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    if (self.datePopoverController)
+    {
+        [self.datePopoverController dismissPopoverAnimated:NO];
+    }
+    
     [_defaultText release];
     [_documentPickerViewController release];
     [_dueDate release];
@@ -160,6 +167,8 @@ BOOL shouldSetFirstResponderOnAppear;
     [self.navigationItem setRightBarButtonItem:createButton];
     
     self.taskTypeFieldGroups = [self createTaskTypeFieldsArray];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleSessionClearedNotification:) name:kNotificationSessionCleared object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -729,11 +738,7 @@ BOOL shouldSetFirstResponderOnAppear;
         popoverRect.size.width = MIN(popoverRect.size.width, 100) ; 
         popoverRect.origin.x  = popoverRect.origin.x; 
         
-        [self.datePopoverController 
-         presentPopoverFromRect:popoverRect
-         inView:self.view
-         permittedArrowDirections:UIPopoverArrowDirectionUp
-         animated:YES];
+        [self.datePopoverController presentPopoverFromRect:popoverRect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
     }
     else 
     {
@@ -760,7 +765,8 @@ BOOL shouldSetFirstResponderOnAppear;
         }
     }
     
-    if (self.datePopoverController) {
+    if (self.datePopoverController)
+    {
         [self.datePopoverController dismissPopoverAnimated:YES];
         self.datePopoverController = nil;
     }  
@@ -768,7 +774,8 @@ BOOL shouldSetFirstResponderOnAppear;
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
-    if (self.datePopoverController) {
+    if (self.datePopoverController)
+    {
         [self.datePopoverController dismissPopoverAnimated:YES];
         self.datePopoverController = nil;
     }
@@ -820,6 +827,19 @@ BOOL shouldSetFirstResponderOnAppear;
     else
     {
         [[self.navigationItem rightBarButtonItem] setEnabled:NO];
+    }
+}
+
+#pragma mark - Session Cleared Notification handler
+
+- (void)handleSessionClearedNotification:(NSNotification *)notification
+{
+    NSString *accountUUID = notification.userInfo[@"accountUUID"];
+    if (accountUUID == self.accountUuid)
+    {
+        [self dismissViewControllerAnimated:YES completion:^(void) {
+            displayWarningMessageWithTitle(NSLocalizedString(@"docpreview.accountInactive.title", @"Account Inactive"), NSLocalizedString(@"task.create.error", @"Task creation failed"));
+        }];
     }
 }
 

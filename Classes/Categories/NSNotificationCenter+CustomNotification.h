@@ -236,13 +236,21 @@
 - (void)postFavoriteDownloadCancelledNotificationWithUserInfo:(NSDictionary *)userInfo;
 
 - (void)postDocumentFavoritedOrUnfavoritedNotificationWithUserInfo:(NSDictionary *)userInfo;
+
 /**
- * Used to post a notification when a task has been cpleted.
+ * Used to post a notification when a task has been completed.
  *
  * User Info:
  *      (NSString *) "taskId" : the id of the task which has been completed.
  */
 - (void)postTaskCompletedNotificationWithUserInfo:(NSDictionary *)userInfo;
 
+/**
+ * Used to post a notification when a account's session has been cleared, either by timing out, or by the app being backgrounded
+ *
+ * User Info:
+ *    (NSString *) "accountUUID": The UUID of the account that has been cleared
+ */
+- (void)postSessionClearedNotificationWithUserInfo:(NSDictionary *)userInfo;
 
 @end
