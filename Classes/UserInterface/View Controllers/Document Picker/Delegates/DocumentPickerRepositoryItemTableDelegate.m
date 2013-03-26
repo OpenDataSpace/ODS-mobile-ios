@@ -129,9 +129,9 @@
     NSAssert(nibItems, @"Failed to load object from NIB");
     
     CGRect frame = cell.restrictedImage.frame;
-    frame.origin.x = self.tableView.frame.size.width - cell.restrictedImage.frame.size.width;
+    frame.origin.x = cell.contentView.frame.size.width - cell.restrictedImage.frame.size.width;
     cell.restrictedImage.frame = frame;
-    [cell addSubview:cell.restrictedImage];
+    [cell.contentView addSubview:cell.restrictedImage];
     
     return cell;
 }
@@ -139,9 +139,9 @@
 - (void)customizeTableViewCell:(UITableViewCell *)tableViewCell forIndexPath:(NSIndexPath *)indexPath
 {
     RepositoryItem *item = [self.items objectAtIndex:indexPath.row];
-    
     RepositoryItemTableViewCell *cell = (RepositoryItemTableViewCell *)tableViewCell;
     NSString *filename = [item.metadata valueForKey:@"cmis:name"];
+
     [cell.filename setText:((!filename || [filename length] == 0) ? item.title : filename)];
 
     if ([item isFolder])

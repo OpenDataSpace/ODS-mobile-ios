@@ -158,7 +158,8 @@ NSInteger const kRestrictedImageViewTag = 30;
 		[[cell textLabel] setFont:[UIFont boldSystemFontOfSize:17.0f]];
 		[[cell detailTextLabel] setFont:[UIFont italicSystemFontOfSize:14.0f]];
         
-        UIImageView * restrictedView = [[[UIImageView alloc] initWithFrame:CGRectMake(cell.contentView.frame.size.width - 24, 0, 24, 24)] autorelease];
+        UIImageView *restrictedView = [[[UIImageView alloc] initWithFrame:CGRectMake(cell.contentView.frame.size.width - 24, 0, 24, 24)] autorelease];
+        restrictedView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
         restrictedView.tag = kRestrictedImageViewTag;
         [cell.contentView addSubview:restrictedView];
 	}
