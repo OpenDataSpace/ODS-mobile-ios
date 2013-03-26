@@ -189,50 +189,6 @@ NSInteger const kGetCommentsCountTag = 6;
     [self updateRemoteRequestActionAvailability];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    
-    BOOL usingAlfresco = [[AccountManager sharedManager] isAlfrescoAccountForAccountUUID:self.selectedAccountUUID];
-    BOOL showCommentButton = [[AppProperties propertyForKey:kPShowCommentButton] boolValue];
-    BOOL useLocalComments = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"useLocalComments"];
-    
-    AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:self.selectedAccountUUID];
-    BOOL validAccount = account ? YES : NO;
-    
-#ifdef TARGET_ALFRESCO
-    if (self.isDownloaded)
-    {
-        showCommentButton = NO;
-    }
-#endif
-    
-    // Calling the comment request service for the comment count
-    // If there's no connection we should not perform the request    
-    if (!self.isDocumentExpired && self.canPerformRemoteRequests && (showCommentButton && usingAlfresco) && !(self.isDownloaded && useLocalComments) && validAccount)
-    {
-        self.commentsRequest = [CommentsHttpRequest commentsHttpGetRequestWithNodeRef:[NodeRef nodeRefFromCmisObjectId:self.cmisObjectId]
-                                                                          accountUUID:self.selectedAccountUUID
-                                                                             tenantID:self.tenantID];
-        [self.commentsRequest setDelegate:self];
-        [self.commentsRequest setDidFinishSelector:@selector(commentsHttpRequestDidFinish:)];
-        [self.commentsRequest setDidFailSelector:@selector(commentsHttpRequestDidFail:)];
-        [self.commentsRequest setTag:kGetCommentsCountTag];
-        
-        // delaying request by 0.5 seconds, to allow enough time for modelview (EditTextDocumentViewController) to disappear before presenting another modelview (password prompt) in case session has expired
-        dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC);
-        dispatch_after(delay, dispatch_get_main_queue(), ^(void)
-        {
-            [self.commentsRequest startAsynchronous];
-        });
-    }
-    else if (useLocalComments)
-    {
-        //We retrieve the count from the saved comments
-        [self replaceCommentButtonWithBadge:[NSString stringWithFormat:@"%d", [self.fileMetadata.localComments count]]];
-    }
-}
-
 
 /*
  Started with the idea in http://stackoverflow.com/questions/1110052/uiview-doesnt-resize-to-full-screen-when-hiding-the-nav-bar-tab-bar
@@ -388,6 +344,8 @@ NSInteger const kGetCommentsCountTag = 6;
     [updatedItemsArray insertObject:self.actionButton atIndex:actionButtonIndex];
     
     BOOL showCommentButton = [[AppProperties propertyForKey:kPShowCommentButton] boolValue];
+    BOOL useLocalComments = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"useLocalComments"];
+    BOOL validAccount = account ? YES : NO;
     
 #ifdef TARGET_ALFRESCO
     if (self.isDownloaded)
@@ -407,6 +365,25 @@ NSInteger const kGetCommentsCountTag = 6;
         [updatedItemsArray addObject:[self iconSpacer]];
         spacersCount++;
         [updatedItemsArray addObject:self.commentButton];
+
+        // Calling the comment request service for the comment count. If there's no connection we should not perform the request
+        if (!self.isDocumentExpired && self.canPerformRemoteRequests && !(self.isDownloaded && useLocalComments) && validAccount)
+        {
+            self.commentsRequest = [CommentsHttpRequest commentsHttpGetRequestWithNodeRef:[NodeRef nodeRefFromCmisObjectId:self.cmisObjectId]
+                                                                              accountUUID:self.selectedAccountUUID
+                                                                                 tenantID:self.tenantID];
+            [self.commentsRequest setDelegate:self];
+            [self.commentsRequest setDidFinishSelector:@selector(commentsHttpRequestDidFinish:)];
+            [self.commentsRequest setDidFailSelector:@selector(commentsHttpRequestDidFail:)];
+            [self.commentsRequest setSuppressAllErrors:YES];
+            [self.commentsRequest setTag:kGetCommentsCountTag];
+            [self.commentsRequest startAsynchronous];
+        }
+    }
+    else if (useLocalComments)
+    {
+        //We retrieve the count from the saved comments
+        [self replaceCommentButtonWithBadge:[NSString stringWithFormat:@"%d", [self.fileMetadata.localComments count]]];
     }
     
     // Show favorites bar button item
