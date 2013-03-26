@@ -289,7 +289,7 @@ NSInteger const kGetCommentsCountTag = 6;
             
             if (existsInObstacles)
             {
-                [self.navigationController popViewControllerAnimated:YES];
+                [self.navigationController popViewControllerAnimated:NO];
             }
         }
     }
@@ -415,6 +415,7 @@ NSInteger const kGetCommentsCountTag = 6;
                                                                 tenantID:self.fileMetadata.tenantID];
             [self.likeRequest setLikeDelegate:self];
             [self.likeRequest setTag:kLike_GET_Request];
+            [self.likeRequest setSuppressAllErrors:YES];
             [self.likeRequest startAsynchronous];
         }
         
