@@ -451,9 +451,10 @@ static NSInteger kAlertDeleteAccountTag = 1;
         return 400;
     }
     [request addBasicAuthenticationHeaderWithUsername:username andPassword:password];
-    [request setTimeOutSeconds:20];
-    [request setValidatesSecureCertificate:userPrefValidateSSLCertificate()];
-    [request setUseSessionPersistence:NO];
+    request.timeOutSeconds = 20;
+    request.validatesSecureCertificate = userPrefValidateSSLCertificate();
+    request.useSessionPersistence = NO;
+    request.suppressAllErrors = YES;
     [BaseHTTPRequest addClientCertificatesFromAccount:self.accountInfo toRequest:request];
     [request startSynchronous];
     
@@ -472,7 +473,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
         }
     }
     
-    return [request responseStatusCode];
+    return request.responseStatusCode;
 }
 
 - (int)requestToOtherServer

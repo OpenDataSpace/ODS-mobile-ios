@@ -74,9 +74,9 @@
                                                              forKeys:[NSArray arrayWithObjects:kDocumentsUnfavoritedOnServerWithLocalChanges, kDocumentsDeletedOnServerWithLocalChanges, nil]];
 }
 
-- (void)viewDidDisappear:(BOOL)animated
+- (void)viewWillDisappear:(BOOL)animated
 {
-    [super viewDidDisappear:animated];
+    [super viewWillDisappear:animated];
     [self handleSyncObstacles];
 }
 
@@ -111,7 +111,7 @@
     if ([[self.errorDictionary objectForKey:key] count] != 0)
     {
         NSString *headerText = NSLocalizedString([self.sectionHeaders objectForKey:key], @"TableView Header Section Descriptions");
-        return [headerText sizeWithFont:[UIFont systemFontOfSize:14.0f] constrainedToSize:CGSizeMake(320, 2000) lineBreakMode:UILineBreakModeWordWrap].height;
+        return [headerText sizeWithFont:[UIFont systemFontOfSize:14.0f] constrainedToSize:CGSizeMake(300, 2000) lineBreakMode:NSLineBreakByWordWrapping].height;
     }
     return 0;
 }
@@ -224,21 +224,20 @@
     {
         int horizontalMargin = 10;
         int verticalMargin = 10;
+        CGFloat heightRequired = [self calculateHeaderHeightForSection:section];
         
-        UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, [self calculateHeaderHeightForSection:section])];
-        
+        UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, heightRequired + (verticalMargin * 2))];
         headerView.backgroundColor = [UIColor clearColor];
         headerView.contentMode = UIViewContentModeScaleAspectFit;
         headerView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(horizontalMargin, verticalMargin, tableView.frame.size.width - (horizontalMargin * 2), [self calculateHeaderHeightForSection:section] - (verticalMargin * 2))];
-        label.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;;
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(horizontalMargin, -verticalMargin, tableView.frame.size.width - (horizontalMargin * 2), heightRequired)];
+        label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         label.backgroundColor = [UIColor clearColor];
         label.textAlignment = UITextAlignmentCenter;
         label.lineBreakMode = UILineBreakModeWordWrap;
         label.numberOfLines = 0;
         label.font = [UIFont systemFontOfSize:14.0f];
-        
         label.text = NSLocalizedString([self.sectionHeaders objectForKey:key], @"TableView Header Section Descriptions");
         
         [headerView addSubview:label];

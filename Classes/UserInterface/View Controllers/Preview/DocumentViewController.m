@@ -189,50 +189,6 @@ NSInteger const kGetCommentsCountTag = 6;
     [self updateRemoteRequestActionAvailability];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    
-    BOOL usingAlfresco = [[AccountManager sharedManager] isAlfrescoAccountForAccountUUID:self.selectedAccountUUID];
-    BOOL showCommentButton = [[AppProperties propertyForKey:kPShowCommentButton] boolValue];
-    BOOL useLocalComments = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"useLocalComments"];
-    
-    AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:self.selectedAccountUUID];
-    BOOL validAccount = account ? YES : NO;
-    
-#ifdef TARGET_ALFRESCO
-    if (self.isDownloaded)
-    {
-        showCommentButton = NO;
-    }
-#endif
-    
-    // Calling the comment request service for the comment count
-    // If there's no connection we should not perform the request    
-    if (!self.isDocumentExpired && self.canPerformRemoteRequests && (showCommentButton && usingAlfresco) && !(self.isDownloaded && useLocalComments) && validAccount)
-    {
-        self.commentsRequest = [CommentsHttpRequest commentsHttpGetRequestWithNodeRef:[NodeRef nodeRefFromCmisObjectId:self.cmisObjectId]
-                                                                          accountUUID:self.selectedAccountUUID
-                                                                             tenantID:self.tenantID];
-        [self.commentsRequest setDelegate:self];
-        [self.commentsRequest setDidFinishSelector:@selector(commentsHttpRequestDidFinish:)];
-        [self.commentsRequest setDidFailSelector:@selector(commentsHttpRequestDidFail:)];
-        [self.commentsRequest setTag:kGetCommentsCountTag];
-        
-        // delaying request by 0.5 seconds, to allow enough time for modelview (EditTextDocumentViewController) to disappear before presenting another modelview (password prompt) in case session has expired
-        dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC);
-        dispatch_after(delay, dispatch_get_main_queue(), ^(void)
-        {
-            [self.commentsRequest startAsynchronous];
-        });
-    }
-    else if (useLocalComments)
-    {
-        //We retrieve the count from the saved comments
-        [self replaceCommentButtonWithBadge:[NSString stringWithFormat:@"%d", [self.fileMetadata.localComments count]]];
-    }
-}
-
 
 /*
  Started with the idea in http://stackoverflow.com/questions/1110052/uiview-doesnt-resize-to-full-screen-when-hiding-the-nav-bar-tab-bar
@@ -388,6 +344,8 @@ NSInteger const kGetCommentsCountTag = 6;
     [updatedItemsArray insertObject:self.actionButton atIndex:actionButtonIndex];
     
     BOOL showCommentButton = [[AppProperties propertyForKey:kPShowCommentButton] boolValue];
+    BOOL useLocalComments = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"useLocalComments"];
+    BOOL validAccount = account ? YES : NO;
     
 #ifdef TARGET_ALFRESCO
     if (self.isDownloaded)
@@ -407,6 +365,25 @@ NSInteger const kGetCommentsCountTag = 6;
         [updatedItemsArray addObject:[self iconSpacer]];
         spacersCount++;
         [updatedItemsArray addObject:self.commentButton];
+
+        // Calling the comment request service for the comment count. If there's no connection we should not perform the request
+        if (!self.isDocumentExpired && self.canPerformRemoteRequests && !(self.isDownloaded && useLocalComments) && validAccount)
+        {
+            self.commentsRequest = [CommentsHttpRequest commentsHttpGetRequestWithNodeRef:[NodeRef nodeRefFromCmisObjectId:self.cmisObjectId]
+                                                                              accountUUID:self.selectedAccountUUID
+                                                                                 tenantID:self.tenantID];
+            [self.commentsRequest setDelegate:self];
+            [self.commentsRequest setDidFinishSelector:@selector(commentsHttpRequestDidFinish:)];
+            [self.commentsRequest setDidFailSelector:@selector(commentsHttpRequestDidFail:)];
+            [self.commentsRequest setSuppressAllErrors:YES];
+            [self.commentsRequest setTag:kGetCommentsCountTag];
+            [self.commentsRequest startAsynchronous];
+        }
+    }
+    else if (useLocalComments)
+    {
+        //We retrieve the count from the saved comments
+        [self replaceCommentButtonWithBadge:[NSString stringWithFormat:@"%d", [self.fileMetadata.localComments count]]];
     }
     
     // Show favorites bar button item
@@ -522,6 +499,10 @@ NSInteger const kGetCommentsCountTag = 6;
             self.webView = nil;
             
             self.presentMediaViewController = YES;
+        }
+        else if (self.previewRequest)
+        {
+            [self.webView loadRequest:self.previewRequest];
         }
         else
         {
@@ -1229,7 +1210,8 @@ NSInteger const kGetCommentsCountTag = 6;
 
 - (void)commentsHttpRequestDidFinish:(id)sender
 {
-    CommentsHttpRequest * request = (CommentsHttpRequest *)sender;
+    CommentsHttpRequest *request = (CommentsHttpRequest *)sender;
+    request.delegate = nil;
     
     if (request.tag == kGetCommentsCountTag)
     {
@@ -1245,6 +1227,9 @@ NSInteger const kGetCommentsCountTag = 6;
 
 - (void)commentsHttpRequestDidFail:(id)sender
 {
+    CommentsHttpRequest *request = (CommentsHttpRequest *)sender;
+    request.delegate = nil;
+    
     AlfrescoLogDebug(@"commentsHttpRequestDidFail!");
     [self stopHUD];
 }
@@ -1253,6 +1238,8 @@ NSInteger const kGetCommentsCountTag = 6;
 
 - (void)nodeLocationHttpRequestDidFinish:(NodeLocationHTTPRequest *)request
 {
+    request.delegate = nil;
+    
     // We have the document's location
     self.hasNodeLocation = YES;
     
@@ -1263,8 +1250,10 @@ NSInteger const kGetCommentsCountTag = 6;
     [self.actionButton setEnabled:YES];
 }
 
-- (void)nodeLocationHttpRequestDidFail:(id)sender
+- (void)nodeLocationHttpRequestDidFail:(NodeLocationHTTPRequest *)request
 {
+    request.delegate = nil;
+    
     // We didn't get the node's location
     self.hasNodeLocation = NO;
 
@@ -1350,7 +1339,7 @@ NSInteger const kGetCommentsCountTag = 6;
 
 #pragma mark - UIWebViewDelegate
 
-- (void) webViewDidFinishLoad:(UIWebView *)webView
+- (void)webViewDidFinishLoad:(UIWebView *)webView
 {
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationDuration:kDocumentFadeInTime];
@@ -1396,11 +1385,9 @@ NSInteger const kGetCommentsCountTag = 6;
 
 #pragma mark - LikeHTTPRequest Delegate
 
-- (void)likeRequest:(LikeHTTPRequest *)request likeRatingServiceDefined:(NSString *)isDefined 
-{
-}
 - (void)likeRequest:(LikeHTTPRequest *)request documentIsLiked:(NSString *)isLiked 
 {
+    request.likeDelegate = nil;
     BOOL boolLiked = [isLiked boolValue];
     
     if (self.likeBarButton.toggleState != boolLiked)
@@ -1412,23 +1399,26 @@ NSInteger const kGetCommentsCountTag = 6;
 
 - (void)likeRequest:(LikeHTTPRequest *)request likeDocumentSuccess:(NSString *)isLiked 
 {
+    request.likeDelegate = nil;
     [self.likeBarButton.barButton setEnabled:YES];
 }
 
 - (void)likeRequest:(LikeHTTPRequest *)request unlikeDocumentSuccess:(NSString *)isUnliked
 {
+    request.likeDelegate = nil;
     [self.likeBarButton.barButton setEnabled:YES];
 }
 
 - (void)likeRequest:(LikeHTTPRequest *)request failedWithError:(NSError *)theError 
 {
+    request.likeDelegate = nil;
     AlfrescoLogDebug(@"likeRequest:failedWithError:%@", [theError description]);
     if (request.tag == kLike_GET_Request)
     {
         return;
     }
     
-    NSString* errorMessage = nil;
+    NSString *errorMessage = nil;
     if (self.likeBarButton.toggleState)
     {
         errorMessage = NSLocalizedString(@"documentview.like.failure.message", @"Failed to like the document" );

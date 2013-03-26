@@ -42,23 +42,6 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
 
 @implementation FavoriteTableCellWrapper
 
-@synthesize itemTitle = _itemTitle;
-@synthesize repositoryItem = _repositoryItem;
-@synthesize uploadInfo = _uploadInfo;
-@synthesize isSearchError = _isSearchError;
-@synthesize searchStatusCode = _searchStatusCode;
-@synthesize tableView = _tableView;
-@synthesize isActivityInProgress = _isActivityInProgress;
-@synthesize isPreviewInProgress = _isPreviewInProgress;
-@synthesize cell = _cell;
-@synthesize fileSize = _fileSize;
-@synthesize syncStatus = _syncStatus;
-@synthesize documentIsFavorite = _documentIsFavorite;
-@synthesize activityType = _activityType;
-
-@synthesize accountUUID = _accountUUID;
-@synthesize tenantID = _tenantID;
-
 - (void)dealloc
 {
     [_itemTitle release];
@@ -243,15 +226,23 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
             FavoritesUploadManager *uploadManager = [FavoritesUploadManager sharedManager];
             if ([downloadManager isManagedDownload:child.guid])
             {
-                [self setIsActivityInProgress:YES];
-                
-                [downloadManager setProgressIndicator:cell.progressBar forObjectId:child.guid];
-                [cell.progressBar setProgress:[downloadManager currentProgressForObjectId:child.guid]];
-                
-                if (self.syncStatus != SyncStatusLoading)
+                if ([downloadManager isFailedDownload:child.guid])
                 {
-                    self.syncStatus = SyncStatusWaiting;
-                    [cell.details setText:NSLocalizedString(@"Waiting to sync...", @"")];
+                    self.syncStatus = SyncStatusFailed;
+                    [cell.details setText:NSLocalizedString(@"sync.failureDetail.title", @"Sync failed")];
+                }
+                else
+                {
+                    [self setIsActivityInProgress:YES];
+                    
+                    [downloadManager setProgressIndicator:cell.progressBar forObjectId:child.guid];
+                    [cell.progressBar setProgress:[downloadManager currentProgressForObjectId:child.guid]];
+                    
+                    if (self.syncStatus != SyncStatusLoading)
+                    {
+                        self.syncStatus = SyncStatusWaiting;
+                        [cell.details setText:NSLocalizedString(@"Waiting to sync...", @"")];
+                    }
                 }
             }
             

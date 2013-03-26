@@ -38,7 +38,6 @@
 
 @protocol LikeHTTPRequestDelegate <NSObject>
 @optional
-- (void)likeRequest:(LikeHTTPRequest *)request likeRatingServiceDefined:(NSString *)isDefined;
 - (void)likeRequest:(LikeHTTPRequest *)request documentIsLiked:(NSString *)isLiked;
 - (void)likeRequest:(LikeHTTPRequest *)request likeDocumentSuccess:(NSString *)isLiked;
 - (void)likeRequest:(LikeHTTPRequest *)request unlikeDocumentSuccess:(NSString *)isUnliked;

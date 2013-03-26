@@ -27,80 +27,101 @@
 #import "RepositoryServices.h"
 #import "AccountManager.h"
 
-static MultiAccountBrowseManager *sharedInstance;
-
 @implementation MultiAccountBrowseManager
-@synthesize listeners = _listeners;
 
-- (void)dealloc {
+- (void)dealloc
+{
     [requestAccountUUID release];
     [super dealloc];
 }
 
-- (id)init {
+- (id)init
+{
     self = [super init];
-    if(self) {
+    if (self)
+    {
         _listeners = [[NSMutableSet alloc] init];
     }
     return self;
 }
 
 #pragma mark - private methods
+
 // Helper to call the listener with the success update and a given update type
--(void)updateListenersWithType:(MultiAccountUpdateType)type {
-    for(id<MultiAccountBrowseListener> listener in self.listeners) {
-        if([listener respondsToSelector:@selector(multiAccountBrowseUpdated:forType:)]) {
+- (void)updateListenersWithType:(MultiAccountUpdateType)type
+{
+    for (id<MultiAccountBrowseListener> listener in self.listeners)
+    {
+        if ([listener respondsToSelector:@selector(multiAccountBrowseUpdated:forType:)])
+        {
             [listener multiAccountBrowseUpdated:self forType:type];
         }
     }
 }
 
 // Helper to call the listener with the fail update and a given update type
--(void)failListenersWithType:(MultiAccountUpdateType)type {
-    for(id<MultiAccountBrowseListener> listener in self.listeners) {
-        if([listener respondsToSelector:@selector(multiAccountBrowseFailed:forType:)]) {
+
+- (void)failListenersWithType:(MultiAccountUpdateType)type
+{
+    for (id<MultiAccountBrowseListener> listener in self.listeners)
+    {
+        if ([listener respondsToSelector:@selector(multiAccountBrowseFailed:forType:)])
+        {
             [listener multiAccountBrowseFailed:self forType:type];
         }
     }
 }
 
 #pragma mark - public methods
-- (void)addListener:(id<MultiAccountBrowseListener>)listener {
+
+- (void)addListener:(id<MultiAccountBrowseListener>)listener
+{
     [self.listeners addObject:listener];
 }
 
-- (void)removeListener:(id<MultiAccountBrowseListener>)listener {
+- (void)removeListener:(id<MultiAccountBrowseListener>)listener
+{
     [self.listeners removeObject:listener];
 }
 
-- (void)loadSitesForAccountUUID:(NSString *)uuid {
+- (void)loadSitesForAccountUUID:(NSString *)uuid
+{
     // If there are cached results, just update the listeners about it
-    if([[SitesManagerService sharedInstanceForAccountUUID:uuid tenantID:nil] hasResults]) {
+    if ([[SitesManagerService sharedInstanceForAccountUUID:uuid tenantID:nil] hasResults])
+    {
         [self updateListenersWithType:MultiAccountUpdateTypeSites];
-    } else {
+    }
+    else
+    {
         // .. else, proceed to request the sites.
         [self reloadSitesForAccountUUID:uuid];
     }
 }
-- (void)reloadSitesForAccountUUID:(NSString *)uuid {
+
+- (void)reloadSitesForAccountUUID:(NSString *)uuid
+{
     [[SitesManagerService sharedInstanceForAccountUUID:uuid tenantID:nil] addListener:self];
     [[SitesManagerService sharedInstanceForAccountUUID:uuid tenantID:nil] startOperations];
 }
 
-- (void)loadNetworksForAccountUUID:(NSString *)uuid {
+- (void)loadNetworksForAccountUUID:(NSString *)uuid
+{
     CMISServiceManager *serviceManager = [CMISServiceManager sharedManager];
-    //[serviceManager addListener:self forAccountUuid:uuid];
     [serviceManager addQueueListener:self];
     [serviceManager loadServiceDocumentForAccountUuid:uuid];
     [requestAccountUUID release];
     requestAccountUUID = [uuid copy];
 }
 
-- (void)loadSitesForAccountUUID:(NSString *)uuid tenantID:(NSString *)tenantID {
+- (void)loadSitesForAccountUUID:(NSString *)uuid tenantID:(NSString *)tenantID
+{
     // If there are cached results, just update the listeners about it
-    if([[SitesManagerService sharedInstanceForAccountUUID:uuid tenantID:tenantID] hasResults]) {
+    if ([[SitesManagerService sharedInstanceForAccountUUID:uuid tenantID:tenantID] hasResults])
+    {
         [self updateListenersWithType:MultiAccountUpdateTypeNetworkSites];
-    } else {
+    }
+    else
+    {
         [[SitesManagerService sharedInstanceForAccountUUID:uuid tenantID:tenantID] addListener:self];
         [[SitesManagerService sharedInstanceForAccountUUID:uuid tenantID:tenantID] startOperations];
     }
@@ -110,32 +131,38 @@ static MultiAccountBrowseManager *sharedInstance;
  * SitesMangerService, AccountManager and RepositoryServices are used to access the sites, accounts and networks,
  *  cached results, respectively.
  */
-- (NSArray *)sitesForAccountUUID:(NSString *)uuid {
-    if([[SitesManagerService sharedInstanceForAccountUUID:uuid tenantID:nil] hasResults]) {
+- (NSArray *)sitesForAccountUUID:(NSString *)uuid
+{
+    if ([[SitesManagerService sharedInstanceForAccountUUID:uuid tenantID:nil] hasResults])
+    {
         return [[SitesManagerService sharedInstanceForAccountUUID:uuid tenantID:nil] allSites];
-    } else {
-        return nil;
     }
+    return nil;
 }
 
-- (NSArray *)networksForAccountUUID:(NSString *)uuid {
+- (NSArray *)networksForAccountUUID:(NSString *)uuid
+{
     NSArray *networks = [NSArray arrayWithArray:[[RepositoryServices shared] getRepositoryInfoArrayForAccountUUID:uuid]];
-    if(networks) {
+    if (networks)
+    {
         return networks;
-    } else {
-        return nil;
     }
+
+    return nil;
 }
 
-- (NSArray *)sitesForAccountUUID:(NSString *)uuid tenantID:(NSString *)tenantID {
-    if([[SitesManagerService sharedInstanceForAccountUUID:uuid tenantID:tenantID] hasResults]) {
+- (NSArray *)sitesForAccountUUID:(NSString *)uuid tenantID:(NSString *)tenantID
+{
+    if ([[SitesManagerService sharedInstanceForAccountUUID:uuid tenantID:tenantID] hasResults])
+    {
         return [[SitesManagerService sharedInstanceForAccountUUID:uuid tenantID:tenantID] allSites];
-    } else {
-        return nil;
     }
+
+    return nil;
 }
 
-- (NSArray *)accounts {
+- (NSArray *)accounts
+{
     return [[AccountManager sharedManager] activeAccounts];
 }
 
@@ -148,9 +175,12 @@ static MultiAccountBrowseManager *sharedInstance;
 - (void)serviceManagerRequestsFinished:(CMISServiceManager *)serviceManager
 {
     NSArray *array = [NSArray arrayWithArray:[[RepositoryServices shared] getRepositoryInfoArrayForAccountUUID:requestAccountUUID]];
-    if(array) {
+    if (array)
+    {
         [self updateListenersWithType:MultiAccountUpdateTypeNetworks];
-    } else {
+    }
+    else
+    {
         [self failListenersWithType:MultiAccountUpdateTypeNetworks];
     }
     
@@ -166,19 +196,29 @@ static MultiAccountBrowseManager *sharedInstance;
 }
 
 #pragma mark - SitesMangerService delegate
-- (void)siteManagerFinished:(SitesManagerService *)siteManager {
-    if([[siteManager tenantID] isEqualToString:kDefaultTenantID]) {
+
+- (void)siteManagerFinished:(SitesManagerService *)siteManager
+{
+    if ([[siteManager tenantID] isEqualToString:kDefaultTenantID])
+    {
         [self updateListenersWithType:MultiAccountUpdateTypeSites];
-    } else {
+    }
+    else
+    {
         [self updateListenersWithType:MultiAccountUpdateTypeNetworkSites];
     }
     
     [siteManager removeListener:self];
 }
-- (void)siteManagerFailed:(SitesManagerService *)siteManager {
-    if([[siteManager tenantID] isEqualToString:kDefaultTenantID]) {
+
+- (void)siteManagerFailed:(SitesManagerService *)siteManager
+{
+    if ([[siteManager tenantID] isEqualToString:kDefaultTenantID])
+    {
         [self failListenersWithType:MultiAccountUpdateTypeNetworkSites];
-    } else {
+    }
+    else
+    {
         [self failListenersWithType:MultiAccountUpdateTypeNetworkSites];
     }
     
@@ -186,10 +226,15 @@ static MultiAccountBrowseManager *sharedInstance;
 }
 
 #pragma mark - Singleton methods
-+ (MultiAccountBrowseManager *)sharedManager {
-    if(sharedInstance == nil)
-        sharedInstance = [[MultiAccountBrowseManager alloc] init];
-    
-    return sharedInstance;
+
++ (MultiAccountBrowseManager *)sharedManager
+{
+    static dispatch_once_t predicate = 0;
+    __strong static id sharedObject = nil;
+    dispatch_once(&predicate, ^{
+        sharedObject = [[self alloc] init];
+    });
+    return sharedObject;
 }
+
 @end

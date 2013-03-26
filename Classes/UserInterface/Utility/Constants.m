@@ -65,6 +65,7 @@ NSString * const kAccountUpdateNotificationAdd = @"add";
 NSString * const kAccountUpdateNotificationAllAccounts = @"allAccounts";
 NSString * const kBrowseDocumentsNotification = @"browseDocuments";
 NSString * const kLastAccountDetailsNotification = @"lastAccountDetails";
+NSString * const kNotificationSessionCleared = @"kNotificationSessionCleared";
 
 NSString * const kNotificationTaskCompleted = @"kNotificationTaskCompleted";
 

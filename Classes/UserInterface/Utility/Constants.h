@@ -91,6 +91,7 @@ extern NSString * const kAccountUpdateNotificationAdd;
 extern NSString * const kAccountUpdateNotificationAllAccounts;
 extern NSString * const kBrowseDocumentsNotification;
 extern NSString * const kLastAccountDetailsNotification;
+extern NSString * const kNotificationSessionCleared;
 
 //
 // Task notification types

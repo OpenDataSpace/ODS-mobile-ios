@@ -28,6 +28,7 @@
 #import "AccountManager.h"
 #import "RepositoryServices.h"
 #import "SitesManagerService.h"
+#import "NSNotificationCenter+CustomNotification.h"
 
 NSString * const kKeychainAppSession_Identifier = @"AppSession";
 
@@ -107,19 +108,20 @@ NSString * const kKeychainAppSession_Identifier = @"AppSession";
     static NSString *KeyPath = @"tenantID";
     [self.keychain resetKeychainItem];
     
-    //We also need to clear any cached request
+    // We also need to clear any cached request
     NSArray *accounts = [[AccountManager sharedManager] noPasswordAccounts];
     RepositoryServices *repoService = [RepositoryServices shared];
-    for(AccountInfo *account in accounts)
+    for (AccountInfo *account in accounts)
     {
         NSArray *repos = [repoService getRepositoryInfoArrayForAccountUUID:account.uuid];
         NSArray *tenantIDs = [repos valueForKeyPath:KeyPath];
-        //For cloud accounts, there is one instance for each tenant the cloud account contains
+        // For cloud accounts, there is one instance for each tenant the cloud account contains
         for (NSString *anID in tenantIDs) 
         {
             [[SitesManagerService sharedInstanceForAccountUUID:account.uuid tenantID:anID] invalidateResults];
         }
         [repoService invalidateRepositoriesForAccountUuid:account.uuid];
+        [[NSNotificationCenter defaultCenter] postSessionClearedNotificationWithUserInfo:@{@"accountUUID": account.uuid}];
     }
 }
 
@@ -129,7 +131,8 @@ static SessionKeychainManager *sharedKeychainMananger = nil;
 
 + (SessionKeychainManager *)sharedManager
 {
-    if (sharedKeychainMananger == nil) {
+    if (sharedKeychainMananger == nil)
+    {
         DataKeychainItemWrapper *keychain = [[[DataKeychainItemWrapper alloc] initWithIdentifier:kKeychainAppSession_Identifier accessGroup:nil] autorelease];
         [keychain setObject:@"SessionService" forKey:(id)kSecAttrService];
         sharedKeychainMananger = [[super alloc] initWithKeychain:keychain];
