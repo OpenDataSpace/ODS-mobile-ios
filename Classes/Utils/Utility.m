@@ -126,6 +126,19 @@ BOOL isAudioExtension(NSString *extension)
     return [audioExtensions containsObject:extension];
 }
 
+BOOL isIWorkExtension(NSString *extension)
+{
+    static NSArray *iWorkExtensions;
+    extension = [extension lowercaseString];
+    
+    if (!iWorkExtensions)
+    {
+        iWorkExtensions = [[NSArray arrayWithObjects:@"key", @"pages", @"numbers", nil] retain];
+    }
+    
+    return [iWorkExtensions containsObject:extension];
+}
+
 BOOL isPhotoExtension(NSString *extension)
 {
     static NSArray *photoExtensions = nil;
