@@ -487,6 +487,7 @@ NSInteger const kGetCommentsCountTag = 6;
     self.previewRequest = [NSURLRequest requestWithURL:url];
     BOOL isVideo = isVideoExtension(url.pathExtension);
     BOOL isAudio = isAudioExtension(url.pathExtension);
+    BOOL isIWork = isIWorkExtension(url.pathExtension);
     
     if (self.contentMimeType)
     {
@@ -501,7 +502,7 @@ NSInteger const kGetCommentsCountTag = 6;
             
             self.presentMediaViewController = YES;
         }
-        else if (self.previewRequest)
+        else if (isIWork)
         {
             [self.webView loadRequest:self.previewRequest];
         }

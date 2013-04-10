@@ -43,6 +43,7 @@ NSString *createStringByEscapingAmpersandsInsideTagsOfString(NSString *input, NS
 BOOL isVideoExtension(NSString *extension);
 BOOL isAudioExtension(NSString *extension);
 BOOL isPhotoExtension(NSString *extension);
+BOOL isIWorkExtension(NSString *extension);
 BOOL isMimeTypeVideo(NSString *mimeType);
 
 void startSpinner(void);

@@ -46,12 +46,20 @@
     for (NSString *key in favoritesNode)
     {
         id value = [favoritesNode objectForKey:key];
+        
+        // due to a change on the public API the value object can now be
+        // an object so we must check for an NSDictionary, see MOBILE-1580.
+        if ([value isKindOfClass:[NSDictionary class]])
+        {
+            value = [value objectForKey:@"favourited"];
+        }
+    
         if ([value boolValue] == YES)
         {
             [requestFavoriteSites addObject:key];
         }
     }
-    
+
     self.favoriteSites = [NSArray arrayWithArray:requestFavoriteSites];
 }
 
