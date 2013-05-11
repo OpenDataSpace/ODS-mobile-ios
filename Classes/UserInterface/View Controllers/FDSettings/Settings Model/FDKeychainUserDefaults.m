@@ -50,11 +50,12 @@ NSString * const kKeychainUserDefaults_Identifier = @"UserDefaults";
             if (deserializedDict)
             {
                 _userDefaultsCache = [deserializedDict retain];
-            } 
-            else
-            {
-                _userDefaultsCache = [[NSMutableDictionary alloc] init];
             }
+        }
+        
+        if (!_userDefaultsCache)
+        {
+            _userDefaultsCache = [[NSMutableDictionary alloc] init];
         }
     }
     return self;
