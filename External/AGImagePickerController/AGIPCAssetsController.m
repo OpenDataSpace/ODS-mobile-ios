@@ -371,7 +371,7 @@
             self.title = NSLocalizedString(@"agipc.select.items", @"Select Items");
         }
         else {
-            self.title = [NSString stringWithFormat:NSLocalizedString(@"%d Items Selected", @"Selected Items"), [AGIPCGridItem numberOfSelections]];
+            self.title = [NSString stringWithFormat:NSLocalizedString(@"agipc.selected.items", @"Selected Items"), [AGIPCGridItem numberOfSelections]];
         }
     }   
 }
