@@ -581,7 +581,7 @@
 "failed-sync.title.plural" = "%d sincr. non riusc.";
 "failed-sync.detailSubtitle" = "Download in: %@";
 "failed-sync.cell.clear-list" = "Canc. elenco";
-
+"sync.state.waiting-to-sync" = "Waiting to sync...";
 "sync.failureDetail.title" = "Errore di sincronizzazione";
 
 /* MDMLite strings */

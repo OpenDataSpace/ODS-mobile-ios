@@ -241,7 +241,7 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
                     if (self.syncStatus != SyncStatusLoading)
                     {
                         self.syncStatus = SyncStatusWaiting;
-                        [cell.details setText:NSLocalizedString(@"Waiting to sync...", @"")];
+                        [cell.details setText:NSLocalizedString(@"sync.state.waiting-to-sync", @"Waiting to sync...")];
                     }
                 }
             }
@@ -256,7 +256,7 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
                 if (self.syncStatus != SyncStatusLoading)
                 {
                     self.syncStatus = SyncStatusWaiting;
-                    [cell.details setText:NSLocalizedString(@"Waiting to sync...", @"")];
+                    [cell.details setText:NSLocalizedString(@"sync.state.waiting-to-sync", @"Waiting to sync...")];
                 }
             }
         }
