@@ -468,6 +468,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
         RepositoryItemCellWrapper *cellWrapper = [[RepositoryItemCellWrapper alloc] initWithRepositoryItem:child];
         [cellWrapper setItemTitle:child.title];
         [cellWrapper setSelectedAccountUUID:self.selectedSearchNode.accountUUID];
+        [cellWrapper setTenantID:self.selectedSearchNode.tenantID];
         [self.results addObject:cellWrapper];
         [cellWrapper release];
     }
@@ -627,7 +628,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     [self.previewDelegate setSelectedAccountUUID:self.selectedSearchNode.accountUUID];
     [self.previewDelegate setTenantID:self.selectedSearchNode.tenantID];
     
-    if ([favoriteManager isNodeFavorite:result.guid inAccount:self.selectedSearchNode.accountUUID] && [fileManager downloadExistsForKey:fileName])
+    if ([favoriteManager isNodeFavorite:result.guid inAccount:self.selectedSearchNode.accountUUID tenantID:self.selectedSearchNode.tenantID] && [fileManager downloadExistsForKey:fileName])
     {
         if ([[AlfrescoMDMLite sharedInstance] isSyncExpired:fileName withAccountUUID:self.selectedAccountUUID])
         {

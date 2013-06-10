@@ -394,7 +394,7 @@ NSInteger const kGetCommentsCountTag = 6;
                                                                                    style:UIBarButtonItemStylePlain
                                                                                   target:self action:@selector(addToFavorites:)]autorelease]];
         
-        if ([[FavoriteManager sharedManager] isNodeFavorite:self.cmisObjectId inAccount:self.selectedAccountUUID])
+        if ([[FavoriteManager sharedManager] isNodeFavorite:self.cmisObjectId inAccount:self.selectedAccountUUID tenantID:self.tenantID])
         {
             [self.favoriteButton toggleImage];
         }
@@ -931,7 +931,7 @@ NSInteger const kGetCommentsCountTag = 6;
     BOOL conditional = (enable && [self canPerformRemoteRequests]);
     FavoriteManager *favoriteManager = [FavoriteManager sharedManager];
     BOOL isSyncedFile = ([favoriteManager isSyncPreferenceEnabled] &&
-                         [favoriteManager isNodeFavorite:self.fileMetadata.objectId inAccount:self.selectedAccountUUID]);
+                         [favoriteManager isNodeFavorite:self.fileMetadata.objectId inAccount:self.selectedAccountUUID tenantID:self.tenantID]);
    
     if (animated)
     {
@@ -1446,7 +1446,7 @@ NSInteger const kGetCommentsCountTag = 6;
 
 - (void)favoriteUnfavoriteUnsuccessfulForObject:(NSString *)objectID
 {
-    BOOL documentIsFavorite = [[FavoriteManager sharedManager] isNodeFavorite:self.cmisObjectId inAccount:self.selectedAccountUUID];
+    BOOL documentIsFavorite = [[FavoriteManager sharedManager] isNodeFavorite:self.cmisObjectId inAccount:self.selectedAccountUUID tenantID:self.tenantID];
     
     if (self.favoriteButton.toggleState != documentIsFavorite)
     {

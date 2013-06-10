@@ -44,6 +44,7 @@
 @synthesize isDownloadingPreview = _isDownloadingPreview;
 @synthesize cell = _cell;
 @synthesize selectedAccountUUID = _selectedAccountUUID;
+@synthesize tenantID = _tenantID;
 @synthesize documentIsFavorite = _documentIsFavorite;
 
 - (void)dealloc
@@ -54,6 +55,7 @@
     [_tableView release];
     [_cell release];
     [_selectedAccountUUID release];
+    [_tenantID release];
     [super dealloc];
 }
 
@@ -211,7 +213,7 @@
     
     RepositoryItem *child = [self anyRepositoryItem];
     FavoriteManager *favoriteManager = [FavoriteManager sharedManager];
-    [self setDocumentIsFavorite:([favoriteManager isNodeFavorite:child.guid inAccount:self.selectedAccountUUID])];
+    [self setDocumentIsFavorite:([favoriteManager isNodeFavorite:child.guid inAccount:self.selectedAccountUUID tenantID:self.tenantID])];
     
     NSString *filename = [child.metadata valueForKey:@"cmis:name"];
     if (!filename || ([filename length] == 0))
