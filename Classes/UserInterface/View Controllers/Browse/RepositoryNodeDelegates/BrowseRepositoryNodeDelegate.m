@@ -193,7 +193,7 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
             FavoriteFileDownloadManager *fileManager = [FavoriteFileDownloadManager sharedInstance];
             NSString *fileName = [fileManager generatedNameForFile:child.title withObjectID:child.guid];
             
-            if ([favoriteManager isNodeFavorite:child.guid inAccount:self.selectedAccountUUID] && [fileManager downloadExistsForKey:fileName])
+            if ([favoriteManager isNodeFavorite:child.guid inAccount:self.selectedAccountUUID tenantID:self.tenantID] && [fileManager downloadExistsForKey:fileName])
             {
                 if ([[AlfrescoMDMLite sharedInstance] isSyncExpired:fileName withAccountUUID:self.selectedAccountUUID])
                 {
@@ -576,7 +576,7 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
             if (indexPath)
             {
                 UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-                BOOL isFavorite = [favoriteManager isNodeFavorite:[item.repositoryItem guid]  inAccount:self.selectedAccountUUID];
+                BOOL isFavorite = [favoriteManager isNodeFavorite:[item.repositoryItem guid]  inAccount:self.selectedAccountUUID tenantID:self.tenantID];
                 [item updateFavoriteIndicator:isFavorite forCell:cell];
             }
         }

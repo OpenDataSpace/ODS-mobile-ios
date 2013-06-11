@@ -357,7 +357,7 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
         
         if (favoritesRequest.requestType == FavoritesHttpRequestTypeSync)
         {
-            [self.favoriteNodeRefsForAccounts setObject:[favoritesRequest favorites] forKey:favoritesRequest.accountUUID];
+            [self.favoriteNodeRefsForAccounts setObject:[favoritesRequest favorites] forKey:[self favoritesKeyForAccountUUID:favoritesRequest.accountUUID andTenantID:favoritesRequest.tenantID]];
             
             NSMutableArray *nodes = [[NSMutableArray alloc] init];
             for (NSString *node in [favoritesRequest favorites])
@@ -436,7 +436,7 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
             }
             
             FavoriteTableCellWrapper *wrapper = [self findNodeInFavorites:self.favoriteUnfavoriteNode];
-            BOOL isFavorite = [self isNodeFavorite:self.favoriteUnfavoriteNode inAccount:self.favoriteUnfavoriteAccountUUID];
+            BOOL isFavorite = [self isNodeFavorite:self.favoriteUnfavoriteNode inAccount:self.favoriteUnfavoriteAccountUUID tenantID:self.favoriteUnfavoriteTenantID];
             [wrapper setDocumentIsFavorite:isFavorite];
             [wrapper updateFavoriteIndicator];
             
@@ -835,7 +835,7 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
 {
     FavoriteFileDownloadManager *fileManager = [FavoriteFileDownloadManager sharedInstance];
     NSDictionary *fileDownloadInfo = [fileManager downloadInfoForFilename:filename];
-    BOOL isDeletedOnServer = [self isNodeFavorite:[fileDownloadInfo objectForKey:@"objectId"] inAccount:[fileDownloadInfo objectForKey:@"accountUUID"]];
+    BOOL isDeletedOnServer = [self isNodeFavorite:[fileDownloadInfo objectForKey:@"objectId"] inAccount:[fileDownloadInfo objectForKey:@"accountUUID"] tenantID:[fileDownloadInfo objectForKey:@"tenantID"]];
     
     // getting last downloaded date for repository item from local directory
     NSDate *downloadedDate = [fileDownloadInfo objectForKey:@"lastDownloadedDate"];
@@ -1067,9 +1067,9 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
 
 # pragma mark - Utility Methods
 
-- (BOOL)isNodeFavorite:(NSString *)nodeRef inAccount:(NSString *)accountUUID
+- (BOOL)isNodeFavorite:(NSString *)nodeRef inAccount:(NSString *)accountUUID  tenantID:(NSString *)tenantID
 {
-    NSArray *favoriteNodeRefs = [self.favoriteNodeRefsForAccounts objectForKey:accountUUID];
+    NSArray *favoriteNodeRefs = [self.favoriteNodeRefsForAccounts objectForKey:[self favoritesKeyForAccountUUID:accountUUID andTenantID:tenantID]];
     
     @synchronized(favoriteNodeRefs)
     {
@@ -1248,6 +1248,20 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
         {
             [self favoriteUnfavoriteNode:@"" withAccountUUID:accountUUID andTenantID:nil favoriteAction:FavoriteManagerActionGetNodes];
         }
+    }
+}
+
+#pragma mark - private methods
+
+- (NSString *)favoritesKeyForAccountUUID:(NSString *)accountUUID andTenantID:(NSString *)tenantID
+{
+    if (tenantID != nil && ![tenantID isEqualToString:@""])
+    {
+        return [NSString stringWithFormat:@"%@-%@", accountUUID, tenantID];
+    }
+    else
+    {
+        return accountUUID;
     }
 }
 

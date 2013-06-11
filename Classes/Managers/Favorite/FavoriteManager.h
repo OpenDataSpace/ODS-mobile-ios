@@ -120,7 +120,7 @@ typedef enum
 
 /* Utilities */
 
-- (BOOL)isNodeFavorite:(NSString *)nodeRef inAccount:(NSString *)accountUUID;
+- (BOOL)isNodeFavorite:(NSString *)nodeRef inAccount:(NSString *)accountUUID tenantID:(NSString *)tenantID;
 - (BOOL)isFirstUse;
 - (BOOL)isSyncEnabled;
 - (BOOL)isSyncPreferenceEnabled;

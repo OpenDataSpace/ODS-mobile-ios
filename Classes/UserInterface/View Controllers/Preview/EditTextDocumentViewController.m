@@ -177,7 +177,7 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
     
     FavoriteManager *favoriteManager = [FavoriteManager sharedManager];
     BOOL isSyncedFavorite = ([favoriteManager isSyncPreferenceEnabled] &&
-                             [favoriteManager isNodeFavorite:self.objectId inAccount:self.selectedAccountUUID]);
+                             [favoriteManager isNodeFavorite:self.objectId inAccount:self.selectedAccountUUID tenantID:self.tenantID]);
     
     if (isSyncedFavorite)
     {
@@ -445,7 +445,7 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
     {
         FavoriteManager *favoriteManager = [FavoriteManager sharedManager];
         BOOL isSyncedFile = ([favoriteManager isSyncPreferenceEnabled] &&
-                                 [favoriteManager isNodeFavorite:self.objectId inAccount:self.selectedAccountUUID]);
+                                 [favoriteManager isNodeFavorite:self.objectId inAccount:self.selectedAccountUUID tenantID:self.tenantID]);
         
         if (isSyncedFile)
         {
