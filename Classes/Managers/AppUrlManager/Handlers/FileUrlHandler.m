@@ -121,7 +121,7 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
             // FavoriteManager integration
             FavoriteManager *favoriteManager = [FavoriteManager sharedManager];
             BOOL isSyncedFavorite = ([favoriteManager isSyncPreferenceEnabled] &&
-                                     [favoriteManager isNodeFavorite:saveBackMetadata.objectId inAccount:saveBackMetadata.accountUUID]);
+                                     [favoriteManager isNodeFavorite:saveBackMetadata.objectId accountUUID:saveBackMetadata.accountUUID tenantID:saveBackMetadata.tenantID]);
             if (isSyncedFavorite)
             {
                 FavoriteFileDownloadManager *fileDownloadManager = [FavoriteFileDownloadManager sharedInstance];

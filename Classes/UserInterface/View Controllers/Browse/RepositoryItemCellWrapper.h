@@ -39,7 +39,8 @@
 @property (nonatomic, readonly) RepositoryItem *anyRepositoryItem;
 @property (nonatomic, assign) BOOL isDownloadingPreview;
 @property (nonatomic, retain) UITableViewCell *cell;
-@property (nonatomic, retain) NSString * selectedAccountUUID;
+@property (nonatomic, retain) NSString *selectedAccountUUID;
+@property (nonatomic, retain) NSString *tenantID;
 @property (nonatomic, assign) BOOL documentIsFavorite;
 
 /*

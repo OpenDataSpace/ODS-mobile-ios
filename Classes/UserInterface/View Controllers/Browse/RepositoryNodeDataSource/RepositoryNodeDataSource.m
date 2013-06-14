@@ -288,7 +288,8 @@ UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRo
     {
         RepositoryItemCellWrapper *cellWrapper = [[RepositoryItemCellWrapper alloc] initWithRepositoryItem:child];
         [cellWrapper setItemTitle:child.title];
-         cellWrapper.selectedAccountUUID = self.selectedAccountUUID;
+        cellWrapper.selectedAccountUUID = self.selectedAccountUUID;
+        cellWrapper.tenantID = self.tenantID;
         [allItems addObject:cellWrapper];
         [cellWrapper release];
     }
