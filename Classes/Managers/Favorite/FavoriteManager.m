@@ -1246,7 +1246,9 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
         AccountInfo *accountInfo = [[AccountManager sharedManager] accountInfoForUUID:accountUUID];
         if (accountInfo.accountStatus == FDAccountStatusActive)
         {
+#ifndef OPEN_DATA_SPACE
             [self favoriteUnfavoriteNode:@"" accountUUID:accountUUID tenantID:nil favoriteAction:FavoriteManagerActionGetNodes];
+#endif
         }
     }
 }

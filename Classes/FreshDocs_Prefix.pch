@@ -36,6 +36,8 @@
     #import "FDKeychainUserDefaults.h"
 #endif
 
+#define OPEN_DATA_SPACE 1
+
 #define IS_IPAD ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] && [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
 
 /**

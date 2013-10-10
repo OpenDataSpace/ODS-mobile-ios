@@ -434,6 +434,7 @@
 		27F3E5EF1565427800EEEEDF /* settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 27F3E5EC1565427800EEEEDF /* settings.png */; };
 		27F3E5F01565427800EEEEDF /* settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27F3E5ED1565427800EEEEDF /* settings@2x.png */; };
 		27F3E5F11565427800EEEEDF /* settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27F3E5ED1565427800EEEEDF /* settings@2x.png */; };
+		2D9847A218068100005BA95E /* ServerURLs_OpenDataSpace.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2D9847A118068100005BA95E /* ServerURLs_OpenDataSpace.plist */; };
 		3323F02EA5C218B9C486464B /* SaveBackMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 3323F3C46FF26FC972B442C7 /* SaveBackMetadata.m */; };
 		3323F10574C53240F1054213 /* SaveBackMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 3323F3C46FF26FC972B442C7 /* SaveBackMetadata.m */; };
 		3C22D1B515C9F0900082E118 /* FDMultilineCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C22D1B415C9F0900082E118 /* FDMultilineCellController.m */; };
@@ -1953,6 +1954,7 @@
 		27F3E5EC1565427800EEEEDF /* settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = settings.png; sourceTree = "<group>"; };
 		27F3E5ED1565427800EEEEDF /* settings@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "settings@2x.png"; sourceTree = "<group>"; };
 		2892E40F0DC94CBA00A64D0F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		2D9847A118068100005BA95E /* ServerURLs_OpenDataSpace.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ServerURLs_OpenDataSpace.plist; sourceTree = "<group>"; };
 		3323F2CCCEE3CB9EB93F964F /* SaveBackMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SaveBackMetadata.h; sourceTree = "<group>"; };
 		3323F3C46FF26FC972B442C7 /* SaveBackMetadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SaveBackMetadata.m; sourceTree = "<group>"; };
 		3C22D1B315C9F0900082E118 /* FDMultilineCellController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDMultilineCellController.h; sourceTree = "<group>"; };
@@ -5157,6 +5159,7 @@
 		AA7F9A25144D0EE60047FA9F /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				2D9847A118068100005BA95E /* ServerURLs_OpenDataSpace.plist */,
 				275486F815DC6D4300C88CD1 /* AccountAutocreateConfiguration.plist */,
 				087E1D1D15B7045D00D84D82 /* Activities.strings */,
 				AA7F9A27144D0EE60047FA9F /* Images */,
@@ -6268,6 +6271,7 @@
 				AA7F9AA8144D0EE60047FA9F /* aboutZiaLogo.png in Resources */,
 				AA7F9AAE144D0EE60047FA9F /* aboutZiaLogo@2x.png in Resources */,
 				AA7F9ABA144D0EE60047FA9F /* aboutZiaLogoBottom.png in Resources */,
+				2D9847A218068100005BA95E /* ServerURLs_OpenDataSpace.plist in Resources */,
 				AA7F9AC0144D0EE60047FA9F /* aboutZiaLogoBottom@2x.png in Resources */,
 				AA7F9AE4144D0EE60047FA9F /* aep.png in Resources */,
 				AA7F9AEA144D0EE60047FA9F /* aep@2x.png in Resources */,
@@ -7639,6 +7643,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -7664,6 +7669,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7688,7 +7694,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Classes/FreshDocs_Prefix.pch;
@@ -7712,7 +7718,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				COPY_PHASE_STRIP = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7867,7 +7873,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;

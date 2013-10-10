@@ -250,9 +250,9 @@ static NSArray *siteTypes;
 
 //FIXME uncomment the methods once we figure out how are we going to handle non-alfresco repositories
 - (void)hideSegmentedControl {
-    /*[segmentedControl setHidden:YES];
-    [segmentedControlBkg setHidden:YES];
-    self.tableView.frame = self.view.frame;*/
+    [self.segmentedControl setHidden:YES];
+    [self.segmentedControlBkg setHidden:YES];
+    self.tableView.frame = self.view.frame;
 }
 
 - (void)showSegmentedControl {

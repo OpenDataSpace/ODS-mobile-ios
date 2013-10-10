@@ -119,6 +119,7 @@
     
     NSMutableArray *moreCellGroup = [NSMutableArray array];
 
+#ifndef OPEN_DATA_SPACE
     /**
      * Search
      */
@@ -138,7 +139,7 @@
     downloadsCell.selectionStyle = UITableViewCellSelectionStyleBlue;
     downloadsCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     [moreCellGroup addObject:downloadsCell];
-
+#endif
     /**
      * Manage Accounts
      */

@@ -149,7 +149,14 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
 
 + (id)requestForServerAPI:(NSString *)apiKey accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID infoDictionary:(NSDictionary *)infoDictionary useAuthentication:(BOOL)useAuthentication
 {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"ServerURLs" ofType:@"plist"];
+    NSString *pathServerURLs = @"ServerURLs";
+    
+#ifdef OPEN_DATA_SPACE
+    pathServerURLs = @"ServerURLs_OpenDataSpace";  //for open data space
+#endif
+    
+    NSString * path = [[NSBundle mainBundle] pathForResource:pathServerURLs ofType:@"plist"];
+    
     NSDictionary *dictionary = [[[NSDictionary alloc] initWithContentsOfFile:path] autorelease];
     
     NSString *tokenizedURLString = [dictionary objectForKey:apiKey];
@@ -438,8 +445,11 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
     [dict setObject:[self safeValueForObject:info.port] forKey:@"PORT"];
     [dict setObject:[self safeValueForObject:info.username] forKey:@"USERNAME"];
     [dict setObject:[self safeValueForObject:info.serviceDocumentRequestPath] forKey:@"SERVICE_DOC"];
+#ifdef OPEN_DATA_SPACE
+    [dict setObject:[self safeValueForObject:info.serviceDocumentRequestPath] forKey:@"SERVICE"];  //for open data space
+#endif
     
-    if ([info.vendor isEqualToString:kFDAlfresco_RepositoryVendorName]) 
+    if ([info.vendor isEqualToString:kFDAlfresco_RepositoryVendorName])
     {
         static NSString *cmis = @"cmis";
         
