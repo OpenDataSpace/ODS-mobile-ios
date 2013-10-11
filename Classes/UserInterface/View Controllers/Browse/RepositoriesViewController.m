@@ -178,11 +178,12 @@ static NSString *RepositoryInfoKey = @"RepositoryInfo";
         [tmpModel setObject:repoInfo forKey:RepositoryInfoKey];
         
         NSString *labelText = [repoInfo repositoryName];
+#ifndef OPEN_DATA_SPACE
         if ([repoInfo tenantID]) {
             labelText = [repoInfo tenantID];
         }
-        
-        TableCellViewController *cellController = [[TableCellViewController alloc] initWithAction:@selector(repositoryCellPressed:) 
+#endif
+        TableCellViewController *cellController = [[TableCellViewController alloc] initWithAction:@selector(repositoryCellPressed:)
                                                                                          onTarget:self withModel:tmpModel];
         [tmpModel release];
         
@@ -245,10 +246,11 @@ static NSString *RepositoryInfoKey = @"RepositoryInfo";
     RepositoryInfo *repoInfo = [tmpModel objectForKey:RepositoryInfoKey];
     
     NSString *repoName = [repoInfo repositoryName];
+#ifndef OPEN_DATA_SPACE
     if ([repoInfo tenantID]) {
         repoName = [repoInfo tenantID];
     }
-    
+#endif
     RootViewController *nextController = [[RootViewController alloc] initWithNibName:kFDRootViewController_NibName bundle:nil];
     [nextController setSelectedAccountUUID:[self selectedAccountUUID]];
     [nextController setTenantID:[repoInfo tenantID]];

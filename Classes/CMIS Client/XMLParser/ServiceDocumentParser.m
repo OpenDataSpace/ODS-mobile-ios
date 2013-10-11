@@ -195,8 +195,8 @@
 		[self setRepositoryInfoDictionary:nil];
 	}
 	else if ([elementName isEqualToString:@"workspace"] && [CMISUtils isAtomPubNamespace:namespaceURI]) {
-		[[RepositoryServices shared] addRepositoryInfo:currentRepositoryInfo 
-                                        forAccountUuid:accountUuid tenantID:[self tenantID]];
+		[[RepositoryServices shared] addRepositoryInfo:currentRepositoryInfo
+                                         forAccountUuid:accountUuid tenantID:currentRepositoryInfo.repositoryId];//[self tenantID]];  TODO:use repo ID as tenantID
 	}
     else if ([elementName isEqualToString:@"uritemplate"] && [CMISUtils isCmisRestAtomNamespace:namespaceURI]) {
         if (currentTemplateType) {

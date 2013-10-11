@@ -559,13 +559,13 @@ static NSArray *siteTypes;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Selected a "No sites" cell?
-    if (indexPath.section == 0)
+   /* if (indexPath.section == 0)
     {
         if ([self.activeSites count] <= 0)
         {
             return;
         }
-    }
+    }*/
         
 	[self cancelAllHTTPConnections];
     

@@ -71,7 +71,7 @@
 	<key>ServerAPIPersonAvatar</key>
 	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/slingshot/profile/avatar/$USERNAME</string>
 	<key>ServerAPINetworksCollection</key>
-	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/a/-default-/internal/cloud/user/$USERNAME/accounts</string>
+	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE</string>
 	<key>ServerAPICloudSignup</key>
 	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/a/-default-/internal/cloud/accounts/signupqueue</string>
 	<key>ServerAPICloudAccountStatus</key>

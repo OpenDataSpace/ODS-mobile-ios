@@ -96,14 +96,14 @@
         [IpadSupport pushDetailController:viewController withNavigation:controller.navigationController andSender:self];
         [viewController release];
     }
-    else if ([account isMultitenant]) 
+    else //if ([account isMultitenant])
     {
         RepositoriesViewController *viewController = [[RepositoriesViewController alloc] initWithAccountUUID:[account uuid]];
         [viewController setViewTitle:[account description]];
         [[controller navigationController] pushViewController:viewController animated:animated];
         [viewController release];
     }
-    else
+   /* else
     {
         RootViewController *nextController = [[RootViewController alloc] initWithNibName:kFDRootViewController_NibName bundle:nil];
         [nextController setSelectedAccountUUID:[account uuid]];
@@ -111,7 +111,7 @@
         
         [[controller navigationController] pushViewController:nextController animated:animated];
         [nextController release];
-    }
+    }*/
 }
 
 @end
