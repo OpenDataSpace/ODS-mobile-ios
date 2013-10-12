@@ -377,7 +377,7 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
             }
             else if (theError.code == ASIAuthenticationErrorType)
             {
-                NSString *authenticationFailureMessageForAccount = [NSString stringWithFormat:NSLocalizedString(@"authenticationFailureMessageForAccount", @"Please check your username and password in the iPhone settings for Fresh Docs"), self.accountInfo.description];
+                NSString *authenticationFailureMessageForAccount = [NSString stringWithFormat:NSLocalizedString(@"authenticationFailureMessageForAccount", @"Please check your username and password in the iPhone settings for ODS"), self.accountInfo.description];
                 displayErrorMessageWithTitle(authenticationFailureMessageForAccount, NSLocalizedString(@"authenticationFailureTitle", @"Authentication Failure Title Text 'Authentication Failure'"));
             }
             else if (self.responseStatusCode >= 400 && (self.responseStatusCode != 500 || !self.ignore500StatusError))

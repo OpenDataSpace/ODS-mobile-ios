@@ -27,7 +27,7 @@
 #import "DataKeychainItemWrapper.h"
 
 NSString * const kKeychainAccountList_Identifier = @"AccountList";
-NSString * const kServiceName = @"com.ziaconsulting.FreshDocsService";
+NSString * const kServiceName = @"cc.dataspace.ODService";
 
 @implementation AccountKeychainManager
 @synthesize keychain = _keychain;

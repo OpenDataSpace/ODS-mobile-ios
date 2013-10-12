@@ -119,11 +119,11 @@
 
 /* Email */
 "email.body.link" = "Link to %@";
-"email.footer.text" = "Sent from my document repository using Fresh Docs+, the native iPhone CMIS client";
-"email.footer.html" = "Sent from my document repository using <a href=\"http://itunes.apple.com/app/fresh-docs/id342124495?mt=8\">Fresh Docs+</a>, the native iPhone CMIS client";
+"email.footer.text" = "Sent from my document repository using ODS+, the native iPhone CMIS client";
+"email.footer.html" = "Sent from my document repository using <a href=\"http://itunes.apple.com/app/ODS/id342124495?mt=8\">ODS+</a>, the native iPhone CMIS client";
 
 /*  */
-"serviceDocumentRequestFailureMessage" = "Fresh Docs was unable connect to %@. Either your settings are incorrect, or you are not connected to the internet. You may still access your synced favorites and downloads in offline mode";
+"serviceDocumentRequestFailureMessage" = "ODS was unable connect to %@. Either your settings are incorrect, or you are not connected to the internet. You may still access your synced favorites and downloads in offline mode";
 
 /* Error */
 "serviceDocumentRequestFailureTitle" = "Offline Mode";
@@ -147,7 +147,7 @@
 "Settings" = "Settings";
 "about.build.date.time" = "Build Date: %s %s";
 "about.body" = "Zia Consulting is a group of dedicated professionals focused on dramatically improving business results. Our team has a proven track record of delivering measurable results and technical innovation while leveraging business management experience. We enable our clients to reach their goals by building trusted business advisor relationships.";
-"about.libraries" = "FreshDocs uses the following third party libraries";
+"about.libraries" = "ODS uses the following third party libraries";
 
 "comments.view.title" = "Comments";
 "closeButtonText" = "Cancel";	
@@ -256,7 +256,7 @@
 "downloadview.footer.no-documents" = "No Downloaded Documents";
 
 "library.access.denied.alert.title" = "Access Denied";
-"library.access.denied.alert.message" = "You have been denied access to the library, please turn on location services for Fresh Docs by going to device settings.";
+"library.access.denied.alert.message" = "You have been denied access to the library, please turn on location services for ODS by going to device settings.";
 
 "add.actionsheet.create-document" = "Create Document";
 "add.actionsheet.record-audio" = "Record Audio";
@@ -344,7 +344,7 @@
 "metadata.exif.orientation.portrait.upsidedown" = "Portrait Up-side Down";
 "metadata.exit.orientation.undefined" = "Undefined";
 
-"popover.button.title" = "Fresh Docs";
+"popover.button.title" = "ODS";
 
 "downloadprogress.file-left" = "1 document left";
 "downloadprogress.files-left" = "%d documents left";
@@ -423,7 +423,7 @@
 "serverlist.footer.noaccounts" = "";
 "serverlist.footer.default" = "%d Accounts";
 
-"account.navigation.view.title" = "Fresh Docs";
+"account.navigation.view.title" = "ODS";
 "account.awaiting.cell.subtitle" = "Awaiting Email Verification";
 "account.inactive.cell.subtitle" = "Inactive";
 "account.connection-error.cell.subtitle" = "Cannot connect to Server";
@@ -461,7 +461,7 @@
 "migration.migrateApp.message" = "Migrating the App settings";
 
 /* Settings related strings */
-"settings.title" = "Fresh Docs Settings";
+"settings.title" = "ODS Settings";
 
 "settings.header.alfresco" = "Default Settings";
 "settings.header.sync" = "Favorites";
@@ -541,7 +541,7 @@
 "homescreen.footer.textRangeToLink" = "";
 
 "splashscreen.disclaimer.title" = "Help us to improve our apps";
-"splashscreen.disclaimer.body" = "To help us improve Fresh Docs, we collect anonymous technical diagnostic data. You may disable this feature in the Settings area within the app.";
+"splashscreen.disclaimer.body" = "To help us improve ODS, we collect anonymous technical diagnostic data. You may disable this feature in the Settings area within the app.";
 
 "help.view.title" = "Help";
 "help.guides.header" = "Guides";

@@ -102,7 +102,7 @@ NSString * const kServerIsQualifying = @"kServerIsQualifying";
     if(self) {
         _uuid = [[NSString generateUUID] retain];
         
-        [self setServiceDocumentRequestPath:@"/alfresco/service/cmis"];
+        [self setServiceDocumentRequestPath:@"/cmis/atom"];  //for open data space
         [self setPort:kFDHTTP_DefaultPort];
         [self setProtocol:kFDHTTP_Protocol];
         [self setMultitenant:[NSNumber numberWithBool:NO]];

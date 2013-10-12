@@ -435,6 +435,7 @@
 		27F3E5F01565427800EEEEDF /* settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27F3E5ED1565427800EEEEDF /* settings@2x.png */; };
 		27F3E5F11565427800EEEEDF /* settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27F3E5ED1565427800EEEEDF /* settings@2x.png */; };
 		2D9847A218068100005BA95E /* ServerURLs_OpenDataSpace.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2D9847A118068100005BA95E /* ServerURLs_OpenDataSpace.plist */; };
+		2D9847A61809003D005BA95E /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2D9847A51809003D005BA95E /* Default-568h@2x.png */; };
 		3323F02EA5C218B9C486464B /* SaveBackMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 3323F3C46FF26FC972B442C7 /* SaveBackMetadata.m */; };
 		3323F10574C53240F1054213 /* SaveBackMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 3323F3C46FF26FC972B442C7 /* SaveBackMetadata.m */; };
 		3C22D1B515C9F0900082E118 /* FDMultilineCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C22D1B415C9F0900082E118 /* FDMultilineCellController.m */; };
@@ -1955,6 +1956,7 @@
 		27F3E5ED1565427800EEEEDF /* settings@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "settings@2x.png"; sourceTree = "<group>"; };
 		2892E40F0DC94CBA00A64D0F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		2D9847A118068100005BA95E /* ServerURLs_OpenDataSpace.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ServerURLs_OpenDataSpace.plist; sourceTree = "<group>"; };
+		2D9847A51809003D005BA95E /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		3323F2CCCEE3CB9EB93F964F /* SaveBackMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SaveBackMetadata.h; sourceTree = "<group>"; };
 		3323F3C46FF26FC972B442C7 /* SaveBackMetadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SaveBackMetadata.m; sourceTree = "<group>"; };
 		3C22D1B315C9F0900082E118 /* FDMultilineCellController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDMultilineCellController.h; sourceTree = "<group>"; };
@@ -3492,6 +3494,7 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				2D9847A51809003D005BA95E /* Default-568h@2x.png */,
 				3C82021314E1A82000A67645 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* External */,
 				AABD0AEF135CA3B300316E08 /* Resources-Branding */,
@@ -6295,6 +6298,7 @@
 				AA7F9B56144D0EE60047FA9F /* keynote@2x.png in Resources */,
 				AA7F9B5C144D0EE60047FA9F /* numbers.png in Resources */,
 				AA7F9B62144D0EE60047FA9F /* numbers@2x.png in Resources */,
+				2D9847A61809003D005BA95E /* Default-568h@2x.png in Resources */,
 				AA7F9B68144D0EE60047FA9F /* pages.png in Resources */,
 				AA7F9B6E144D0EE60047FA9F /* pages@2x.png in Resources */,
 				AA7F9B74144D0EE60047FA9F /* avatar.png in Resources */,
@@ -7604,6 +7608,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "";
+				PROVISIONING_PROFILE = "3B094228-3857-4D3D-8D26-C56C729B7AD0";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = armv7;

@@ -54,7 +54,7 @@
 	<array>
 		<dict>
 			<key>serviceDocument</key>
-			<string>/alfresco/service/cmis</string>
+			<string>/cmis/atom</string>
 			<key>port</key>
 			<string>80</string>
 			<key>hostname</key>
@@ -81,7 +81,7 @@
 			<key>name</key>
 			<string>Alfresco</string>
 			<key>serviceDocument</key>
-			<string>/alfresco/service/cmis</string>
+			<string>/cmis/atom</string>
 		</dict>
 		<dict>
 			<key>name</key>
