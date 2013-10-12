@@ -146,7 +146,7 @@
 
 "Settings" = "Settings";
 "about.build.date.time" = "Build: %s %s (%@.%@)";
-"about.body" = "Alfresco is the open platform for social content management. This mobile application was designed and developed in partnership with Zia Consulting, an Alfresco Platinum Partner.\n\nAlfresco Mobile connects to Alfresco in the cloud and Alfresco on premise servers (3.4 and above) to provide safe access to your corporate documents on the go. This mobile application connects to your Alfresco repository using your Alfresco login credentials (over HTTP or HTTPS), and manages access based on your permissions.";
+"about.body" = "Alfresco is the open platform for social content management. This mobile application was designed and developed in partnership with Open Data Space, an Alfresco Platinum Partner.\n\nAlfresco Mobile connects to Alfresco in the cloud and Alfresco on premise servers (3.4 and above) to provide safe access to your corporate documents on the go. This mobile application connects to your Alfresco repository using your Alfresco login credentials (over HTTP or HTTPS), and manages access based on your permissions.";
 "about.libraries" = "Alfresco Mobile uses the following third party libraries";
 
 "comments.view.title" = "Comments";

@@ -48,7 +48,7 @@
                             </connections>
                         </button>
                         <view contentMode="scaleToFill" id="11" customClass="GradientView">
-                            <rect key="frame" x="70" y="235" width="629" height="381.00000000000006"/>
+                            <rect key="frame" x="70" y="235" width="629" height="381"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
                             <subviews>
                                 <textView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" minimumZoomScale="0.0" editable="NO" id="15" userLabel="aboutZiaText" colorLabel="IBBuiltInLabel-Red">
@@ -58,17 +58,17 @@
                                     <accessibility key="accessibilityConfiguration">
                                         <accessibilityTraits key="traits" none="YES" staticText="YES" notEnabled="YES"/>
                                     </accessibility>
-                                    <mutableString key="text">Zia Consulting ... Content anywhere, solutions here.
+                                    <string key="text">Zia Consulting ... Content anywhere, solutions here.
 
 Zia Consulting is a leading provider of enterprise business solutions for content management from paper to mobile.
 
-Zia Consulting’s Fresh Products and Mobile Applications for ECM enables users to create, store, share, and find content across the enterprise and on the go.  Zia Consulting has worked with both the public and private sector to provide end to end business solutions for Procurement, Sales Automation, Contract and Records Management, eDiscovery, Knowledge and Business Process Management, Project and Expense Management, to name a few.</mutableString>
+Zia Consulting’s Fresh Products and Mobile Applications for ECM enables users to create, store, share, and find content across the enterprise and on the go.  Zia Consulting has worked with both the public and private sector to provide end to end business solutions for Procurement, Sales Automation, Contract and Records Management, eDiscovery, Knowledge and Business Process Management, Project and Expense Management, to name a few.</string>
                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                     <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="17"/>
                                     <textInputTraits key="textInputTraits"/>
                                 </textView>
                                 <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="16" userLabel="smallZiaButton">
-                                    <rect key="frame" x="249" y="318.00000000000006" width="130" height="43"/>
+                                    <rect key="frame" x="249" y="318" width="130" height="43"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                     <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="15"/>
                                     <state key="normal" image="ZiaLogoCP-130.png">

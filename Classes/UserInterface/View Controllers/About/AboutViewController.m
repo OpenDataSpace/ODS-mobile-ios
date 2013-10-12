@@ -130,7 +130,7 @@
 
 - (IBAction)buttonPressed:(id)sender
 {
-	[[UIApplication sharedApplication] openURL:[NSURL URLWithString: @"http://www.ziaconsulting.com"]];
+	[[UIApplication sharedApplication] openURL:[NSURL URLWithString: @"http://www.opendataspace.com"]];
 }
 
 - (IBAction)clientButtonPressed:(id)sender
