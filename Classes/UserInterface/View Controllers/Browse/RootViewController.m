@@ -151,9 +151,11 @@ static NSArray *siteTypes;
     self.selectedIndex = nil;
     self.willSelectIndex = nil;
     [self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:YES];
+   
+    [self.navigationItem setHidesBackButton:NO animated:YES]; //force back button display
 }
 
-- (void)viewWillDisappear:(BOOL)animated 
+- (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
 	

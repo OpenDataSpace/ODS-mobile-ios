@@ -206,7 +206,7 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
         // extract node id from object id
         NSString *fileName = [self documentName];
         NSArray *idSplit = [self.objectId componentsSeparatedByString:@"/"];
-        NSString *nodeId = [idSplit objectAtIndex:3];
+        NSString *nodeId = [idSplit objectAtIndex:0];//NSString *nodeId = [idSplit objectAtIndex:3];  //TODO:node id
         
         // check we've got an internet connection
         if ([[ConnectivityManager sharedManager] hasInternetConnection])
