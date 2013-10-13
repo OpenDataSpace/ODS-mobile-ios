@@ -21,13 +21,12 @@
             </connections>
         </customObject>
         <tabBarController id="16" userLabel="Tab Bar Controller">
-            <extendedEdge key="edgesForExtendedLayout"/>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
             <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black"/>
             <nil key="simulatedBottomBarMetrics"/>
             <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
             <nil key="simulatedDestinationMetrics"/>
-            <tabBar key="tabBar" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="17">
+            <tabBar key="tabBar" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" selectedItem="86" id="17">
                 <rect key="frame" x="0.0" y="431" width="320" height="49"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -41,12 +40,11 @@
                     <nil key="simulatedBottomBarMetrics"/>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
                     <nil key="simulatedDestinationMetrics"/>
-                    <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="11">
+                    <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" translucent="NO" id="11">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <viewControllers>
                         <viewController id="13" userLabel="Root View Controller - Top Level" customClass="BrowseAccountsViewController">
-                            <extendedEdge key="edgesForExtendedLayout"/>
                             <navigationItem key="navigationItem" title="Top Level" id="14" userLabel="Navigation Item - Top Level"/>
                             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
                             <nil key="simulatedTopBarMetrics"/>
@@ -64,12 +62,11 @@
                     <nil key="simulatedBottomBarMetrics"/>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
                     <nil key="simulatedDestinationMetrics"/>
-                    <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="155">
+                    <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translucent="NO" id="155">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <viewControllers>
                         <viewController id="154" customClass="SearchViewController">
-                            <extendedEdge key="edgesForExtendedLayout"/>
                             <navigationItem key="navigationItem" title="Root View Controller" id="156" userLabel="Navigation Item - Root View Controller"/>
                             <nil key="simulatedStatusBarMetrics"/>
                             <nil key="simulatedTopBarMetrics"/>
@@ -80,19 +77,17 @@
                     </viewControllers>
                 </navigationController>
                 <navigationController id="82" userLabel="Navigation Controller - Favorites" customClass="FavoritesNavigationController">
-                    <extendedEdge key="edgesForExtendedLayout"/>
                     <tabBarItem key="tabBarItem" systemItem="downloads" id="86"/>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
                     <nil key="simulatedDestinationMetrics"/>
-                    <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="84">
+                    <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translucent="NO" id="84">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <viewControllers>
                         <viewController id="83" customClass="DownloadsViewController">
-                            <extendedEdge key="edgesForExtendedLayout"/>
                             <navigationItem key="navigationItem" title="Root View Controller" id="85"/>
                             <nil key="simulatedStatusBarMetrics"/>
                             <nil key="simulatedTopBarMetrics"/>
@@ -110,12 +105,11 @@
                     <nil key="simulatedBottomBarMetrics"/>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
                     <nil key="simulatedDestinationMetrics"/>
-                    <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="136">
+                    <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translucent="NO" id="136">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <viewControllers>
                         <viewController id="137" customClass="MoreViewController">
-                            <extendedEdge key="edgesForExtendedLayout"/>
                             <navigationItem key="navigationItem" title="Root View Controller" id="138"/>
                             <nil key="simulatedStatusBarMetrics"/>
                             <nil key="simulatedTopBarMetrics"/>
