@@ -506,7 +506,7 @@ void showConnectionErrorMessageWithError(ASIHTTPRequest *request, NSError *error
 
 void styleButtonAsDefaultAction(UIBarButtonItem *button)
 {
-    UIColor *actionColor = [UIColor colorWithHue:0.61 saturation:0.44 brightness:0.9 alpha:0];
+    UIColor *actionColor = [UIColor colorWithHue:0.61 saturation:0.44 brightness:0.9 alpha:1.0];
     [button setTintColor:actionColor];
 }
 

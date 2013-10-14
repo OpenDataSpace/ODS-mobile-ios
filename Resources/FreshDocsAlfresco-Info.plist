@@ -33,14 +33,20 @@
 	<string>Icon.png</string>
 	<key>CFBundleIconFiles</key>
 	<array>
-		<string>Icon_80</string>
-		<string>Icon_120</string>
+		<string>Icon_80.png</string>
+		<string>Icon_120.png</string>
 		<string>Icon.png</string>
 		<string>Icon@2x.png</string>
 		<string>Icon-72.png</string>
 		<string>Icon-Small.png</string>
 		<string>Icon-Small-50.png</string>
 		<string>Icon-Small@2x.png</string>
+		<string>Icon_40.png</string>
+		<string>Icon_40@2x.png</string>
+		<string>Icon_60.png</string>
+		<string>Icon_120.png</string>
+		<string>Icon_76.png</string>
+		<string>Icon_76@2x.png</string>
 	</array>
 	<key>CFBundleIconFiles~ipad</key>
 	<array>

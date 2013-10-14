@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>about.clientUrl</key>
-	<string>http://www.ziaconsulting.com</string>
+	<string>http://www.opendataspace.com</string>
 	<key>about.background.useGradient</key>
 	<true/>
 	<key>about.licenses</key>
@@ -70,7 +70,7 @@
 	<key>alfrescocloud.customerCare.url</key>
 	<string>https://getsatisfaction.com/alfresco/products/alfresco_alfresco_mobile_app</string>
 	<key>alfrescocloud.hostname</key>
-	<string>my.alfresco.com</string>
+	<string>my.opendataspace.com</string>
 	<key>homescreen.show</key>
 	<false/>
 	<key>accounts.defaultVendor</key>
