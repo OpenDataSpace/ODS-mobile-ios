@@ -78,6 +78,7 @@ static CGFloat masterViewControllerWidth = 320.0;
                                                              target:self action:@selector(performCloseAction:)] autorelease];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleBrowseDocuments:) name:kBrowseDocumentsNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moviePlayerPlaybackDidFinish:) name:MPMoviePlayerPlaybackDidFinishNotification object:nil];
+        self.navigationBar.translucent = NO;
     }
     return self;
 }
