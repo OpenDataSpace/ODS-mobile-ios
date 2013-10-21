@@ -428,13 +428,13 @@ NSInteger const kGetCommentsCountTag = 6;
         [updatedItemsArray addObject:[self.likeBarButton barButton]];
     }
     
-    if (self.canEditDocument && [[self contentMimeType] isEqualToString:@"text/plain"] && !self.isDownloaded)
+    /*if (self.canEditDocument && [[self contentMimeType] isEqualToString:@"text/plain"] && !self.isDownloaded)
     {
         self.editButton = [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"pencil.png"] style:UIBarButtonItemStylePlain target:self action:@selector(editDocumentAction:)] autorelease];
         [updatedItemsArray addObject:[self iconSpacer]];
         spacersCount++;
         [updatedItemsArray addObject:self.editButton];
-    }
+    }*/
     [[self documentToolbar] setItems:updatedItemsArray];
 
     

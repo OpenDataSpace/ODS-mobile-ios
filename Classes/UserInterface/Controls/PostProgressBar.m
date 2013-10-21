@@ -207,6 +207,7 @@
     [request setShouldStreamPostDataFromDisk:YES];
     [request setShouldContinueWhenAppEntersBackground:YES];
     [request setSuppressAllErrors:suppressErrors];
+    [request setTimeOutSeconds:60];
     [request startAsynchronous];
 	
     PostProgressBar *bar = [[[PostProgressBar alloc] initWithRequest:request message:msg graceTime:graceTime] autorelease];

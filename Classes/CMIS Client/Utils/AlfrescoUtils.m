@@ -78,15 +78,20 @@ static NSMutableDictionary *sharedInstances = nil;
 
 - (NSURL *)setContentURLforNode: (NSString*)nodeId
 {
-    NSString *urlStr = [NSString stringWithFormat:@"%@/i/%@", [self serviceDocumentURL], nodeId];
+   /* NSString *urlStr = [NSString stringWithFormat:@"%@/i/%@", [self serviceDocumentURL], nodeId];
 	NSURL *u         = [NSURL URLWithString:urlStr];
-	
+	*/
+    NSString *urlStr = [NSString stringWithFormat:@"%@/content?id=%@&overwriteFlag=true", [self serviceDocumentURL],nodeId];
+	NSURL *u         = [NSURL URLWithString:urlStr];
+    
 	return u;
 }
 
 - (NSURL *)setContentURLforNode: (NSString*)nodeId tenantId:(NSString *)tenantId
 {
-    NSString *urlStr = [NSString stringWithFormat:@"%@/a/%@/cmis/i/%@", [self serviceDocumentURL], tenantId, nodeId];
+    /*NSString *urlStr = [NSString stringWithFormat:@"%@/a/%@/cmis/i/%@", [self serviceDocumentURL], tenantId, nodeId];
+	NSURL *u         = [NSURL URLWithString:urlStr];*/
+    NSString *urlStr = [NSString stringWithFormat:@"%@/%@/content?id=%@&overwriteFlag=true", [self serviceDocumentURL], tenantId, nodeId];
 	NSURL *u         = [NSURL URLWithString:urlStr];
 	
 	return u;

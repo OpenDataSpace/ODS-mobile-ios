@@ -122,7 +122,7 @@
     NSString *url = [self selfURL];
     if ([self isFolder])
     {
-        url = [NSString stringByAppendingString:@"/tree" toString:url];
+        url = [NSString stringByAppendingString:@"&&allVersion=true" toString:url];//@"/tree"
     }
     return url;
 }
