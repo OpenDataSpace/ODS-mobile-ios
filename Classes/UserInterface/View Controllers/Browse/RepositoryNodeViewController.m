@@ -44,6 +44,7 @@
 #import "BrowseRepositoryNodeDelegate.h"
 #import "SearchRepositoryNodeDelegate.h"
 #import "CreateFolderViewController.h"
+#import "AGImagePickerControllerDefines.h"
 
 NSInteger const kDownloadFolderAlert = 1;
 NSInteger const kConfirmMultipleDeletePrompt = 4;
@@ -339,7 +340,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
-    if (IS_IPAD && self.isEditing)
+    if (IS_IPAD() && self.isEditing)
     {
         // When in portrait orientation, show the master view controller to guide the user
         if (self.interfaceOrientation == UIInterfaceOrientationPortrait || self.interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown)
@@ -352,7 +353,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 - (void)performAddAction:(id)sender event:(UIEvent *)event
 {
-	if (IS_IPAD)
+	if (IS_IPAD())
     {
 		[self dismissPopover];
 	}
@@ -402,7 +403,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 	
 	[sheet setCancelButtonIndex:[sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")]];
     
-    if (IS_IPAD)
+    if (IS_IPAD())
     {
         [self setActionSheetSenderControl:sender];
         [sheet setActionSheetStyle:UIActionSheetStyleDefault];
@@ -432,7 +433,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 - (void)performEditAction:(id)sender
 {
-	if (IS_IPAD)
+	if (IS_IPAD())
     {
 		[self dismissPopover];
 	}
@@ -493,7 +494,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 {
     if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.take-photo", @"Take Photo")] || [buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.take-photo-video", @"Take Photo or Video")]) 
     {
-        if (IS_IPAD)
+        if (IS_IPAD())
         {
             UIViewController *pickerContainer = [[UIViewController alloc] init];
             if (!self.imagePickerController)
@@ -557,7 +558,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                                 otherButtonTitles: NSLocalizedString(@"add.actionsheet.choose-photo", @"Choose Photo from Library"), NSLocalizedString(@"add.actionsheet.upload-document", @"Upload Document"), nil];
         
         [sheet setCancelButtonIndex:[sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")]];
-        if (IS_IPAD) 
+        if (IS_IPAD())
         {
             [sheet setActionSheetStyle:UIActionSheetStyleDefault];
             [sheet showFromBarButtonItem:self.actionSheetSenderControl animated:YES];
@@ -669,9 +670,9 @@ NSString * const kMultiSelectDelete = @"deleteAction";
          }];
         
         [imagePickerController setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
-        if(IS_IPAD)
+        if(IS_IPAD())
         {
-            [imagePickerController setChangeBarStyle:NO];
+            //[imagePickerController setChangeBarStyle:NO];
         }
         [self presentModalViewControllerHelper:imagePickerController];
         [imagePickerController release];
@@ -760,13 +761,13 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         selectedItem = [cellWrapper repositoryItem];
     }
     
-    if (!IS_IPAD || [selectedItem isFolder])
+    if (!IS_IPAD() || [selectedItem isFolder])
     {
         [[self tableView] deselectRowAtIndexPath:selectedRow animated:YES];
         [self.searchDelegate.searchController.searchResultsTableView deselectRowAtIndexPath:selectedRow animated:YES];
     }
     
-    if (IS_IPAD)
+    if (IS_IPAD())
     {
         NSIndexPath *indexPath = [self indexPathForNodeWithGuid:[IpadSupport getCurrentDetailViewControllerObjectID]];
         if (self.tableView)
@@ -1074,7 +1075,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (IS_IPAD)
+    if (IS_IPAD())
     {
 		[self dismissPopover];
 	}
@@ -1144,7 +1145,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         [self setLastUpdated:[NSDate date]];
         [self.refreshHeaderView refreshLastUpdatedDate];
 
-        if (IS_IPAD)
+        if (IS_IPAD())
         {
             NSIndexPath *indexPath = [self indexPathForNodeWithGuid:[IpadSupport getCurrentDetailViewControllerObjectID]];
             if (indexPath && self.tableView)
@@ -1559,7 +1560,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     
     for (RepositoryItem *item in deletedItems)
     {
-        if (IS_IPAD && [item.guid isEqualToString:[IpadSupport getCurrentDetailViewControllerObjectID]]) {
+        if (IS_IPAD() && [item.guid isEqualToString:[IpadSupport getCurrentDetailViewControllerObjectID]]) {
             
             [IpadSupport clearDetailController];
         }

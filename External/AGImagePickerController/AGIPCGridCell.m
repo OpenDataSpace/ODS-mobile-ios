@@ -3,7 +3,7 @@
 //  AGImagePickerController
 //
 //  Created by Artur Grigor on 17.02.2012.
-//  Copyright (c) 2012 Artur Grigor. All rights reserved.
+//  Copyright (c) 2012 - 2013 Artur Grigor. All rights reserved.
 //  
 //  For the full copyright and license information, please view the LICENSE
 //  file that was distributed with this source code.
@@ -13,62 +13,49 @@
 #import "AGIPCGridItem.h"
 
 #import "AGImagePickerController.h"
-#import "AGImagePickerController+Constants.h"
+#import "AGImagePickerController+Helper.h"
+
+@interface AGIPCGridCell ()
+{
+	NSArray *_items;
+    AGImagePickerController *_imagePickerController;
+}
+
+@end
 
 @implementation AGIPCGridCell
 
 #pragma mark - Properties
 
-@synthesize items;
+@synthesize items = _items, imagePickerController = _imagePickerController;
 
-- (void)setItems:(NSArray *)theItems
+- (void)setItems:(NSArray *)items
 {
-    @synchronized (self)
+    if (_items != items)
     {
-        if (items != theItems)
-        {
-            for (UIView *view in [self subviews]) 
-            {		
+        for (AGIPCGridItem *view in [self subviews])
+        {		
+            if ([view isKindOfClass:[AGIPCGridItem class]]){
                 [view removeFromSuperview];
             }
-            
-            [items release];
-            items = [theItems retain];
         }
+        
+        _items = items;
     }
-}
-
-- (NSArray *)items
-{
-    NSArray *array = nil;
-    
-    @synchronized (self)
-    {
-        array = [[items retain] autorelease];
-    }
-    
-    return array;
 }
 
 #pragma mark - Object Lifecycle
 
-- (void)dealloc
+- (id)initWithImagePickerController:(AGImagePickerController *)imagePickerController items:(NSArray *)items andReuseIdentifier:(NSString *)identifier
 {
-    [items release];
-    
-    [super dealloc];
-}
-
-- (id)initWithItems:(NSArray *)theItems reuseIdentifier:(NSString *)theIdentifier
-{
-    self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:theIdentifier];
-    if(self)
-    {    
-		self.items = theItems;
+    self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+    if (self)
+    {
+        self.imagePickerController = imagePickerController;
+		self.items = items;
         
-        UIView *emptyView = [[UIView alloc] initWithFrame:CGRectZero];
+        UIView *emptyView = [[UIView alloc] init];
         self.backgroundView = emptyView;
-        [emptyView release];
 	}
 	
 	return self;
@@ -77,8 +64,8 @@
 #pragma mark - Layout
 
 - (void)layoutSubviews
-{   
-    CGRect frame = [AGImagePickerController itemRect:self.superview.frame.size]; //self.superview is the tableView
+{
+    CGRect frame = self.imagePickerController.itemRect;
     CGFloat leftMargin = frame.origin.x;
     
 	for (AGIPCGridItem *gridItem in self.items)
@@ -87,7 +74,6 @@
         UITapGestureRecognizer *selectionGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:gridItem action:@selector(tap)];
         selectionGestureRecognizer.numberOfTapsRequired = 1;
 		[gridItem addGestureRecognizer:selectionGestureRecognizer];
-        [selectionGestureRecognizer release];
         
 		[self addSubview:gridItem];
 		
