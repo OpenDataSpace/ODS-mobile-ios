@@ -119,10 +119,10 @@ typedef enum
     }
 
     // Search control if showing folders and documents
-    if (self.state == DocumentPickerStateShowingFoldersAndDocuments)
+    /*if (self.state == DocumentPickerStateShowingFoldersAndDocuments)
     {
         [self createSearchBar];
-    }
+    }*/
 
     [self createTableView];
     [self createFinishSelectionButton];

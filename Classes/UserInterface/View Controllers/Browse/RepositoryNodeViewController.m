@@ -231,10 +231,10 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 - (void)viewDidLoad 
 {
     [super viewDidLoad];
-    SearchRepositoryNodeDelegate *searchDelegate = [[SearchRepositoryNodeDelegate alloc] initWithViewController:self];
-    [searchDelegate setRepositoryNodeGuid:[self guid]];
-    [self setSearchDelegate:searchDelegate];
-    [searchDelegate release];
+    //SearchRepositoryNodeDelegate *searchDelegate = [[SearchRepositoryNodeDelegate alloc] initWithViewController:self];  //TODO: remove serach from documents view
+    //[searchDelegate setRepositoryNodeGuid:[self guid]];
+    //[self setSearchDelegate:searchDelegate];
+    //[searchDelegate release];
 
 	[Theme setThemeForUIViewController:self];
     [self.tableView setRowHeight:kDefaultTableCellHeight];
