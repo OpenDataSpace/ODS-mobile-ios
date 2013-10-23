@@ -179,6 +179,7 @@
     aboutCell.selectionStyle = UITableViewCellSelectionStyleBlue;
     [moreCellGroup addObject:aboutCell];
     
+#ifndef OPEN_DATA_SPACE
     /**
      * Settings
      */
@@ -187,7 +188,7 @@
     settingsCell.imageView.image = [UIImage imageNamed:kSettingsMoreIcon_ImageName];
     settingsCell.selectionStyle = UITableViewCellSelectionStyleBlue;
     [moreCellGroup addObject:settingsCell];
-    
+#endif
     if(!IS_IPAD)
     {
         for(TableCellViewController* cell in moreCellGroup)

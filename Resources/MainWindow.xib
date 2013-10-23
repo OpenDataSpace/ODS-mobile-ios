@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="4510" systemVersion="12F37" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="4510" systemVersion="12F45" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3742"/>
     </dependencies>
@@ -23,7 +23,7 @@
         <tabBarController id="16" userLabel="Tab Bar Controller">
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
             <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black"/>
-            <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+            <nil key="simulatedBottomBarMetrics"/>
             <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
             <nil key="simulatedDestinationMetrics"/>
             <tabBar key="tabBar" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="17">
@@ -56,7 +56,7 @@
                 </navigationController>
                 <navigationController id="152">
                     <extendedEdge key="edgesForExtendedLayout"/>
-                    <tabBarItem key="tabBarItem" systemItem="search" id="153"/>
+                    <tabBarItem key="tabBarItem" systemItem="downloads" id="153"/>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <nil key="simulatedBottomBarMetrics"/>
@@ -66,7 +66,7 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <viewControllers>
-                        <viewController id="154" customClass="SearchViewController">
+                        <viewController id="154" customClass="DownloadsViewController">
                             <navigationItem key="navigationItem" title="Root View Controller" id="156" userLabel="Navigation Item - Root View Controller"/>
                             <nil key="simulatedStatusBarMetrics"/>
                             <nil key="simulatedTopBarMetrics"/>
@@ -77,7 +77,7 @@
                     </viewControllers>
                 </navigationController>
                 <navigationController id="82" userLabel="Navigation Controller - Favorites" customClass="FavoritesNavigationController">
-                    <tabBarItem key="tabBarItem" systemItem="downloads" id="86"/>
+                    <tabBarItem key="tabBarItem" title="ODS Settings" image="settings.png" id="86"/>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <nil key="simulatedBottomBarMetrics"/>
@@ -87,7 +87,7 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <viewControllers>
-                        <viewController id="83" customClass="DownloadsViewController">
+                        <viewController id="83" customClass="FDSettingsViewController">
                             <navigationItem key="navigationItem" title="Root View Controller" id="85"/>
                             <nil key="simulatedStatusBarMetrics"/>
                             <nil key="simulatedTopBarMetrics"/>
@@ -123,6 +123,7 @@
         </tabBarController>
     </objects>
     <resources>
+        <image name="settings.png" width="31" height="32"/>
         <image name="tabDoc.png" width="30" height="30"/>
     </resources>
 </document>
