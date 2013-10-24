@@ -144,6 +144,10 @@ const CGFloat kDefaultDetailTextLabelSize = 14.0f;
 {
 	NSString *cellIdentifier = [self cellIdentifier];
     
+    if ([tableView respondsToSelector:@selector(setSeparatorInset:)]) {
+        [tableView setSeparatorInset:UIEdgeInsetsZero];
+    }
+    
     [self setIndexPath:newIndexPath];
     UITableViewCell *cell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 	if (cell == nil)
@@ -154,7 +158,7 @@ const CGFloat kDefaultDetailTextLabelSize = 14.0f;
     [cell setAccessoryType:self.accessoryType];
     [cell setSelectionStyle:self.selectionStyle];
     [cell.imageView setImage:self.imageView.image];
-    
+
     [cell.textLabel setText:self.textLabel.text];
     AlfrescoLogTrace(@"Default font size: %f", cell.textLabel.font.pointSize);
     [cell.textLabel setFont:self.textLabel.font];

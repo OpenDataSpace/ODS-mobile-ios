@@ -167,7 +167,12 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [tableView setAutoresizesSubviews:YES];
     [tableView setAutoresizingMask:UIViewAutoresizingNone];
     [self setView:tableView];
-    [self setTableView:tableView];
+    [self setTableView:tableView];   
+    
+    if ([tableView respondsToSelector:@selector(setSeparatorInset:)]) {
+        [tableView setSeparatorInset:UIEdgeInsetsZero];
+    }
+    
     [tableView release];
     
     // Multi-select toolbar

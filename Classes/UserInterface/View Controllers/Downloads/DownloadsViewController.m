@@ -87,6 +87,9 @@
     [self setFolderDatasource:dataSource];
 	[[self tableView] setDataSource:dataSource];
 	[[self tableView] reloadData];
+    if ([[self tableView] respondsToSelector:@selector(setSeparatorInset:)]) {
+        [[self tableView] setSeparatorInset:UIEdgeInsetsZero];
+    }
     [dataSource release];
 	
 	// start monitoring the document directory…

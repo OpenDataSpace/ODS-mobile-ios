@@ -150,6 +150,9 @@ static NSArray *siteTypes;
     
     self.selectedIndex = nil;
     self.willSelectIndex = nil;
+    if ([self.tableView respondsToSelector:@selector(setSeparatorInset:)]) {
+        [self.tableView setSeparatorInset:UIEdgeInsetsZero];
+    }
     [self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:YES];
    
     [self.navigationItem setHidesBackButton:NO animated:YES]; //force back button display
@@ -167,7 +170,7 @@ static NSArray *siteTypes;
 	[super viewDidLoad];
     
     // Default selection is "My sites"
-    [self.segmentedControl setSelectedSegmentIndex:kDefaultSelectedSegment];
+    /*[self.segmentedControl setSelectedSegmentIndex:kDefaultSelectedSegment];
     [self.segmentedControl setTitle:NSLocalizedString(@"root.favsites.sectionheader", @"Favorite Sites") forSegmentAtIndex:0];
     [self.segmentedControl setTitle:NSLocalizedString(@"root.mysites.sectionheader", @"My Sites") forSegmentAtIndex:1];
     [self.segmentedControl setTitle:NSLocalizedString(@"root.allsites.sectionheader", @"All Sites") forSegmentAtIndex:2];
@@ -181,7 +184,7 @@ static NSArray *siteTypes;
     [self.segmentedControl setBackgroundColor:[ThemeProperties segmentedControlBkgColor]];
     [self.segmentedControlBkg setBackgroundColor:[ThemeProperties segmentedControlBkgColor]];
     [self hideSegmentedControl];
-    
+    */
     isAlfrescoAccount = [[AccountManager sharedManager] isAlfrescoAccountForAccountUUID:self.selectedAccountUUID];
     
     RepositoryServices *repoService = [RepositoryServices shared];
