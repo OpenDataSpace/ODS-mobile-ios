@@ -80,7 +80,7 @@
         [self.navigationController popToRootViewControllerAnimated:NO];
         [BrowseAccountsActions advanceToNextViewController:accountInfo withController:self animated:NO];
     }
-    
+    [self tabBarController].tabBar.translucent = NO;
     [[self tabBarController] setSelectedViewController:[self navigationController]];
 }
 @end

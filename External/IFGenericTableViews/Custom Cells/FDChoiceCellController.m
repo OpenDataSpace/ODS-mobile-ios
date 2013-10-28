@@ -58,8 +58,8 @@
 		[choiceLabel setTextColor:[UIColor colorWithRed:0.20f green:0.31f blue:0.52f alpha:1.0f]];
         [choiceLabel setTag:100];
 		
-		if (nil != backgroundColor) 
-			[choiceLabel setBackgroundColor:backgroundColor];
+		//if (nil != backgroundColor)
+		//	[choiceLabel setBackgroundColor:backgroundColor];
         
 
         [cell.contentView addSubview:choiceLabel];
@@ -112,7 +112,7 @@
     CGFloat tableviewWidth = tableView.frame.size.width;
     CGFloat groupedMargin = tableView.style == UITableViewStyleGrouped ? [self groupedCellMarginWithTableWidth:tableviewWidth] : 0;
     CGFloat cellWidth = cell.contentView.frame.size.width;
-    CGFloat viewWidth = cellWidth - (labelSize.width + (20.0f * indentationLevel) + (groupedMargin * 2));
+    CGFloat viewWidth = cellWidth - (labelSize.width + (0.0f * indentationLevel) + (groupedMargin * 2));
     
     valueFrame.size.width = viewWidth;
     valueFrame.origin.x = cellWidth - viewWidth - 8.0f;

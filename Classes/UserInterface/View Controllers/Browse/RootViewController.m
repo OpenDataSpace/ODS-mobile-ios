@@ -222,6 +222,16 @@ static NSArray *siteTypes;
     // Accessory images
     self.accessoryDownImage = [UIImage imageNamed:@"grey-accessory-down"];
     self.accessoryUpImage = [UIImage imageNamed:@"grey-accessory-up"];
+    
+    self.view = self.tableView; //if a tableview add into a view, then autoresizing not work.
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
+    {
+        self.edgesForExtendedLayout = UIRectEdgeNone;
+        self.extendedLayoutIncludesOpaqueBars = NO;
+        self.modalPresentationCapturesStatusBarAppearance = NO;
+    }
+#endif
 }
 
 - (void)loadServiceDocument
@@ -525,6 +535,19 @@ static NSArray *siteTypes;
     }
     
 	return headerView;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0) //for fix tableview frame
+    {
+        if (IS_IPAD) {
+            return 80.0f;
+        }
+        return 44.0f;
+    }
+#endif
+    return 0.0f;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section

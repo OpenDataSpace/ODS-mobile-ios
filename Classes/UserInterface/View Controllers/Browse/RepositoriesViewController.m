@@ -99,6 +99,15 @@
     [self setLastUpdated:[NSDate date]];
     [self.refreshHeaderView refreshLastUpdatedDate];
     [self.tableView addSubview:self.refreshHeaderView];
+    
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
+    {
+        self.edgesForExtendedLayout = UIRectEdgeNone;
+        self.extendedLayoutIncludesOpaqueBars = NO;
+        self.modalPresentationCapturesStatusBarAppearance = NO;
+    }
+#endif
 }
 
 - (void)viewWillDisappear:(BOOL)animated

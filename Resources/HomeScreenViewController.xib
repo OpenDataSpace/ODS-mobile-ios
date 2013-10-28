@@ -42,7 +42,7 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <view contentMode="scaleToFill" id="66" customClass="ImageTextButton">
-                                    <rect key="frame" x="13" y="133" width="294" height="60"/>
+                                    <rect key="frame" x="13" y="133" width="294.00000000000006" height="60"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="home-screen-cloud.png" id="70">

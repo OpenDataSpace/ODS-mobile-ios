@@ -309,6 +309,25 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
     return 60;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
+    {
+        if (IS_IPAD) {
+            return 80.0f;
+        }
+        return 44.0f;
+    }
+#endif
+    return 0.0f;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
+{
+    // Zero-height UIView removes trailing empty cells, which look strange if the last UITableViewCell is expanded
+    return [[[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 0)] autorelease];
+}
+
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	RepositoryItemCellWrapper *cellWrapper = nil;
