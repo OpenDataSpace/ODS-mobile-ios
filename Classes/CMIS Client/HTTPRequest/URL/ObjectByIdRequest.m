@@ -66,7 +66,7 @@
                                      @"",@"filter",
                                      @"true",@"includeAllowableActions", 
                                      @"false",@"includePolicyIds",
-                                     @"false",@"includeRelationships",
+                                     @"none",@"includeRelationships",  //TODO:our server not support false;
                                      @"false",@"includeACL",
                                      @"",@"renditionFilter",nil];
     
