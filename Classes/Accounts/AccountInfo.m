@@ -103,8 +103,8 @@ NSString * const kServerIsQualifying = @"kServerIsQualifying";
         _uuid = [[NSString generateUUID] retain];
         
         [self setServiceDocumentRequestPath:@"/cmis/atom"];  //for open data space
-        [self setPort:kFDHTTP_DefaultPort];
-        [self setProtocol:kFDHTTP_Protocol];
+        [self setPort:kFDHTTPS_DefaultPort];
+        [self setProtocol:kFDHTTPS_Protocol];
         [self setMultitenant:[NSNumber numberWithBool:NO]];
         AccountStatus *accountStatus = [[[AccountStatus alloc] init] autorelease];
         [accountStatus setUuid:_uuid];

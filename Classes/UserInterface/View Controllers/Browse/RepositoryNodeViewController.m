@@ -45,6 +45,7 @@
 #import "SearchRepositoryNodeDelegate.h"
 #import "CreateFolderViewController.h"
 #import "AGImagePickerControllerDefines.h"
+#import "UITableView+LongPress.h"
 
 NSInteger const kDownloadFolderAlert = 1;
 NSInteger const kConfirmMultipleDeletePrompt = 4;
@@ -172,6 +173,8 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     if ([tableView respondsToSelector:@selector(setSeparatorInset:)]) {
         [tableView setSeparatorInset:UIEdgeInsetsZero];
     }
+    
+    [tableView addLongPressRecognizer];
     
     [tableView release];
     

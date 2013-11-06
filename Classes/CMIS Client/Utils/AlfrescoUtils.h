@@ -35,6 +35,7 @@
 - (NSURL *)childrenURLforNode: (NSString*)node;
 - (NSURL *)setContentURLforNode: (NSString*)nodeId;
 - (NSURL *)setContentURLforNode: (NSString*)nodeId tenantId:(NSString *)tenantId;
+- (NSURL *)moveObjectURLFromNode: (NSString*) sourceFolderId targetFolderId:(NSString *) targetFolderId repoId:(NSString*) repoId;
 
 - (id)initWithAccountUUID:(NSString *)uuid;
 + (AlfrescoUtils *)sharedInstanceForAccountUUID:(NSString *)uuid;

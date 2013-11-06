@@ -33,6 +33,8 @@
 #import <Foundation/Foundation.h>
 #import "BaseHTTPRequest.h"
 #import "AlfrescoMDMLite.h"
+#import "UITableView+LongPress.h"
+
 @class MBProgressHUD;
 @class FolderItemsHTTPRequest;
 @class RepositoryPreviewManagerDelegate;
@@ -41,7 +43,7 @@
 @class RepositoryItemCellWrapper;
 @class MultiSelectActionsToolbar;
 
-@interface BrowseRepositoryNodeDelegate : NSObject <UITableViewDelegate, UIPopoverControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate, ASIHTTPRequestDelegate, AlfrescoMDMServiceManagerDelegate>
+@interface BrowseRepositoryNodeDelegate : NSObject <UITableViewDelegate, UIPopoverControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate, ASIHTTPRequestDelegate, AlfrescoMDMServiceManagerDelegate,UITableViewDelegateLongPress>
 {
     NSMutableArray *_itemsToDelete;
 }

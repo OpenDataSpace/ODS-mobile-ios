@@ -134,26 +134,6 @@
 		</dict>
 		<dict>
 			<key>Type</key>
-			<string>PSMultiValueSpecifier</string>
-			<key>Title</key>
-			<string>accountdetails.fields.vendor</string>
-			<key>Key</key>
-			<string>vendor</string>
-			<key>DefaultValue</key>
-			<string>Other</string>
-			<key>Titles</key>
-			<array>
-				<string>Alfresco</string>
-				<string>Other</string>
-			</array>
-			<key>Values</key>
-			<array>
-				<string>Alfresco</string>
-				<string>Other</string>
-			</array>
-		</dict>
-		<dict>
-			<key>Type</key>
 			<string>PSTextFieldSpecifier</string>
 			<key>Title</key>
 			<string>accountdetails.fields.servicedoc</string>

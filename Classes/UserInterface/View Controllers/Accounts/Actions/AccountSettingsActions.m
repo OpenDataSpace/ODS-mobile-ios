@@ -104,8 +104,10 @@
         [accountViewController setDelegate:self];
         
         AccountInfo *newAccount = [[AccountInfo alloc] init];
-        [newAccount setProtocol:kFDHTTP_Protocol];
-        [newAccount setPort:kFDHTTP_DefaultPort];
+        [newAccount setProtocol:kFDHTTPS_Protocol];
+        [newAccount setPort:kFDHTTPS_DefaultPort];
+        [newAccount setDescription:@"ODS"];
+        [newAccount setVendor:@"ODS"];
         [accountViewController setAccountInfo:newAccount];
         [newAccount release];
         

@@ -38,6 +38,8 @@
 #import "DeleteQueueProgressBar.h"
 #import "MetaDataTableViewController.h"
 #import "RepositoryNodeViewController.h"
+#import "CMISUpdateProperties.h"
+#import "CMISMoveObjectHTTPRequest.h"
 
 NSInteger const kCancelUploadPrompt = 2;
 NSInteger const kDismissFailedUploadPrompt = 3;
@@ -640,6 +642,12 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
             [self.tableView deselectRowAtIndexPath:index animated:YES];
         }
     }
+}
+
+
+#pragma mark - TableView Long Press Delegate methods
+- (void)tableView:(UITableView *)tableView didRecognizeLongPressOnRowAtIndexPath:(NSIndexPath *)indexPath {
+    
 }
 
 @end

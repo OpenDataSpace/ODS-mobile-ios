@@ -436,6 +436,8 @@
 		27F3E5F11565427800EEEEDF /* settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27F3E5ED1565427800EEEEDF /* settings@2x.png */; };
 		2D20099F180B936A00014DA5 /* iTunesArtwork@2x in Resources */ = {isa = PBXBuildFile; fileRef = 2D20099E180B936A00014DA5 /* iTunesArtwork@2x */; };
 		2D2009A1180BDD6F00014DA5 /* MainWindow~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2D2009A0180BDD6F00014DA5 /* MainWindow~ipad.xib */; };
+		2D45A633182746320079AF66 /* CMISMoveObjectHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D45A632182746320079AF66 /* CMISMoveObjectHTTPRequest.m */; };
+		2D90543B18234EB900AA4771 /* UITableView+LongPress.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D90543A18234EB900AA4771 /* UITableView+LongPress.m */; };
 		2D9847A218068100005BA95E /* ServerURLs_OpenDataSpace.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2D9847A118068100005BA95E /* ServerURLs_OpenDataSpace.plist */; };
 		2DAA822A18165B5000471D4F /* AGImagePickerController+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DAA822918165B5000471D4F /* AGImagePickerController+Helper.m */; };
 		2DAA822C18165CDC00471D4F /* AGImagePickerController.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2DAA822B18165CDC00471D4F /* AGImagePickerController.bundle */; };
@@ -1956,6 +1958,10 @@
 		2892E40F0DC94CBA00A64D0F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		2D20099E180B936A00014DA5 /* iTunesArtwork@2x */ = {isa = PBXFileReference; lastKnownFileType = file; path = "iTunesArtwork@2x"; sourceTree = "<group>"; };
 		2D2009A0180BDD6F00014DA5 /* MainWindow~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = "MainWindow~ipad.xib"; path = "Resources/MainWindow~ipad.xib"; sourceTree = "<group>"; };
+		2D45A631182746320079AF66 /* CMISMoveObjectHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISMoveObjectHTTPRequest.h; sourceTree = "<group>"; };
+		2D45A632182746320079AF66 /* CMISMoveObjectHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISMoveObjectHTTPRequest.m; sourceTree = "<group>"; };
+		2D90543918234EB900AA4771 /* UITableView+LongPress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+LongPress.h"; sourceTree = "<group>"; };
+		2D90543A18234EB900AA4771 /* UITableView+LongPress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+LongPress.m"; sourceTree = "<group>"; };
 		2D9847A118068100005BA95E /* ServerURLs_OpenDataSpace.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ServerURLs_OpenDataSpace.plist; sourceTree = "<group>"; };
 		2DAA822718165ABE00471D4F /* AGImagePickerControllerDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGImagePickerControllerDefines.h; sourceTree = "<group>"; };
 		2DAA822818165B5000471D4F /* AGImagePickerController+Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AGImagePickerController+Helper.h"; sourceTree = "<group>"; };
@@ -4205,6 +4211,8 @@
 				3C82026414E1A82000A67645 /* FolderItemsHTTPRequest.m */,
 				3C82026514E1A82000A67645 /* ObjectByIdRequest.h */,
 				3C82026614E1A82000A67645 /* ObjectByIdRequest.m */,
+				2D45A631182746320079AF66 /* CMISMoveObjectHTTPRequest.h */,
+				2D45A632182746320079AF66 /* CMISMoveObjectHTTPRequest.m */,
 			);
 			path = URL;
 			sourceTree = "<group>";
@@ -4795,6 +4803,8 @@
 				27B2689614ED396600D8533F /* MultiSelectActionsToolbar.m */,
 				270C8FB514FB011800B6A752 /* MultiSelectActionItem.h */,
 				270C8FB614FB011800B6A752 /* MultiSelectActionItem.m */,
+				2D90543918234EB900AA4771 /* UITableView+LongPress.h */,
+				2D90543A18234EB900AA4771 /* UITableView+LongPress.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -5797,7 +5807,10 @@
 				ORGANIZATIONNAME = "";
 				TargetAttributes = {
 					A48BDF32117EA853001DEDBE = {
-						DevelopmentTeam = 5SDLG7MAVU;
+						DevelopmentTeam = D2CUX2HP99;
+					};
+					AA4D9F0413DEC43D007C94EE = {
+						DevelopmentTeam = D2CUX2HP99;
 					};
 				};
 			};
@@ -6759,6 +6772,7 @@
 				3C82039B14E1A82000A67645 /* SitesManagerService.m in Sources */,
 				3C82039E14E1A82000A67645 /* CMISQueryHTTPRequest.m in Sources */,
 				3C8203A114E1A82000A67645 /* CMISSearchHTTPRequest.m in Sources */,
+				2D45A633182746320079AF66 /* CMISMoveObjectHTTPRequest.m in Sources */,
 				3C8203A414E1A82000A67645 /* ServiceDocumentRequest.m in Sources */,
 				3C8203A714E1A82000A67645 /* CMISTypeDefinitionHTTPRequest.m in Sources */,
 				3C8203AA14E1A82000A67645 /* CMISUpdateProperties.m in Sources */,
@@ -7016,6 +7030,7 @@
 				271E28F31601DBDE00CCC06D /* SiteJoinHTTPRequest.m in Sources */,
 				27D852EB1602395F0046D56A /* NodeLocationHTTPRequest.m in Sources */,
 				739928D51600E49A00634F56 /* FavoritesErrorsViewController.m in Sources */,
+				2D90543B18234EB900AA4771 /* UITableView+LongPress.m in Sources */,
 				739928DC1601CEAD00634F56 /* FavoritesErrorTableViewCell.m in Sources */,
 				271061651605FD8900F11172 /* SystemNotice.m in Sources */,
 				271061691605FD8900F11172 /* SystemNoticeGradientView.m in Sources */,
@@ -7615,7 +7630,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Cookapp Co., Ltd.";
+				CODE_SIGN_IDENTITY = "iPhone Developer: lei tim (S9NS489FCY)";
 				CURRENT_PROJECT_VERSION = "";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
@@ -7629,7 +7644,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "405DC0D9-2C7C-4F48-A2B6-FC8161D59D08";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = armv7;
@@ -7642,7 +7657,7 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "";
 				CURRENT_PROJECT_VERSION = "";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
@@ -7671,7 +7686,7 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: lei tim (S9NS489FCY)";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -7686,7 +7701,7 @@
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = ODS;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "63967691-93BA-4E0C-A4B5-A8E9E7F6C436";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -7700,7 +7715,7 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7714,7 +7729,7 @@
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = ODS;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "405DC0D9-2C7C-4F48-A2B6-FC8161D59D08";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -7728,7 +7743,7 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Classes/FreshDocs_Prefix.pch;
@@ -7755,7 +7770,7 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7769,7 +7784,7 @@
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = ODS;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "405DC0D9-2C7C-4F48-A2B6-FC8161D59D08";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -7781,6 +7796,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CODE_SIGN_ENTITLEMENTS = "Resources-Branding/Alfresco/Alfresco.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DSTROOT = "/tmp/$(TARGET_NAME).dst";
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -7803,6 +7819,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CODE_SIGN_ENTITLEMENTS = "Resources-Branding/Alfresco/Alfresco.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				DSTROOT = "/tmp/$(TARGET_NAME).dst";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7823,7 +7840,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CODE_SIGN_ENTITLEMENTS = "Resources-Branding/Alfresco/Alfresco.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				DSTROOT = "/tmp/$(TARGET_NAME).dst";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7845,6 +7862,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CODE_SIGN_ENTITLEMENTS = "Resources-Branding/Alfresco/Alfresco.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DSTROOT = "/tmp/$(TARGET_NAME).dst";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7865,6 +7883,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CODE_SIGN_ENTITLEMENTS = "Resources-Branding/Alfresco/Alfresco.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DSTROOT = "/tmp/$(TARGET_NAME).dst";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7875,6 +7894,7 @@
 					"\"$(SRCROOT)/External/FlurryAnalytics\"",
 				);
 				PRODUCT_NAME = Alfresco;
+				PROVISIONING_PROFILE = "";
 				SYMROOT = "build/${TARGET_NAME}";
 			};
 			name = "Team Provisioning";
@@ -7884,7 +7904,7 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Cookapp Co., Ltd.";
+				CODE_SIGN_IDENTITY = "";
 				CURRENT_PROJECT_VERSION = "";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
@@ -7898,6 +7918,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = armv7;
@@ -7913,7 +7934,7 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7938,8 +7959,8 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: lei tim (S9NS489FCY)";
 				CURRENT_PROJECT_VERSION = "";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_PREPROCESSOR_DEFINITIONS = "DEBUG=1";
@@ -7956,8 +7977,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "";
-				PROVISIONING_PROFILE = "46A00BBD-1FB5-46CA-ADEA-3446AF8971CB";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "63967691-93BA-4E0C-A4B5-A8E9E7F6C436";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = armv7;
@@ -7969,8 +7989,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer: lei tim (S9NS489FCY)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: lei tim (S9NS489FCY)";
 				CURRENT_PROJECT_VERSION = "";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
@@ -7984,7 +8004,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "405DC0D9-2C7C-4F48-A2B6-FC8161D59D08";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "405DC0D9-2C7C-4F48-A2B6-FC8161D59D08";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = armv7;

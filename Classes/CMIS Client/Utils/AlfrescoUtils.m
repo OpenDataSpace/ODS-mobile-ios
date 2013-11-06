@@ -97,6 +97,14 @@ static NSMutableDictionary *sharedInstances = nil;
 	return u;
 }
 
+- (NSURL *)moveObjectURLFromNode: (NSString*) sourceFolderId targetFolderId:(NSString *) targetFolderId repoId:(NSString*) repoId
+{
+    NSString *urlStr = [NSString stringWithFormat:@"%@/%@/children?id=%@&sourceFolderId=%@", [self serviceDocumentURL], repoId, targetFolderId, sourceFolderId];
+	NSURL *u         = [NSURL URLWithString:urlStr];
+	
+	return u;
+}
+
 #pragma mark -
 #pragma mark Singleton methods
 + (AlfrescoUtils *)sharedInstanceForAccountUUID:(NSString *)uuid

@@ -53,7 +53,7 @@
     // get optional values, with defaults where appropriate
     NSString *description = defaultString((NSString *)[queryPairs objectForKey:@"description"], nil);
     NSString *protocol = defaultString((NSString *)[queryPairs objectForKey:@"protocol"], @"http");
-    NSString *webapp = defaultString((NSString *)[queryPairs objectForKey:@"webapp"], @"/alfresco/service/cmis");
+    NSString *webapp = defaultString((NSString *)[queryPairs objectForKey:@"webapp"], @"");
     NSString *multitenant = defaultString((NSString *)[queryPairs objectForKey:@"multitenant"], @"NO");
     NSString *vendor = defaultString((NSString *)[queryPairs objectForKey:@"vendor"], kFDAlfresco_RepositoryVendorName);
     

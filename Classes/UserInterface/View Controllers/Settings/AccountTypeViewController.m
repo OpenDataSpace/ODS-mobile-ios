@@ -278,8 +278,8 @@ static NSString * const kPlistFileExtension = @"plist";
     [newAccountController setDelegate:self.delegate];
     
     AccountInfo *newAccount = [[AccountInfo alloc] init];
-    [newAccount setProtocol:kFDHTTP_Protocol];
-    [newAccount setPort:kFDHTTP_DefaultPort];
+    [newAccount setProtocol:kFDHTTPS_Protocol];
+    [newAccount setPort:kFDHTTPS_DefaultPort];
     [newAccountController setAccountInfo:newAccount];
     
     [self.navigationController pushViewController:newAccountController animated:YES];
