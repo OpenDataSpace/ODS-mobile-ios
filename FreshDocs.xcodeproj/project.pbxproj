@@ -1967,6 +1967,10 @@
 		2DAA822818165B5000471D4F /* AGImagePickerController+Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AGImagePickerController+Helper.h"; sourceTree = "<group>"; };
 		2DAA822918165B5000471D4F /* AGImagePickerController+Helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AGImagePickerController+Helper.m"; sourceTree = "<group>"; };
 		2DAA822B18165CDC00471D4F /* AGImagePickerController.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AGImagePickerController.bundle; sourceTree = "<group>"; };
+		3158CF3E182AA72500801544 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3158CF3F182AA72500801544 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3158CF40182AA72600801544 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3158CF41182AA72600801544 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3323F2CCCEE3CB9EB93F964F /* SaveBackMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SaveBackMetadata.h; sourceTree = "<group>"; };
 		3323F3C46FF26FC972B442C7 /* SaveBackMetadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SaveBackMetadata.m; sourceTree = "<group>"; };
 		3C22D1B315C9F0900082E118 /* FDMultilineCellController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDMultilineCellController.h; sourceTree = "<group>"; };
@@ -7599,6 +7603,10 @@
 			isa = PBXVariantGroup;
 			children = (
 				AA5F9712144C70C7005328F8 /* en */,
+				3158CF3E182AA72500801544 /* fr */,
+				3158CF3F182AA72500801544 /* de */,
+				3158CF40182AA72600801544 /* it */,
+				3158CF41182AA72600801544 /* es */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
