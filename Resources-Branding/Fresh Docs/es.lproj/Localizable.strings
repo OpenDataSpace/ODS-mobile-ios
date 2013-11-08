@@ -146,7 +146,7 @@
 
 "Settings" = "Settings";
 "about.build.date.time" = "Build Date: %s %s";
-"about.body" = "OpenDataSpace is a group of dedicated professionals focused on dramatically improving business results. Our team has a proven track record of delivering measurable results and technical innovation while leveraging business management experience. We enable our clients to reach their goals by building trusted business advisor relationships.";
+"about.body" = "Open data space is a group of dedicated professionals focused on dramatically improving business results. Our team has a proven track record of delivering measurable results and technical innovation while leveraging business management experience. We enable our clients to reach their goals by building trusted business advisor relationships.";
 "about.libraries" = "ODS uses the following third party libraries";
 
 "comments.view.title" = "Comments";
@@ -483,15 +483,10 @@
 
 "settings.fullTextSearch" = "Full Text Search";
 
-"settings.useRelativeDate" = "Use Relative Date";
-
-"settings.useDownloadCache" = "Use Download Cache";
-
 "settings.cmisRepository.CMISRepository" = "CMIS Repository";
 "settings.cmisRepository.ShowCompanyHome" = "Company Home";
 "settings.cmisRepository.ShowHiddenFiles" = "Show Hidden Files";
 "settings.cmisRepository.AmpersandFix" = "Ampersand Fix";
-
 
 "settings.forgetPassword.title" = "Forget Password";
 "settings.forgetPassword.1" = "After 1 minute";
@@ -697,7 +692,7 @@
 
 /* Account Auto Create ViewController */
 "accountCreate.title" = "Account Required";
-"accountCreate.message.cloud" = "To preview this document, you'll need to configure a Cloud account";
+"accountCreate.message.cloud" = "To preview this document, you'll need to configure an Alfresco Cloud account";
 "accountCreate.message.onPremise" = "To preview this document, an account must be configured for host %@";
 "accountCreate.title.create" = "Yes, create an account";
 "accountCreate.footer.cloud" = "";
@@ -889,20 +884,3 @@
 "agipc.loading" = "Loading...";
 "agipc.select.all" = "Select All";
 "agipc.deselect.all" = "Deselect All";
-
-"operation.pop.menu.title"="Operations";
-"operation.pop.menu.delete"="Delete";
-"operation.pop.menu.rename"="Rename";
-"operation.pop.menu.move"="Move";
-
-"confirm.delete.prompt.title" = "Warning";
-"confirm.delete.prompt.message" = "Are you sure to delete file %@?";
-"confirm.delete.prompt.ok" = "Delete";
-"confirm.delete.prompt.cancel" = "Cancel";
-
-"confirm.rename.prompt.title" = "Rename";
-"confirm.rename.prompt.message" = "";
-"confirm.rename.prompt.ok" = "Ok";
-"confirm.rename.prompt.cancel" = "Cancel";
-
-"rename.progressbar.message" = "Renaming Item";
