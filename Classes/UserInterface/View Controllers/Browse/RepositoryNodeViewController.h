@@ -53,6 +53,7 @@
 #import "ObjectByIdRequest.h"
 #import "RepositoryNodeDataSource.h"
 #import "CreateFolderViewController.h"
+#import "RenameQueueProgressBar.h"
 
 @class CMISSearchHTTPRequest;
 @class FolderDescendantsRequest;
@@ -65,6 +66,7 @@
     ASIHTTPRequestDelegate,
     CreateFolderRequestDelegate,
     DeleteQueueDelegate,
+    RenameQueueDelegate,
     DownloadQueueDelegate,
     EGORefreshTableHeaderDelegate,
     MultiSelectActionsDelegate,
@@ -92,6 +94,7 @@
 @property (nonatomic, retain) FolderItemsHTTPRequest *folderItems;
 @property (nonatomic, retain) DownloadQueueProgressBar *downloadQueueProgressBar;
 @property (nonatomic, retain) DeleteQueueProgressBar *deleteQueueProgressBar;
+@property (nonatomic, retain) RenameQueueProgressBar *renameQueueProgressBar;
 @property (nonatomic, retain) FolderDescendantsRequest *folderDescendantsRequest;
 @property (nonatomic, retain) UIPopoverController *popover;
 @property (nonatomic, retain) UITextField *alertField;
@@ -108,6 +111,7 @@
 @property (nonatomic, retain) RepositoryNodeDataSource *browseDataSource;
 @property (nonatomic, retain) SearchRepositoryNodeDelegate *searchDelegate;
 @property (nonatomic, retain) UIImagePickerController *imagePickerController;
+@property (nonatomic, retain) RepositoryItem *selectedItem;
 
 - (id)initWithStyle:(UITableViewStyle)style;
 @end

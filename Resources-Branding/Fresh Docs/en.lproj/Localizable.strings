@@ -884,3 +884,20 @@
 "agipc.loading" = "Loading...";
 "agipc.select.all" = "Select All";
 "agipc.deselect.all" = "Deselect All";
+
+"operation.pop.menu.title"="Operations";
+"operation.pop.menu.delete"="Delete";
+"operation.pop.menu.rename"="Rename";
+"operation.pop.menu.move"="Move";
+
+"confirm.delete.prompt.title" = "Warning";
+"confirm.delete.prompt.message" = "Are you sure to delete file %@?";
+"confirm.delete.prompt.ok" = "Delete";
+"confirm.delete.prompt.cancel" = "Cancel";
+
+"confirm.rename.prompt.title" = "Rename";
+"confirm.rename.prompt.message" = "";
+"confirm.rename.prompt.ok" = "Ok";
+"confirm.rename.prompt.cancel" = "Cancel";
+
+"rename.progressbar.message" = "Renaming Item";

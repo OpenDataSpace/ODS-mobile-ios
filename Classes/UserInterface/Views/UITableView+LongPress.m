@@ -14,7 +14,7 @@
 - (void)addLongPressRecognizer {
     UILongPressGestureRecognizer *lpgr = [[UILongPressGestureRecognizer alloc]
                                           initWithTarget:self action:@selector(handleLongPress:)];
-    lpgr.minimumPressDuration = 1.2; //seconds
+    lpgr.minimumPressDuration = 1.0; //seconds
     lpgr.delegate = self;
     [self addGestureRecognizer:lpgr];
 }

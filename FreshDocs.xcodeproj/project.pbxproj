@@ -436,6 +436,7 @@
 		27F3E5F11565427800EEEEDF /* settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27F3E5ED1565427800EEEEDF /* settings@2x.png */; };
 		2D20099F180B936A00014DA5 /* iTunesArtwork@2x in Resources */ = {isa = PBXBuildFile; fileRef = 2D20099E180B936A00014DA5 /* iTunesArtwork@2x */; };
 		2D2009A1180BDD6F00014DA5 /* MainWindow~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2D2009A0180BDD6F00014DA5 /* MainWindow~ipad.xib */; };
+		2D3D5E88182CD78900417CFA /* RenameQueueProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D3D5E87182CD78900417CFA /* RenameQueueProgressBar.m */; };
 		2D45A633182746320079AF66 /* CMISMoveObjectHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D45A632182746320079AF66 /* CMISMoveObjectHTTPRequest.m */; };
 		2D90543B18234EB900AA4771 /* UITableView+LongPress.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D90543A18234EB900AA4771 /* UITableView+LongPress.m */; };
 		2D9847A218068100005BA95E /* ServerURLs_OpenDataSpace.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2D9847A118068100005BA95E /* ServerURLs_OpenDataSpace.plist */; };
@@ -1958,6 +1959,8 @@
 		2892E40F0DC94CBA00A64D0F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		2D20099E180B936A00014DA5 /* iTunesArtwork@2x */ = {isa = PBXFileReference; lastKnownFileType = file; path = "iTunesArtwork@2x"; sourceTree = "<group>"; };
 		2D2009A0180BDD6F00014DA5 /* MainWindow~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = "MainWindow~ipad.xib"; path = "Resources/MainWindow~ipad.xib"; sourceTree = "<group>"; };
+		2D3D5E86182CD78900417CFA /* RenameQueueProgressBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenameQueueProgressBar.h; sourceTree = "<group>"; };
+		2D3D5E87182CD78900417CFA /* RenameQueueProgressBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RenameQueueProgressBar.m; sourceTree = "<group>"; };
 		2D45A631182746320079AF66 /* CMISMoveObjectHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISMoveObjectHTTPRequest.h; sourceTree = "<group>"; };
 		2D45A632182746320079AF66 /* CMISMoveObjectHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISMoveObjectHTTPRequest.m; sourceTree = "<group>"; };
 		2D90543918234EB900AA4771 /* UITableView+LongPress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+LongPress.h"; sourceTree = "<group>"; };
@@ -4426,6 +4429,8 @@
 				3C87981E15095C28005DFAE0 /* ProgressAlertView.m */,
 				3C7B1DD715B879A3004F8DE9 /* ImageActionSheet.h */,
 				3C7B1DD815B879A3004F8DE9 /* ImageActionSheet.m */,
+				2D3D5E86182CD78900417CFA /* RenameQueueProgressBar.h */,
+				2D3D5E87182CD78900417CFA /* RenameQueueProgressBar.m */,
 			);
 			path = Controls;
 			sourceTree = "<group>";
@@ -6992,6 +6997,7 @@
 				08D4E9F515C95AF100593E20 /* FavoritesViewController.m in Sources */,
 				08D4E9F915C97DC100593E20 /* CMISFavoriteDocsHTTPRequest.m in Sources */,
 				08D4E9FD15C98D0400593E20 /* FavoriteNodeInfo.m in Sources */,
+				2D3D5E88182CD78900417CFA /* RenameQueueProgressBar.m in Sources */,
 				089BA84E15CBDA85002733DC /* FavoriteDownloadManager.m in Sources */,
 				089BA85715CC11AE002733DC /* FavoriteFileDownloadManager.m in Sources */,
 				089BA85B15D2A328002733DC /* FavoritesTableViewDataSource.m in Sources */,

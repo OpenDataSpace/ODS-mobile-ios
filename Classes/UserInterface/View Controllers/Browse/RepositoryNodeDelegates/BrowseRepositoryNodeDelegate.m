@@ -647,7 +647,12 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
 
 #pragma mark - TableView Long Press Delegate methods
 - (void)tableView:(UITableView *)tableView didRecognizeLongPressOnRowAtIndexPath:(NSIndexPath *)indexPath {
-    
+    UITableViewCell * cell = [tableView cellForRowAtIndexPath:indexPath];
+    RepositoryItem *item = [[self.repositoryItems objectAtIndex:indexPath.row] anyRepositoryItem];
+    if([self.actionsDelegate respondsToSelector:@selector(showOperationMenu:)] && (cell && item))
+    {
+        [self.actionsDelegate performSelector:@selector(showOperationMenu:) withObject:[NSArray arrayWithObjects:cell, item, nil]];
+    }
 }
 
 @end

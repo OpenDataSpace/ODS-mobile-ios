@@ -53,6 +53,9 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
 NSInteger const kAddActionSheetTag = 100;
 NSInteger const kUploadActionSheetTag = 101;
 NSInteger const kDeleteActionSheetTag = 103;
+NSInteger const kOperationActionSheetTag = 104;
+NSInteger const kDeleteFileAlert = 10;
+NSInteger const kRenameFileAlert = 11;
 
 NSString * const kMultiSelectDownload = @"downloadAction";
 NSString * const kMultiSelectDelete = @"deleteAction";
@@ -96,6 +99,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 @synthesize folderItems = _folderItems;
 @synthesize downloadQueueProgressBar = _downloadQueueProgressBar;
 @synthesize deleteQueueProgressBar = _deleteQueueProgressBar;
+@synthesize renameQueueProgressBar = _renameQueueProgressBar;
 @synthesize folderDescendantsRequest = _folderDescendantsRequest;
 @synthesize popover = _popover;
 @synthesize alertField = _alertField;
@@ -113,6 +117,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 @synthesize browseDataSource = _browseDataSource;
 @synthesize searchDelegate = _searchDelegate;
 @synthesize imagePickerController = _imagePickerController;
+@synthesize selectedItem = _selectedItem;
 
 - (void)dealloc
 {
@@ -493,6 +498,9 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             case kDeleteActionSheetTag:
                 [self processDeleteActionSheetWithButtonTitle:buttonLabel];
                 break;
+            case kOperationActionSheetTag:
+                [self processOperationsActionSheetWithButtonTitle:buttonLabel];
+                break;
             default:
                 break;
         }
@@ -712,6 +720,23 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         [self didConfirmMultipleDelete];
     }
 }
+
+- (void)processOperationsActionSheetWithButtonTitle:(NSString *)buttonLabel
+{
+    if ([buttonLabel isEqualToString:NSLocalizedString(@"operation.pop.menu.delete", @"Delete")])
+    {
+        [self showDeleteItemPrompt];
+    }
+    else if ([buttonLabel isEqualToString:NSLocalizedString(@"operation.pop.menu.rename", @"Rename")])
+    {
+        [self showRenameItemPrompt];
+    }
+    else if ([buttonLabel isEqualToString:NSLocalizedString(@"operation.pop.menu.move", @"Move")])
+    {
+        [self showChooseMoveTarget];
+    }
+}
+
 
 - (void) presentModalViewControllerHelper:(UIViewController *)modalViewController
 {
@@ -1109,8 +1134,33 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         }
         [self setEditing:NO];
     }
+    else if (alertView.tag == kDeleteFileAlert)
+    {
+        if (buttonIndex != alertView.cancelButtonIndex && _selectedItem)
+        {
+            self.deleteQueueProgressBar = [DeleteQueueProgressBar createWithItems:[NSArray arrayWithObjects:_selectedItem,nil] delegate:self andMessage:NSLocalizedString(@"Deleting Item", @"Deleting Item")];
+            [self.deleteQueueProgressBar setSelectedUUID:self.selectedAccountUUID];
+            [self.deleteQueueProgressBar setTenantID:self.tenantID];
+            [self.deleteQueueProgressBar startDeleting];
+        }
+        _selectedItem = nil;
+    }
+    else if (alertView.tag == kRenameFileAlert)
+    {
+        if (buttonIndex != alertView.cancelButtonIndex && _selectedItem)
+        {
+            UITextField *inputTextField = [alertView textFieldAtIndex:0];
+            NSString  *fileName = _selectedItem.title;
+            NSString  *newFilename = inputTextField.text;
+            if ((newFilename && [newFilename length] > 0) && ![fileName isEqualToString:newFilename]) {  //not nil and not equal to old file name
+                [self renameItem:newFilename];
+            }
+        }
+        _selectedItem = nil;
+    }
     return;
 }
+
 
 - (NSIndexPath *)indexPathForNodeWithGuid:(NSString *)itemGuid
 {
@@ -1603,5 +1653,135 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     displayInformationMessage([NSString stringWithFormat:NSLocalizedString(@"create-folder.success", @"Created folder"), folderName]);
     [self.browseDataSource reloadDataSource];
 }
+
+#pragma mark - UITable View Cell Long Press Delegate methods
+
+- (void) showOperationMenu:(id)parameters
+{
+    UITableViewCell *cell = (UITableViewCell*) [parameters objectAtIndex:0];
+    _selectedItem = [parameters objectAtIndex:1];
+    
+    if (IS_IPAD())
+    {
+		[self dismissPopover];
+	}
+    
+    UIActionSheet *sheet = [[UIActionSheet alloc]
+                            initWithTitle:NSLocalizedString(@"operation.pop.menu.title", @"Operations")
+                            delegate:self
+                            cancelButtonTitle:nil
+                            destructiveButtonTitle:nil
+                            otherButtonTitles: nil];
+    
+    [sheet addButtonWithTitle:NSLocalizedString(@"operation.pop.menu.delete", @"Delete")];
+    [sheet addButtonWithTitle:NSLocalizedString(@"operation.pop.menu.rename", @"Rename")];
+    [sheet addButtonWithTitle:NSLocalizedString(@"operation.pop.menu.move", @"Move")];
+    
+	[sheet setCancelButtonIndex:[sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")]];
+    
+    if (IS_IPAD())
+    {
+        //[self setActionSheetSenderControl:sender];
+        [sheet setActionSheetStyle:UIActionSheetStyleDefault];
+        
+        //UIBarButtonItem *actionButton = (UIBarButtonItem *)sender;
+        
+        CGRect actionButtonRect = cell.frame;
+        actionButtonRect.size.height = actionButtonRect.size.height/2;
+        if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]))
+        {
+            actionButtonRect.origin.y = 10;
+            [sheet showFromRect:actionButtonRect inView:cell animated:YES];
+        }
+        else
+        {
+            // iOS 5.1 bug workaround
+            actionButtonRect.origin.y += 70;
+            [sheet showFromRect:actionButtonRect inView:self.view.window animated:YES];
+            
+        }
+    }
+    else
+    {
+        [sheet showInView:[[self tabBarController] view]];
+    }
+	
+    [sheet setTag:kOperationActionSheetTag];
+    [self setActionSheet:sheet];
+	[sheet release];
+}
+
+#pragma mark  - Operations Prompt method
+
+- (void)showDeleteItemPrompt
+{
+    if (_selectedItem) {
+        NSString  *fileName = _selectedItem.title;
+        UIAlertView *deleteItemPrompt = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"confirm.delete.prompt.title", @"")
+                                                                    message:[NSString stringWithFormat:NSLocalizedString(@"confirm.delete.prompt.message", @"Are you sure to delete file %@?"), fileName]
+                                                                   delegate:self
+                                                          cancelButtonTitle:NSLocalizedString(@"confirm.delete.prompt.cancel", @"Cancel")
+                                                          otherButtonTitles:NSLocalizedString(@"confirm.delete.prompt.ok", @"Delete"), nil] autorelease];
+        [deleteItemPrompt setTag:kDeleteFileAlert];
+        [deleteItemPrompt show];
+    }
+}
+
+- (void) showRenameItemPrompt
+{
+    if (_selectedItem) {
+        NSString  *fileName = _selectedItem.title;
+        UIAlertView *renameItemPrompt = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"confirm.rename.prompt.title", @"")
+                                                                    message:[NSString stringWithFormat:NSLocalizedString(@"confirm.rename.prompt.message", @"")]
+                                                                   delegate:self
+                                                          cancelButtonTitle:NSLocalizedString(@"confirm.rename.prompt.cancel", @"Cancel")
+                                                          otherButtonTitles:NSLocalizedString(@"confirm.rename.prompt.ok", @"Ok"), nil] autorelease];
+        renameItemPrompt.alertViewStyle = UIAlertViewStylePlainTextInput;
+        UITextField *inputTextField = [renameItemPrompt textFieldAtIndex:0];
+        inputTextField.text = fileName;
+        
+        [renameItemPrompt setTag:kRenameFileAlert];
+        [renameItemPrompt show];
+    }
+}
+
+- (void)showChooseMoveTarget
+{
+    
+}
+
+#pragma mark - Rename File & Folder
+- (void) renameItem:(NSString*) newFileName
+{
+    if (_selectedItem && newFileName) {
+        self.renameQueueProgressBar = [RenameQueueProgressBar createWithItem:[NSDictionary dictionaryWithObjectsAndKeys:_selectedItem, @"Item", newFileName, @"NewFileName",nil] delegate:self andMessage:NSLocalizedString(@"Rrename.progressbar.message", @"Renaming Item")];
+        [self.renameQueueProgressBar setSelectedUUID:self.selectedAccountUUID];
+        [self.renameQueueProgressBar setTenantID:self.tenantID];
+        [self.renameQueueProgressBar startRenaming];
+    }
+}
+
+#pragma mark - RenameQueueProgressBar Delegate Methods
+
+- (void)renameQueue:(RenameQueueProgressBar *)renameQueueProgressBar completedRename:(id)renamedItem
+{
+    RepositoryItem *item =  [renamedItem objectForKey:@"Item"];
+    if (IS_IPAD() && [item.guid isEqualToString:[IpadSupport getCurrentDetailViewControllerObjectID]]) {
+            
+            [IpadSupport clearDetailController];
+    }
+    
+    [self.tableView setAllowsMultipleSelectionDuringEditing:NO];
+    [self.tableView setEditing:NO animated:YES];
+    [[self refreshHeaderView] setHidden:NO];
+    [self.browseDataSource reloadDataSource];
+}
+
+- (void)renameQueueWasCancelled:(RenameQueueProgressBar *)renameQueueProgressBar
+{
+    self.renameQueueProgressBar = nil;
+    [self setEditing:NO];
+}
+
 
 @end
