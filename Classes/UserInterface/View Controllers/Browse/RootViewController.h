@@ -33,6 +33,9 @@
 #import "CMISServiceManager.h"
 #import "EGORefreshTableHeaderView.h"
 #import "SiteTableViewCell.h"
+#import "CreateFolderViewController.h"
+#import "RenameQueueProgressBar.h"
+#import "DeleteQueueProgressBar.h"
 
 @class FavoritesSitesHttpRequest;
 
@@ -44,6 +47,11 @@
     MBProgressHUDDelegate,
     SitesManagerListener,
     SiteTableViewCellDelegate,
+    CreateFolderRequestDelegate,
+    DeleteQueueDelegate,
+    RenameQueueDelegate,
+    UIActionSheetDelegate,
+    UIAlertViewDelegate,
     UITableViewDataSource,
     UITableViewDelegate>
 {
@@ -73,6 +81,9 @@
 @property (nonatomic, retain) NSString *selectedSiteType;
 @property (nonatomic, retain) NSIndexPath *selectedIndex;
 @property (nonatomic, retain) NSIndexPath *willSelectIndex;
+@property (nonatomic, retain) UIPopoverController *popover;
+@property (nonatomic, retain) DeleteQueueProgressBar *deleteQueueProgressBar;
+@property (nonatomic, retain) RenameQueueProgressBar *renameQueueProgressBar;
 
 - (void)refreshViewData;
 - (void)metaDataChanged;
