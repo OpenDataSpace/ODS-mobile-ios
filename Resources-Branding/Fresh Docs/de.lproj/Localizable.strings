@@ -856,3 +856,21 @@
 "agipc.loading" = "Laden ...";
 "agipc.select.all" = "Alle auswählen";
 "agipc.deselect.all" = "Auswahl aufheben";
+
+
+"operation.pop.menu.title"="Datei Operationen";
+"operation.pop.menu.delete"="Löschen";
+"operation.pop.menu.rename"="Umbenennen";
+"operation.pop.menu.move"="Verschieben";
+
+"confirm.delete.prompt.title" = "Warnung";
+"confirm.delete.prompt.message" = "Sind Sie sicher, dass sie die Datei %@ löschen wollen?";
+"confirm.delete.prompt.ok" = "Löschen";
+"confirm.delete.prompt.cancel" = "Abbrechen";
+
+"confirm.rename.prompt.title" = "Umbenennen";
+"confirm.rename.prompt.message" = "";
+"confirm.rename.prompt.ok" = "Ok";
+"confirm.rename.prompt.cancel" = "Abbrechen";
+
+"rename.progressbar.message" = "Objekt wird umbennant";
