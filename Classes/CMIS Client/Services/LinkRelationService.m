@@ -80,7 +80,22 @@
 	// !!!: Should we check permissions and service availability? or just return nil 
 	//		(link relation should not be defined if we do not have permissions correct?)
 	
-	NSString *linkRelationString = ((linkRelation == HierarchyNavigationLinkRelationUp) ? @"up" : ((linkRelation == HierarchyNavigationLinkRelationDown) ? @"down" : [NSString string]));
+	NSString *linkRelationString = nil;
+    switch (linkRelation) {
+        case HierarchyNavigationLinkRelationUp:
+            linkRelationString = @"up";
+            break;
+        case HierarchyNavigationLinkRelationDown:
+            linkRelationString = @"down";
+            break;
+        case HierarchyNavigationLinkRelationTree:
+            linkRelationString = @"http://docs.oasis-open.org/ns/cmis/link/200908/foldertree";
+            break;
+        default:
+            linkRelationString = @"";
+            break;
+    }
+    
 	NSString *mediaType = [NSString string];
 	NSString *href = nil;
 	switch (linkRelation) {
@@ -93,6 +108,7 @@
 			break;	
 		}
 		case HierarchyNavigationLinkRelationDown:
+        case HierarchyNavigationLinkRelationTree:
 		{
 			//
 			// TODO: Should check that the Resource is correct, down only supports CMIS Folder and type objects
@@ -124,6 +140,20 @@
 
 #pragma mark -
 #pragma mark CMIS Collections (AtomPub) - Folder Children Collection
+- (NSURL *)getFolderTreeURLForCMISFolder:(RepositoryItem *)cmisFolder withOptionalArguments:(NSDictionary *)optionalArgumentsDictionary
+{
+	NSString *linkHref = [self hrefForHierarchyNavigationLinkRelation:HierarchyNavigationLinkRelationTree cmisService:@"getChildren" cmisObject:cmisFolder];
+	
+	if (nil == linkHref) {
+		AlfrescoLogDebug(@"getChildren link destination could not be found for given link relations: %@", [cmisFolder linkRelations]);
+		return nil;
+	}
+	
+	NSString *httpParameterString = [optionalArgumentsDictionary urlEncodedParameterString];
+	NSURL *getChildrenURL = [[NSURL URLWithString:linkHref] URLByAppendingParameterString:httpParameterString];
+	return getChildrenURL;
+}
+
 - (NSURL *)getChildrenURLForCMISFolder:(RepositoryItem *)cmisFolder withOptionalArguments:(NSDictionary *)optionalArgumentsDictionary
 {
 	NSString *linkHref = [self hrefForHierarchyNavigationLinkRelation:HierarchyNavigationLinkRelationDown cmisService:@"getChildren" cmisObject:cmisFolder];

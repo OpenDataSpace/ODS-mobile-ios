@@ -138,7 +138,7 @@
     }
     
     ALAssetsGroup *group = (self.assetsGroups)[indexPath.row];
-    [group setAssetsFilter:[ALAssetsFilter allPhotos]];
+    [group setAssetsFilter:[ALAssetsFilter allAssets]];
     NSUInteger numberOfAssets = group.numberOfAssets;
     
     cell.textLabel.text = [NSString stringWithFormat:@"%@", [group valueForProperty:ALAssetsGroupPropertyName]];

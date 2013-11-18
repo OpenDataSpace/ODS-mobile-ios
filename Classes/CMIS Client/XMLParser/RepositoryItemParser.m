@@ -185,6 +185,10 @@
     {
 		self.item.canCreateFolder = [string isEqualToString:@"true"];
 	}
+    else if ([self.elementBeingParsed isEqualToString:@"canMoveObject"])
+    {
+		self.item.canMoveObject = [string isEqualToString:@"true"];
+	}
     else if ([self.elementBeingParsed isEqualToString:@"canCreateDocument"])
     {
 		self.item.canCreateDocument = [string isEqualToString:@"true"];

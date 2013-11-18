@@ -67,7 +67,7 @@
         _shouldChangeStatusBarStyle = shouldChangeStatusBarStyle;
         
         if (_shouldChangeStatusBarStyle)
-            if (IS_IPAD())
+            if (IS_IPAD)
                 [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
             else
                 [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackTranslucent animated:YES];

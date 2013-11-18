@@ -42,6 +42,7 @@
 @property (nonatomic) BOOL canCreateDocument;
 @property (nonatomic) BOOL canCreateFolder;
 @property (nonatomic) BOOL canDeleteObject;
+@property (nonatomic) BOOL canMoveObject;
 @property (nonatomic) BOOL canSetContentStream;
 @property (nonatomic, retain) NSMutableDictionary *metadata;
 @property (nonatomic, retain) NSString *describedByURL; //REFACTOR & DEPRECATE __attribute__ ((deprecated));

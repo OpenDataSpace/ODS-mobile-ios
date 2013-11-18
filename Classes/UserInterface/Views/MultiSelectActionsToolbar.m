@@ -27,7 +27,9 @@
 /**
  * Private methods
  */
-@interface MultiSelectActionsToolbar ()
+@interface MultiSelectActionsToolbar () {
+    BOOL   enableMultiSelect;
+}
 
 @property (nonatomic, retain) NSMutableOrderedSet *actionItems;
 @property (nonatomic, retain) UIButton *cancelButton;
@@ -76,6 +78,7 @@
     self = [super init];
     if (self)
     {
+        enableMultiSelect = NO;
         self.alpha = 0;
         self.barStyle = UIBarStyleDefault;
 
@@ -100,7 +103,7 @@
         
         [self.tabBarController.view addSubview:self];
         
-        [self setActionItems:[[[NSMutableOrderedSet alloc] initWithCapacity:2] autorelease]];
+        [self setActionItems:[[[NSMutableOrderedSet alloc] initWithCapacity:3] autorelease]];
         [self setSelectedItems:[[[NSMutableArray alloc] init] autorelease]];
         [self setSelectedIndexPaths:[[[NSMutableArray alloc] init] autorelease]];
     }
@@ -228,6 +231,10 @@
 
 - (void)didEnterMultiSelectModeFromSearchView:(BOOL)searchViewIsActive
 {
+    if (enableMultiSelect) {
+        return ;
+    }
+    enableMultiSelect = YES;
     [self.selectedItems removeAllObjects];
     [self.selectedIndexPaths removeAllObjects];
     [self updateItemButtonLabels];
@@ -242,6 +249,10 @@
 
 - (void)didLeaveMultiSelectMode
 {
+    if (!enableMultiSelect) {
+        return;
+    }
+    enableMultiSelect = NO;
     [UIView beginAnimations:@"multiselect" context:nil];
     self.tabBarController.tabBar.frame = CGRectOffset(self.tabBarController.tabBar.frame, 0, -self.tabBarController.tabBar.frame.size.height);
     self.tabBarController.tabBar.alpha = 1;

@@ -104,7 +104,7 @@
                                   endColor:[UIColor colorWithHexRed:250.0f green:250.0f blue:250.0f alphaTransparency:1.0f] endPoint:CGPointMake(0.5f, 1.0f)];
 #endif
         
-        [self listExternalLibraries:[AppProperties propertyForKey:kALicenses]];
+        //[self listExternalLibraries:[AppProperties propertyForKey:kALicenses]];
     }
     
 #if defined (TARGET_ALFRESCO)

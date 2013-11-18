@@ -184,6 +184,8 @@
 		currentItem.title = currentItem.title ? [currentItem.title stringByAppendingString:string] : string;
 	} else if ([self.elementBeingParsed isEqualToString:@"canCreateFolder"]) {
 		currentItem.canCreateFolder = [string isEqualToString:@"true"];
+	} else if ([self.elementBeingParsed isEqualToString:@"canMoveObject"]) {
+		currentItem.canMoveObject = [string isEqualToString:@"true"];
 	} else if ([self.elementBeingParsed isEqualToString:@"canCreateDocument"]) {
 		currentItem.canCreateDocument = [string isEqualToString:@"true"];
 	} else if ([self.elementBeingParsed isEqualToString:@"canDeleteObject"]) {

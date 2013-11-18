@@ -52,7 +52,7 @@
 {
     NSUInteger numberOfItemsPerRow = 0;
     
-    if (IS_IPAD())
+    if (IS_IPAD)
     {
         if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation))
         {
@@ -174,7 +174,7 @@
 
 - (AGDeviceType)deviceType
 {
-    return (IS_IPAD() ? AGDeviceTypeiPad : AGDeviceTypeiPhone);
+    return (IS_IPAD ? AGDeviceTypeiPad : AGDeviceTypeiPhone);
 }
 
 #pragma mark - Drawing: Item

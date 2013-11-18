@@ -57,6 +57,7 @@
         _canCreateDocument = NO;
         _canCreateFolder = NO;
         _canDeleteObject = NO;
+        _canMoveObject = NO;
 		[self setLastModifiedBy:[NSString string]];
 		[self setLinkRelations:[NSMutableArray array]];
 	}

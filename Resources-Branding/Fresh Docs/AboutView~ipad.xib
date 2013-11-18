@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="4510" systemVersion="12F45" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="4514" systemVersion="12F45" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none">
     <dependencies>
         <deployment defaultVersion="1296" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3742"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3746"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="AboutViewController" customClass="AboutViewController">
@@ -48,7 +48,7 @@
                             </connections>
                         </button>
                         <view contentMode="scaleToFill" id="11" customClass="GradientView">
-                            <rect key="frame" x="70" y="235" width="629" height="381.00000000000006"/>
+                            <rect key="frame" x="70" y="235" width="629" height="381"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
                             <subviews>
                                 <textView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" minimumZoomScale="0.0" editable="NO" id="15" userLabel="aboutZiaText" colorLabel="IBBuiltInLabel-Red">
@@ -58,17 +58,17 @@
                                     <accessibility key="accessibilityConfiguration">
                                         <accessibilityTraits key="traits" none="YES" staticText="YES" notEnabled="YES"/>
                                     </accessibility>
-                                    <string key="text">Zia Consulting ... Content anywhere, solutions here.
+                                    <mutableString key="text">Open Data Space ... Content anywhere, solutions here.
 
-Zia Consulting is a leading provider of enterprise business solutions for content management from paper to mobile.
+Open Data Space is a leading provider of enterprise business solutions for content management from paper to mobile.
 
-Zia Consulting’s Fresh Products and Mobile Applications for ECM enables users to create, store, share, and find content across the enterprise and on the go.  Zia Consulting has worked with both the public and private sector to provide end to end business solutions for Procurement, Sales Automation, Contract and Records Management, eDiscovery, Knowledge and Business Process Management, Project and Expense Management, to name a few.</string>
+Open Data Space’s Fresh Products and Mobile Applications for ECM enables users to create, store, share, and find content across the enterprise and on the go.  Open Data Space has worked with both the public and private sector to provide end to end business solutions for Procurement, Sales Automation, Contract and Records Management, eDiscovery, Knowledge and Business Process Management, Project and Expense Management, to name a few.</mutableString>
                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                     <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="17"/>
                                     <textInputTraits key="textInputTraits"/>
                                 </textView>
                                 <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="16" userLabel="smallZiaButton">
-                                    <rect key="frame" x="249" y="318.00000000000006" width="130" height="43"/>
+                                    <rect key="frame" x="249" y="318" width="130" height="43"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                     <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="15"/>
                                     <state key="normal" image="ZiaLogoCP-130.png">

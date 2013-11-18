@@ -151,7 +151,7 @@ static NSUInteger numberOfSelectedGridItems = 0;
         
         // Position the checkmark image in the bottom right corner
         self.checkmarkImageView = [[UIImageView alloc] initWithFrame:checkmarkFrame];
-        if (IS_IPAD())
+        if (IS_IPAD)
             self.checkmarkImageView.image = [UIImage imageNamed:@"AGImagePickerController.bundle/AGIPC-Checkmark-iPad"];
         else
             self.checkmarkImageView.image = [UIImage imageNamed:@"AGImagePickerController.bundle/AGIPC-Checkmark-iPhone"];

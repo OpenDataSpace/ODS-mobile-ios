@@ -78,7 +78,7 @@
     if (_assetsGroup != theAssetsGroup)
     {
         _assetsGroup = theAssetsGroup;
-        [_assetsGroup setAssetsFilter:[ALAssetsFilter allPhotos]];
+        [_assetsGroup setAssetsFilter:[ALAssetsFilter allAssets]];
 
         [self reloadData];
     }

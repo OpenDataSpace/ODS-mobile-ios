@@ -48,12 +48,12 @@
 // ** Class Constants
 static NSInteger const kDefaultSelectedSegment = 1;
 
-NSInteger const kAddActionSheetTag = 100;
-NSInteger const kUploadActionSheetTag = 101;
-NSInteger const kDeleteActionSheetTag = 103;
-NSInteger const kOperationActionSheetTag = 104;
-NSInteger const kDeleteFileAlert = 10;
-NSInteger const kRenameFileAlert = 11;
+static NSInteger const kAddActionSheetTag = 100;
+static NSInteger const kUploadActionSheetTag = 101;
+static NSInteger const kDeleteActionSheetTag = 103;
+static NSInteger const kOperationActionSheetTag = 104;
+static NSInteger const kDeleteFileAlert = 10;
+static NSInteger const kRenameFileAlert = 11;
 
 
 @interface RootViewController (private) 
@@ -715,7 +715,6 @@ static NSArray *siteTypes;
 }
 
 - (void)tableView:(UITableView *)tableView didRecognizeLongPressOnRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"Tim:=========>data room long press");
     UITableViewCell *cell = (UITableViewCell*) [tableView cellForRowAtIndexPath:indexPath];
    _selectedItem = [self.companyHomeItems objectAtIndex:[indexPath row]];
     /*if (IS_IPAD)
@@ -753,6 +752,11 @@ static NSArray *siteTypes;
         {
             // iOS 5.1 bug workaround
             actionButtonRect.origin.y += 70;
+            NSLog(@"UIDeviceOrientationPortraitUpsideDown:%d ==== %d",[[UIDevice currentDevice] orientation],UIDeviceOrientationPortraitUpsideDown);
+            if ([[UIDevice currentDevice] orientation] == UIDeviceOrientationPortraitUpsideDown
+                || [[UIDevice currentDevice] orientation] == UIDeviceOrientationFaceUp) {
+                NSLog(@"UIDeviceOrientationPortraitUpsideDown");
+            }
             [sheet showFromRect:actionButtonRect inView:self.view.window animated:YES];
             
         }
@@ -898,6 +902,7 @@ static NSArray *siteTypes;
             [vc setGuid:[[fid item] guid]];
             [vc setSelectedAccountUUID:self.selectedAccountUUID];
             [vc setTenantID:self.tenantID];
+            
 
 			// push that view onto the nav controller's stack
 			[self.navigationController pushViewController:vc animated:YES];

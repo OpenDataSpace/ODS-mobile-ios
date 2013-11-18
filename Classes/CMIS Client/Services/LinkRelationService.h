@@ -44,7 +44,8 @@ typedef enum
 typedef enum
 {
     HierarchyNavigationLinkRelationUp,
-    HierarchyNavigationLinkRelationDown
+    HierarchyNavigationLinkRelationDown,
+    HierarchyNavigationLinkRelationTree
 } HierarchyNavigationLinkRelation;
 
 
@@ -73,6 +74,7 @@ typedef enum
 
 // Returns the getChildren link destination and encodes the optional arguments as URL encoded parameters
 // Note: This method supports CMIS 1.0 and several draft versions of CMIS
+- (NSURL *)getFolderTreeURLForCMISFolder:(RepositoryItem *)cmisFolder withOptionalArguments:(NSDictionary *)optionalArgumentsDictionary;
 - (NSURL *)getChildrenURLForCMISFolder:(RepositoryItem *)cmisFolder withOptionalArguments:(NSDictionary *)optionalArgumentsDictionary;
 - (NSDictionary *)optionalArgumentsForFolderChildrenCollectionWithMaxItems:(NSNumber *)maxItemsOrNil
 																 skipCount:(NSNumber *)skipCountOrNil 

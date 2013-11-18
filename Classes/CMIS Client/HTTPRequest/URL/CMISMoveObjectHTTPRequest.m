@@ -18,11 +18,11 @@
         
         NSString *stringPropertyTemplate = @"<cmis:properties><cmis:propertyId propertyDefinitionId=\"cmis:objectId\"><cmis:value>%@</cmis:value></cmis:propertyId></cmis:properties>";
         
-        NSString *entryTemplate= @"<atom:entry xmlns:ns5=\"http://docs.oasis-open.org/ns/cmis/restatom/200908/\" xmlns:ns3=\"http://www.w3.org/2005/Atom\" xmlns=\"http://docs.oasis-open.org/ns/cmis/core/200908/\"><atom:title></atom:title><atom:updated></atom:updated><cmisra:object xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://w3.org/2001/XMLSchema-instance\">%@</cmisra:object></atom:entry>";
+        NSString *entryTemplate= @"<atom:entry xmlns:cmisra=\"http://docs.oasis-open.org/ns/cmis/restatom/200908/\" xmlns:atom=\"http://www.w3.org/2005/Atom\" xmlns:cmis=\"http://docs.oasis-open.org/ns/cmis/core/200908/\"><atom:id></atom:id><atom:title></atom:title><atom:updated></atom:updated><cmisra:object xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://w3.org/2001/XMLSchema-instance\">%@</cmisra:object></atom:entry>";
         
-        NSString *targetFolderId = [moveParam objectForKey:@"cmis:objectId"];//the file or folder would be moved
-        if (targetFolderId) {
-            [propertyElements appendFormat:stringPropertyTemplate, targetFolderId];
+        NSString *sourceObjectId = [moveParam objectForKey:@"cmis:objectId"];//the file or folder would be moved
+        if (sourceObjectId) {
+            [propertyElements appendFormat:stringPropertyTemplate, sourceObjectId];
         }
         
         NSString *body = [[NSString alloc] initWithFormat:entryTemplate, propertyElements];

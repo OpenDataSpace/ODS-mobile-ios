@@ -46,19 +46,22 @@
 #import "CreateFolderViewController.h"
 #import "AGImagePickerControllerDefines.h"
 #import "UITableView+LongPress.h"
+#import "ChooserFolderViewController.h"
+
 
 NSInteger const kDownloadFolderAlert = 1;
 NSInteger const kConfirmMultipleDeletePrompt = 4;
 UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnimationFade;
-NSInteger const kAddActionSheetTag = 100;
-NSInteger const kUploadActionSheetTag = 101;
-NSInteger const kDeleteActionSheetTag = 103;
-NSInteger const kOperationActionSheetTag = 104;
-NSInteger const kDeleteFileAlert = 10;
-NSInteger const kRenameFileAlert = 11;
+static NSInteger const kAddActionSheetTag = 100;
+static NSInteger const kUploadActionSheetTag = 101;
+static NSInteger const kDeleteActionSheetTag = 103;
+static NSInteger const kOperationActionSheetTag = 104;
+static NSInteger const kDeleteFileAlert = 10;
+static NSInteger const kRenameFileAlert = 11;
 
 NSString * const kMultiSelectDownload = @"downloadAction";
 NSString * const kMultiSelectDelete = @"deleteAction";
+NSString * const kMultiSelectMove = @"moveAction";
 
 @interface RepositoryNodeViewController ()
 @property (nonatomic, retain) UIActionSheet *actionSheet;
@@ -118,6 +121,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 @synthesize searchDelegate = _searchDelegate;
 @synthesize imagePickerController = _imagePickerController;
 @synthesize selectedItem = _selectedItem;
+@synthesize moveQueueProgressBar = _moveQueueProgressBar;
 
 - (void)dealloc
 {
@@ -132,6 +136,8 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [_folderItems release];
     [_downloadQueueProgressBar release];
     [_deleteQueueProgressBar release];
+    [_renameQueueProgressBar release];
+    [_moveQueueProgressBar release];
     [_folderDescendantsRequest release];
     [_popover release];
     [_alertField release];
@@ -153,6 +159,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [_childsToDownload release];
     [_childsToOverwrite release];
     [_itemsToDelete release];
+    
     [super dealloc];
 }
 
@@ -187,7 +194,9 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [self setMultiSelectToolbar:[[[MultiSelectActionsToolbar alloc] initWithParentViewController:self] autorelease]];
     [self.multiSelectToolbar setMultiSelectDelegate:self];
     [self.multiSelectToolbar addActionButtonNamed:kMultiSelectDownload withLabelKey:@"multiselect.button.download" atIndex:0];
-    [self.multiSelectToolbar addActionButtonNamed:kMultiSelectDelete withLabelKey:@"multiselect.button.delete" atIndex:1 isDestructive:YES];
+    [self.multiSelectToolbar addActionButtonNamed:kMultiSelectDelete withLabelKey:@"multiselect.button.delete" atIndex:1];
+    [self.multiSelectToolbar addActionButtonNamed:kMultiSelectMove withLabelKey:@"multiselect.button.move" atIndex:2];
+    //[self.multiSelectToolbar addActionButtonNamed:kMultiSelectDelete withLabelKey:[@"multiselect.button.delete" atIndex:0 isDestructive:YES];
     
     //TableView's delegate and datasource
     BrowseRepositoryNodeDelegate *browseDelegate = [[[BrowseRepositoryNodeDelegate alloc] initWithViewController:self] autorelease];
@@ -362,7 +371,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
-    if (IS_IPAD() && self.isEditing)
+    if (IS_IPAD && self.isEditing)
     {
         // When in portrait orientation, show the master view controller to guide the user
         if (self.interfaceOrientation == UIInterfaceOrientationPortrait || self.interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown)
@@ -375,7 +384,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 - (void)performAddAction:(id)sender event:(UIEvent *)event
 {
-	if (IS_IPAD())
+	if (IS_IPAD)
     {
 		[self dismissPopover];
 	}
@@ -425,7 +434,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 	
 	[sheet setCancelButtonIndex:[sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")]];
     
-    if (IS_IPAD())
+    if (IS_IPAD)
     {
         [self setActionSheetSenderControl:sender];
         [sheet setActionSheetStyle:UIActionSheetStyleDefault];
@@ -455,7 +464,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 - (void)performEditAction:(id)sender
 {
-	if (IS_IPAD())
+	if (IS_IPAD)
     {
 		[self dismissPopover];
 	}
@@ -519,7 +528,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 {
     if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.take-photo", @"Take Photo")] || [buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.take-photo-video", @"Take Photo or Video")]) 
     {
-        if (IS_IPAD())
+        if (IS_IPAD)
         {
             UIViewController *pickerContainer = [[UIViewController alloc] init];
             if (!self.imagePickerController)
@@ -583,7 +592,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                                 otherButtonTitles: NSLocalizedString(@"add.actionsheet.choose-photo", @"Choose Photo from Library"), NSLocalizedString(@"add.actionsheet.upload-document", @"Upload Document"), nil];
         
         [sheet setCancelButtonIndex:[sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")]];
-        if (IS_IPAD())
+        if (IS_IPAD)
         {
             [sheet setActionSheetStyle:UIActionSheetStyleDefault];
             [sheet showFromBarButtonItem:self.actionSheetSenderControl animated:YES];
@@ -695,7 +704,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
          }];
         
         [imagePickerController setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
-        if(IS_IPAD())
+        if(IS_IPAD)
         {
             //[imagePickerController setChangeBarStyle:NO];
         }
@@ -733,6 +742,8 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     }
     else if ([buttonLabel isEqualToString:NSLocalizedString(@"operation.pop.menu.move", @"Move")])
     {
+        [_itemsToMove release];
+        _itemsToMove = [[NSMutableArray alloc] initWithObjects:_selectedItem, nil];
         [self showChooseMoveTarget];
     }
 }
@@ -803,13 +814,13 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         selectedItem = [cellWrapper repositoryItem];
     }
     
-    if (!IS_IPAD() || [selectedItem isFolder])
+    if (!IS_IPAD || [selectedItem isFolder])
     {
         [[self tableView] deselectRowAtIndexPath:selectedRow animated:YES];
         [self.searchDelegate.searchController.searchResultsTableView deselectRowAtIndexPath:selectedRow animated:YES];
     }
     
-    if (IS_IPAD())
+    if (IS_IPAD)
     {
         NSIndexPath *indexPath = [self indexPathForNodeWithGuid:[IpadSupport getCurrentDetailViewControllerObjectID]];
         if (self.tableView)
@@ -1117,7 +1128,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (IS_IPAD())
+    if (IS_IPAD)
     {
 		[self dismissPopover];
 	}
@@ -1212,7 +1223,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         [self setLastUpdated:[NSDate date]];
         [self.refreshHeaderView refreshLastUpdatedDate];
 
-        if (IS_IPAD())
+        if (IS_IPAD)
         {
             NSIndexPath *indexPath = [self indexPathForNodeWithGuid:[IpadSupport getCurrentDetailViewControllerObjectID]];
             if (indexPath && self.tableView)
@@ -1262,6 +1273,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     }
 
     UISearchBar *searchBar = [self.searchDelegate.searchController searchBar];
+    
     [self.navigationItem setHidesBackButton:editing animated:YES];
     [UIView beginAnimations:@"searchbar" context:nil];
     [searchBar setAlpha:(editing ? 0.7f : 1)];
@@ -1556,6 +1568,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 {
     BOOL downloadActionIsViable = ([selectedItems count] > 0);
     BOOL deleteActionIsViable = ([selectedItems count] > 0);
+    BOOL moveActionIsViable = ([selectedItems count] > 0);
     
     for (RepositoryItem *item in selectedItems)
     {
@@ -1568,10 +1581,15 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         {
             deleteActionIsViable = NO;
         }
+        
+        if (![item canMoveObject]) {
+            moveActionIsViable = NO; //TODO:a object can be deleted, it should be moved.
+        }
     }
     
     [self.multiSelectToolbar enableActionButtonNamed:kMultiSelectDownload isEnabled:downloadActionIsViable];
     [self.multiSelectToolbar enableActionButtonNamed:kMultiSelectDelete isEnabled:deleteActionIsViable];
+    [self.multiSelectToolbar enableActionButtonNamed:kMultiSelectMove isEnabled:moveActionIsViable];
 }
 
 - (void)multiSelectUserDidPerformAction:(MultiSelectActionsToolbar *)msaToolbar named:(NSString *)name withItems:(NSArray *)selectedItems atIndexPaths:(NSArray *)selectedIndexPaths
@@ -1586,6 +1604,12 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         [_itemsToDelete release];
         _itemsToDelete = [selectedItems copy];
         [self askDeleteConfirmationForMultipleItems];
+    }
+    else if ([name isEqualToString:kMultiSelectMove])
+    {
+        [_itemsToMove release];
+        _itemsToMove = [selectedItems copy];
+        [self showChooseMoveTarget];
     }
 }
 
@@ -1627,7 +1651,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     
     for (RepositoryItem *item in deletedItems)
     {
-        if (IS_IPAD() && [item.guid isEqualToString:[IpadSupport getCurrentDetailViewControllerObjectID]]) {
+        if (IS_IPAD && [item.guid isEqualToString:[IpadSupport getCurrentDetailViewControllerObjectID]]) {
             
             [IpadSupport clearDetailController];
         }
@@ -1661,7 +1685,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     UITableViewCell *cell = (UITableViewCell*) [parameters objectAtIndex:0];
     _selectedItem = [parameters objectAtIndex:1];
     
-    if (IS_IPAD())
+    if (IS_IPAD)
     {
 		[self dismissPopover];
 	}
@@ -1675,11 +1699,14 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     
     [sheet addButtonWithTitle:NSLocalizedString(@"operation.pop.menu.delete", @"Delete")];
     [sheet addButtonWithTitle:NSLocalizedString(@"operation.pop.menu.rename", @"Rename")];
-    [sheet addButtonWithTitle:NSLocalizedString(@"operation.pop.menu.move", @"Move")];
+    if ([_selectedItem canMoveObject])
+    {
+        [sheet addButtonWithTitle:NSLocalizedString(@"operation.pop.menu.move", @"Move")];
+    }
     
 	[sheet setCancelButtonIndex:[sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")]];
     
-    if (IS_IPAD())
+    if (IS_IPAD)
     {
         //[self setActionSheetSenderControl:sender];
         [sheet setActionSheetStyle:UIActionSheetStyleDefault];
@@ -1747,7 +1774,13 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 - (void)showChooseMoveTarget
 {
-    
+    ChooserFolderViewController *chooseFolder = [[[ChooserFolderViewController alloc] initWithAccountUUID:self.selectedAccountUUID] autorelease];
+    AccountInfo *accountInfo = [[AccountManager sharedManager] accountInfoForUUID:self.selectedAccountUUID];
+    chooseFolder.viewTitle = [accountInfo description];
+    chooseFolder.itemType = kMoveTargetTypeRepo;
+    chooseFolder.selectedDelegate = self;
+    [chooseFolder setModalPresentationStyle:UIModalPresentationFormSheet];
+    [IpadSupport presentModalViewController:chooseFolder withNavigation:self.navigationController];
 }
 
 #pragma mark - Rename File & Folder
@@ -1766,7 +1799,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 - (void)renameQueue:(RenameQueueProgressBar *)renameQueueProgressBar completedRename:(id)renamedItem
 {
     RepositoryItem *item =  [renamedItem objectForKey:@"Item"];
-    if (IS_IPAD() && [item.guid isEqualToString:[IpadSupport getCurrentDetailViewControllerObjectID]]) {
+    if (IS_IPAD && [item.guid isEqualToString:[IpadSupport getCurrentDetailViewControllerObjectID]]) {
             
             [IpadSupport clearDetailController];
     }
@@ -1783,5 +1816,43 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [self setEditing:NO];
 }
 
+#pragma mark - RenameQueueProgressBar Delegate Methods
+- (void)moveQueue:(MoveQueueProgressBar *)moveQueueProgressBar completedMoves:(NSArray *)movedItems {
+    NSMutableIndexSet *indexes = [[NSMutableIndexSet alloc] init];
+    NSMutableArray *indexPaths = [NSMutableArray arrayWithCapacity:[movedItems count]];
+    for (RepositoryItem *item in movedItems)
+    {
+        [indexPaths addObject:[self indexPathForNodeWithGuid:item.guid]];
+        [indexes addIndex:[[indexPaths lastObject] row]];
+    }
+    
+    for (RepositoryItem *item in movedItems)
+    {
+        if (IS_IPAD && [item.guid isEqualToString:[IpadSupport getCurrentDetailViewControllerObjectID]]) {
+            
+            [IpadSupport clearDetailController];
+        }
+    }
+    
+    [self.browseDataSource.repositoryItems removeObjectsAtIndexes:indexes];
+    [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:kDefaultTableViewRowAnimation];
+    [indexes release];
+    
+    [self setEditing:NO];
+}
+
+- (void)moveQueueWasCancelled:(MoveQueueProgressBar *)moveQueueProgressBar {
+    self.moveQueueProgressBar = nil;
+    [self setEditing:NO];
+}
+
+#pragma mark - Chooser Folder Delegate
+- (void)selectedItem:(RepositoryItem *)selectedItem repositoryID:(NSString*) repoID{
+    self.moveQueueProgressBar = [MoveQueueProgressBar createWithItems:_itemsToMove targetFolder:selectedItem delegate:self andMessage:NSLocalizedString(@"Moving Item", @"Moving Item")];
+    [self.moveQueueProgressBar setSelectedUUID:self.selectedAccountUUID];
+    [self.moveQueueProgressBar setTenantID:self.tenantID];
+    [self.moveQueueProgressBar setSourceFolderId:_guid];
+    [self.moveQueueProgressBar startMoving];
+}
 
 @end

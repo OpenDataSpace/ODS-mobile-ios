@@ -54,6 +54,8 @@
 #import "RepositoryNodeDataSource.h"
 #import "CreateFolderViewController.h"
 #import "RenameQueueProgressBar.h"
+#import "MoveQueueProgressBar.h"
+#import "ChooserFolderViewController.h"
 
 @class CMISSearchHTTPRequest;
 @class FolderDescendantsRequest;
@@ -62,17 +64,20 @@
 @class BrowseRepositoryNodeDelegate;
 @class SearchRepositoryNodeDelegate;
 
+
 @interface RepositoryNodeViewController : UIViewController < // Protocols alphabetized & on separate lines to help source control!
     ASIHTTPRequestDelegate,
     CreateFolderRequestDelegate,
     DeleteQueueDelegate,
     RenameQueueDelegate,
+    MoveQueueDelegate,
     DownloadQueueDelegate,
     EGORefreshTableHeaderDelegate,
     MultiSelectActionsDelegate,
     PhotoCaptureSaverDelegate,
     RepositoryNodeDataSourceDelegate,
     SavedDocumentPickerDelegate,
+    ChooserFolderDelegate,
     UIActionSheetDelegate,
     UIAlertViewDelegate,
     UIImagePickerControllerDelegate,
@@ -87,6 +92,7 @@
     NSMutableArray *_childsToDownload;
     NSMutableArray *_childsToOverwrite;
     NSMutableArray *_itemsToDelete;
+    NSMutableArray *_itemsToMove;
     UITableViewStyle _tableViewStyle;
 }
 
@@ -95,6 +101,7 @@
 @property (nonatomic, retain) DownloadQueueProgressBar *downloadQueueProgressBar;
 @property (nonatomic, retain) DeleteQueueProgressBar *deleteQueueProgressBar;
 @property (nonatomic, retain) RenameQueueProgressBar *renameQueueProgressBar;
+@property (nonatomic, retain) MoveQueueProgressBar *moveQueueProgressBar;
 @property (nonatomic, retain) FolderDescendantsRequest *folderDescendantsRequest;
 @property (nonatomic, retain) UIPopoverController *popover;
 @property (nonatomic, retain) UITextField *alertField;
