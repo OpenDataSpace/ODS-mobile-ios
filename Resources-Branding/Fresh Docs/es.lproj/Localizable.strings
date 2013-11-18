@@ -621,6 +621,8 @@
 "multiselect.button.delete.counter" = "Delete (%u)";
 "multiselect.button.download" = "Download";
 "multiselect.button.download.counter" = "Download (%u)";
+"multiselect.button.move" = "Move";
+"multiselect.button.move.counter" = "Move (%u)";
 
 "delete.confirmation.title" = "Confirm Delete";
 "delete.confirmation.multiple.message" = "Do you want to delete %d items from the server?";
@@ -902,3 +904,8 @@
 "confirm.rename.prompt.cancel" = "Cancel";
 
 "rename.progressbar.message" = "Renaming Item";
+"Moving Item" = "Moving Item";
+"dialog.chooser.confirm" ="Choose";
+"dialog.chooser.cancel" = "Cancel";
+"moveprogress.file-left" = "1 item remaining";
+"moveprogress.files-left" = "%d items remaining";

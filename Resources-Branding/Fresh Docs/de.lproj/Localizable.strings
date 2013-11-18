@@ -591,6 +591,8 @@
 "multiselect.button.delete.counter" = "Löschen (%u)";
 "multiselect.button.download" = "Herunterladen";
 "multiselect.button.download.counter" = "Herunterladen (%u)";
+"multiselect.button.move" = "Verschieben";
+"multiselect.button.move.counter" = "Verschieben (%u)";
 
 "delete.confirmation.title" = "Löschen bestätigen";
 "delete.confirmation.multiple.message" = "Möchten Sie %d Elemente vom Server löschen?";
@@ -874,3 +876,8 @@
 "confirm.rename.prompt.cancel" = "Abbrechen";
 
 "rename.progressbar.message" = "Objekt wird umbennant";
+"Moving Item" = "Verschiebe Objekt";
+"dialog.chooser.confirm" ="Auswählen";
+"dialog.chooser.cancel" = "Abbrechen";
+"moveprogress.file-left" = "1 Objekt verbleibend";
+"moveprogress.files-left" = "%d Objekte vebleibend";
