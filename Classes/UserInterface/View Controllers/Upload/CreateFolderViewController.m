@@ -76,11 +76,7 @@
     self.model = [[[IFTemporaryModel alloc] initWithDictionary:[NSMutableDictionary dictionary]] autorelease];
 }
 
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    
-    // Set the first responder
+- (void) setCellControllerFirstResponder {
     for (NSArray *group in tableGroups)
     {
         for (id cell in group)
@@ -92,6 +88,31 @@
             }
         }
     }
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    // Set the first responder
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
+    {
+        [self performSelector:@selector(setCellControllerFirstResponder) withObject:nil afterDelay:.01];
+    }
+    else {
+        [self setCellControllerFirstResponder];
+    }
+    /*for (NSArray *group in tableGroups)
+    {
+        for (id cell in group)
+        {
+            if ([cell conformsToProtocol:@protocol(IFCellControllerFirstResponder)])
+            {
+                [(id<IFCellControllerFirstResponder>)cell becomeFirstResponder];
+                return;
+            }
+        }
+    }*/
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

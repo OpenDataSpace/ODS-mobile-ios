@@ -594,16 +594,16 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     }
     
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"uploadview.tablecell.addnewtag.label", @"Add New Tag")
-                                                    message:@" \r\n "
+                                                    message:@""
                                                    delegate:self
                                           cancelButtonTitle:NSLocalizedString(@"closeButtonText", @"Cancel Button Text")
                                           otherButtonTitles:NSLocalizedString(@"Add", @"Add"), nil];
+    alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+    [self setCreateTagTextField:[alert textFieldAtIndex:0]];//[[[UITextField alloc] initWithFrame:CGRectMake(12.0, 45.0, 260.0, 25.0)] autorelease]];
+    //[createTagTextField setBackgroundColor:[UIColor whiteColor]];
+    //[createTagTextField setAutocapitalizationType:UITextAutocapitalizationTypeNone];
     
-    [self setCreateTagTextField:[[[UITextField alloc] initWithFrame:CGRectMake(12.0, 45.0, 260.0, 25.0)] autorelease]];
-    [createTagTextField setBackgroundColor:[UIColor whiteColor]];
-    [createTagTextField setAutocapitalizationType:UITextAutocapitalizationTypeNone];	
-    
-    [alert addSubview:createTagTextField];
+    //[alert addSubview:createTagTextField];
     [alert show];
     [alert release];
 }
