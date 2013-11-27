@@ -339,8 +339,8 @@ NSInteger const kGetCommentsCountTag = 6;
     self.actionButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(performAction:)] autorelease];
     self.actionSheetSenderControl = self.actionButton;
     [self buildActionMenu];
-    [updatedItemsArray insertObject:[self iconSpacer] atIndex:actionButtonIndex];
-    spacersCount++;
+    //[updatedItemsArray insertObject:[self iconSpacer] atIndex:actionButtonIndex];
+    //spacersCount++;
     [updatedItemsArray insertObject:self.actionButton atIndex:actionButtonIndex];
     
     BOOL showCommentButton = [[AppProperties propertyForKey:kPShowCommentButton] boolValue];
@@ -523,17 +523,19 @@ NSInteger const kGetCommentsCountTag = 6;
 	//We move the tool to the nav bar in the ipad
     if (IS_IPAD) 
     {
-        CGFloat width = 35;
+       /* CGFloat width = 35;
         NSInteger normalItems = [self.documentToolbar.items count] - spacersCount;
-        
+        CGRect Frame = self.documentToolbar.frame;
+        CGRect aFrame = CGRectMake(0, 0, normalItems * width + spacersCount * kToolbarSpacerWidth + 10, 44.01);
         TransparentToolbar *ipadToolbar = [[TransparentToolbar alloc] initWithFrame:CGRectMake(0, 0, normalItems * width + spacersCount * kToolbarSpacerWidth + 10, 44.01)];
         [ipadToolbar setTintColor:[ThemeProperties toolbarColor]];
         [ipadToolbar setItems:[self.documentToolbar items]];
         [self.documentToolbar removeFromSuperview];
         self.documentToolbar = ipadToolbar;
-        
-        self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:ipadToolbar] autorelease];
-        [ipadToolbar release];
+        */
+        [self.documentToolbar removeFromSuperview];
+        self.navigationItem.rightBarButtonItems = self.documentToolbar.items;//[[[UIBarButtonItem alloc] initWithCustomView:ipadToolbar] autorelease];
+        //[ipadToolbar release];
         
         // Adding the height of the toolbar
         if (self.webView)
