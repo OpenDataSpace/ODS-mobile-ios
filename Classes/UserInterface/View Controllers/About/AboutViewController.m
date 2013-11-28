@@ -116,7 +116,7 @@
     // Additional Logo image - set here to ensure it's localized
     [self.additionalLogoButton.imageView setImage:[UIImage imageNamed:@"zia-partner-logo.png"]];
 #else
-    [self.buildTimeLabel setText:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]];
+    [self.buildTimeLabel setText:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]];//CFBundleVersion"]];
 #endif
 }
 
