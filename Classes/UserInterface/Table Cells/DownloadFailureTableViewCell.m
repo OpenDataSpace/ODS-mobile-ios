@@ -77,6 +77,9 @@
 - (void)accessoryButtonTapped:(UIControl *)button withEvent:(UIEvent *)event
 {
     UITableView *tableView = (UITableView *) self.superview;
+    if (![tableView isKindOfClass:[UITableView class]]) {  //add this fixed for ios7
+        tableView = (UITableView *) tableView.superview;
+    }
     NSIndexPath * indexPath = [tableView indexPathForRowAtPoint:[[[event touchesForView:button] anyObject] locationInView:tableView]];
 
     if (indexPath != nil)

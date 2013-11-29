@@ -146,6 +146,7 @@
     [request setSuppressAccountStatusUpdateOnError:YES];
     [uploadInfo setUploadStatus:UploadInfoStatusActive];
     [uploadInfo setUploadRequest:request];
+    [request setShouldContinueWhenAppEntersBackground:YES];
     [self.uploadsQueue addOperation:request];
 }
 
