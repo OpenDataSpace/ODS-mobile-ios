@@ -160,6 +160,11 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     [self setAsyncRequests:[NSMutableArray array]];
 }
 
+- (void)setFirstResponder {
+    [textCellController becomeFirstResponder];
+    shouldSetResponder = NO;
+}
+
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
@@ -167,8 +172,12 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     // Set first responder here if the table cell renderer hasn't done it already
     if (shouldSetResponder)
     {
-        [textCellController becomeFirstResponder];
-        shouldSetResponder = NO;
+        if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0 && IS_IPAD)
+        {
+            [self performSelector:@selector(setFirstResponder) withObject:nil afterDelay:0.2];
+        }else{
+            [self setFirstResponder];
+        }
     }
 }
 
@@ -517,7 +526,7 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     /**
      * Tagging fields
      */
-    NSMutableArray *tagsCellGroup = [NSMutableArray array];
+    /*NSMutableArray *tagsCellGroup = [NSMutableArray array];
     
     IFChoiceCellController *tagsController = [[[IFChoiceCellController alloc ] initWithLabel:NSLocalizedString(@"uploadview.tablecell.tags.label", @"Tags")
                                                                                      andChoices:availableTagsArray atKey:@"tags" inModel:self.model] autorelease];
@@ -528,17 +537,17 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     [tagsController setSelectionStyle:UITableViewCellSelectionStyleBlue];
     [self setTagsCellController:tagsController];
     [tagsCellGroup addObject:tagsController];
-    
-    IFButtonCellController *addNewTagCellController = [[IFButtonCellController alloc] initWithLabel:NSLocalizedString(@"uploadview.tablecell.addnewtag.label", @"Add New Tag")
+    */
+    /*IFButtonCellController *addNewTagCellController = [[IFButtonCellController alloc] initWithLabel:NSLocalizedString(@"uploadview.tablecell.addnewtag.label", @"Add New Tag")
                                                                                          withAction:@selector(addNewTagButtonPressed) 
                                                                                            onTarget:self];
     [tagsCellGroup addObject:addNewTagCellController];
     [addNewTagCellController release];
-    
-    [headers addObject:@""];
-	[groups addObject:tagsCellGroup];
-	[footers addObject:@""];
-    [self setTagsCellIndexPath:[NSIndexPath indexPathForRow:0 inSection:[groups indexOfObject:tagsCellGroup]]];
+    */
+    //[headers addObject:@""];
+	//[groups addObject:tagsCellGroup];
+	//[footers addObject:@""];
+    //[self setTagsCellIndexPath:[NSIndexPath indexPathForRow:0 inSection:[groups indexOfObject:tagsCellGroup]]];
     
     
     tableGroups = [groups retain];

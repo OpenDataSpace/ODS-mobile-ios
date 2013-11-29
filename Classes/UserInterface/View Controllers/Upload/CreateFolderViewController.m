@@ -95,9 +95,9 @@
     [super viewDidAppear:animated];
     
     // Set the first responder
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0 && IS_IPAD)
     {
-        [self performSelector:@selector(setCellControllerFirstResponder) withObject:nil afterDelay:.01];
+        [self performSelector:@selector(setCellControllerFirstResponder) withObject:nil afterDelay:.2];
     }
     else {
         [self setCellControllerFirstResponder];

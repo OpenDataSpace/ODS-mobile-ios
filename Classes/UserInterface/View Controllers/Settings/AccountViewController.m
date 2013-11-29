@@ -146,28 +146,37 @@ static NSInteger kAlertDeleteAccountTag = 1;
     [self updateAndReload];
 }
 
+- (void)setFirstResponder {
+    for(NSArray *group in tableGroups)
+    {
+        for(id cell in group)
+        {
+            if([cell conformsToProtocol:@protocol(IFCellControllerFirstResponder)])
+            {
+                [(id<IFCellControllerFirstResponder>)cell becomeFirstResponder];
+                shouldSetResponder = NO;
+                break;
+            }
+        }
+        
+        if (!shouldSetResponder)
+        {
+            break;
+        }
+    }
+}
+
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
 
     if (shouldSetResponder)
     {
-        for(NSArray *group in tableGroups)
+        if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0 && IS_IPAD)
         {
-            for(id cell in group)
-            {
-                if([cell conformsToProtocol:@protocol(IFCellControllerFirstResponder)])
-                {
-                    [(id<IFCellControllerFirstResponder>)cell becomeFirstResponder];
-                    shouldSetResponder = NO;
-                    break;
-                }
-            }
-            
-            if (!shouldSetResponder)
-            {
-                break;
-            }
+            [self performSelector:@selector(setFirstResponder) withObject:nil afterDelay:0.2];
+        }else{
+            [self setFirstResponder];
         }
     }
 }
