@@ -17,15 +17,15 @@
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="29">
-            <rect key="frame" x="0.0" y="0.0" width="768" height="960"/>
+            <rect key="frame" x="0.0" y="0.0" width="768" height="800"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="10" userLabel="Gradient View" customClass="GradientView">
-                    <rect key="frame" x="0.0" y="0.0" width="768" height="960"/>
+                    <rect key="frame" x="0.0" y="0.0" width="768" height="800"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
                     <subviews>
                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" text="(build info)" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="10" id="27">
-                            <rect key="frame" x="70" y="927" width="629" height="18"/>
+                            <rect key="frame" x="70" y="750" width="629" height="18"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                             <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="14"/>
                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -48,27 +48,25 @@
                             </connections>
                         </button>
                         <view contentMode="scaleToFill" id="11" customClass="GradientView">
-                            <rect key="frame" x="70" y="235" width="629" height="381"/>
+                            <rect key="frame" x="70" y="235" width="629" height="162"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
                             <subviews>
-                                <textView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" minimumZoomScale="0.0" editable="NO" id="15" userLabel="aboutZiaText" colorLabel="IBBuiltInLabel-Red">
-                                    <rect key="frame" x="20" y="20" width="589" height="290"/>
+                                <textView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" minimumZoomScale="0.0" editable="NO" textAlignment="center" id="15" userLabel="aboutZiaText" colorLabel="IBBuiltInLabel-Red">
+                                    <rect key="frame" x="20" y="20" width="589" height="85"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     <accessibility key="accessibilityConfiguration">
                                         <accessibilityTraits key="traits" none="YES" staticText="YES" notEnabled="YES"/>
                                     </accessibility>
-                                    <mutableString key="text">Open Data Space ... Content anywhere, solutions here.
-
-Open Data Space is a leading provider of enterprise business solutions for content management from paper to mobile.
-
-Open Data Space’s Fresh Products and Mobile Applications for ECM enables users to create, store, share, and find content across the enterprise and on the go.  Open Data Space has worked with both the public and private sector to provide end to end business solutions for Procurement, Sales Automation, Contract and Records Management, eDiscovery, Knowledge and Business Process Management, Project and Expense Management, to name a few.</mutableString>
+                                    <string key="text">Copyright (C) 2011-2012 Zia Consulting, Inc. 
+Copyright (C) 2011-2012  Alfresco, Inc.
+Copyright(C) 2013-2014 The Open DataSpace Project.</string>
                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                     <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="17"/>
                                     <textInputTraits key="textInputTraits"/>
                                 </textView>
                                 <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="16" userLabel="smallZiaButton">
-                                    <rect key="frame" x="249" y="318" width="130" height="43"/>
+                                    <rect key="frame" x="235" y="99" width="130" height="43"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                     <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="15"/>
                                     <state key="normal" image="ZiaLogoCP-130.png">
@@ -90,10 +88,10 @@ Open Data Space’s Fresh Products and Mobile Applications for ECM enables users
                             </accessibility>
                         </view>
                         <view contentMode="scaleToFill" id="52" userLabel="Gradient View" customClass="GradientView">
-                            <rect key="frame" x="35" y="635" width="698" height="245"/>
+                            <rect key="frame" x="35" y="450" width="698" height="245"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                             <subviews>
-                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="FreshDocs uses following third party libraries" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="10" id="71">
+                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="ODS uses following third party libraries" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="10" id="71">
                                     <rect key="frame" x="14" y="6" width="670" height="30"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>

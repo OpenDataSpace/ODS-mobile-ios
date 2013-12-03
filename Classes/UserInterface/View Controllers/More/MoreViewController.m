@@ -134,7 +134,7 @@
      * Downloads
      */
     TableCellViewController *downloadsCell = [[[TableCellViewController alloc] initWithAction:@selector(showDownloadsView) onTarget:self] autorelease];
-    downloadsCell.textLabel.text = NSLocalizedString(@"downloads.view.title", @"Favorites");
+    downloadsCell.textLabel.text = NSLocalizedString(@"downloads.view.title", @"Downloads");
     downloadsCell.imageView.image = [UIImage imageNamed:kDownloadsMoreIcon_ImageName];
     downloadsCell.selectionStyle = UITableViewCellSelectionStyleBlue;
     downloadsCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;

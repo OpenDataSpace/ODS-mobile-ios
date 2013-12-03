@@ -5782,9 +5782,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		A48BDF32117EA853001DEDBE /* FreshDocs */ = {
+		A48BDF32117EA853001DEDBE /* ODS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A48BDF7B117EA853001DEDBE /* Build configuration list for PBXNativeTarget "FreshDocs" */;
+			buildConfigurationList = A48BDF7B117EA853001DEDBE /* Build configuration list for PBXNativeTarget "ODS" */;
 			buildPhases = (
 				AA94F9461383B3BD0046E863 /* Resources */,
 				A48BDF51117EA853001DEDBE /* Sources */,
@@ -5794,7 +5794,7 @@
 			);
 			dependencies = (
 			);
-			name = FreshDocs;
+			name = ODS;
 			productName = Alfresco;
 			productReference = A48BDF80117EA853001DEDBE /* ODS.app */;
 			productType = "com.apple.product-type.application";
@@ -5856,7 +5856,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				A48BDF32117EA853001DEDBE /* FreshDocs */,
+				A48BDF32117EA853001DEDBE /* ODS */,
 				AA4D9F0413DEC43D007C94EE /* Alfresco */,
 			);
 		};
@@ -7656,7 +7656,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Junrong Zhang (624T4S7QMP)";
+				CODE_SIGN_IDENTITY = "";
 				CURRENT_PROJECT_VERSION = "";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
@@ -7670,7 +7670,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "";
-				PROVISIONING_PROFILE = "4094020F-F212-4271-868B-EAF0AB96D4ED";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = armv7;
@@ -7683,7 +7683,7 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Junrong Zhang (624T4S7QMP)";
+				CODE_SIGN_IDENTITY = "";
 				CURRENT_PROJECT_VERSION = "";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
@@ -7697,7 +7697,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "";
-				PROVISIONING_PROFILE = "012209AC-298C-4344-8458-FCC2EEAC881B";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = armv7;
@@ -7712,8 +7712,8 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Junrong Zhang (624T4S7QMP)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -7728,7 +7728,7 @@
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = ODS;
-				PROVISIONING_PROFILE = "02799214-CDB7-49C4-A492-FA146F05673D";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -7741,7 +7741,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Junrong Zhang (624T4S7QMP)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -7756,7 +7756,8 @@
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = ODS;
-				PROVISIONING_PROFILE = "02799214-CDB7-49C4-A492-FA146F05673D";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -7769,8 +7770,8 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Junrong Zhang (624T4S7QMP)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Cookapp Co., Ltd. (5SDLG7MAVU)";
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Classes/FreshDocs_Prefix.pch;
@@ -7783,7 +7784,7 @@
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = ODS;
-				PROVISIONING_PROFILE = "02799214-CDB7-49C4-A492-FA146F05673D";
+				PROVISIONING_PROFILE = "B641CBC7-FAF1-4BF4-97B6-E8A37185596B";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -7796,7 +7797,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Junrong Zhang (624T4S7QMP)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -7811,7 +7812,7 @@
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = ODS;
-				PROVISIONING_PROFILE = "02799214-CDB7-49C4-A492-FA146F05673D";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -7823,7 +7824,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CODE_SIGN_ENTITLEMENTS = "Resources-Branding/Alfresco/Alfresco.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
 				COPY_PHASE_STRIP = NO;
 				DSTROOT = "/tmp/$(TARGET_NAME).dst";
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -7836,7 +7837,7 @@
 					"\"$(SRCROOT)/External/FlurryAnalytics\"",
 				);
 				PRODUCT_NAME = Alfresco;
-				PROVISIONING_PROFILE = "02799214-CDB7-49C4-A492-FA146F05673D";
+				PROVISIONING_PROFILE = "";
 				SYMROOT = "build/${TARGET_NAME}";
 			};
 			name = Debug;
@@ -7847,7 +7848,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CODE_SIGN_ENTITLEMENTS = "Resources-Branding/Alfresco/Alfresco.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
 				COPY_PHASE_STRIP = YES;
 				DSTROOT = "/tmp/$(TARGET_NAME).dst";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7868,7 +7869,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CODE_SIGN_ENTITLEMENTS = "Resources-Branding/Alfresco/Alfresco.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
 				COPY_PHASE_STRIP = YES;
 				DSTROOT = "/tmp/$(TARGET_NAME).dst";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7890,7 +7891,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CODE_SIGN_ENTITLEMENTS = "Resources-Branding/Alfresco/Alfresco.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
 				COPY_PHASE_STRIP = NO;
 				DSTROOT = "/tmp/$(TARGET_NAME).dst";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7911,7 +7912,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CODE_SIGN_ENTITLEMENTS = "Resources-Branding/Alfresco/Alfresco.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
 				COPY_PHASE_STRIP = NO;
 				DSTROOT = "/tmp/$(TARGET_NAME).dst";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7932,7 +7933,7 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Junrong Zhang (624T4S7QMP)";
+				CODE_SIGN_IDENTITY = "";
 				CURRENT_PROJECT_VERSION = "";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
@@ -7961,8 +7962,8 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Junrong Zhang (624T4S7QMP)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Junrong Zhang (624T4S7QMP)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7976,7 +7977,7 @@
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = ODS;
-				PROVISIONING_PROFILE = "02799214-CDB7-49C4-A492-FA146F05673D";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -7987,8 +7988,8 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Junrong Zhang (624T4S7QMP)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Cookapp Co., Ltd. (5SDLG7MAVU)";
 				CURRENT_PROJECT_VERSION = "";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_PREPROCESSOR_DEFINITIONS = "DEBUG=1";
@@ -8005,7 +8006,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "";
-				PROVISIONING_PROFILE = "63967691-93BA-4E0C-A4B5-A8E9E7F6C436";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = armv7;
@@ -8017,8 +8018,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Junrong Zhang (624T4S7QMP)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Junrong Zhang (624T4S7QMP)";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				CURRENT_PROJECT_VERSION = "";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
@@ -8032,8 +8033,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "";
-				PROVISIONING_PROFILE = "405DC0D9-2C7C-4F48-A2B6-FC8161D59D08";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "405DC0D9-2C7C-4F48-A2B6-FC8161D59D08";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = armv7;
@@ -8044,7 +8045,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		A48BDF7B117EA853001DEDBE /* Build configuration list for PBXNativeTarget "FreshDocs" */ = {
+		A48BDF7B117EA853001DEDBE /* Build configuration list for PBXNativeTarget "ODS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A48BDF7C117EA853001DEDBE /* Debug */,

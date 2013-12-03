@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="4510" systemVersion="12F45" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="4514" systemVersion="12F45" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none">
     <dependencies>
         <deployment defaultVersion="1296" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3742"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3746"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="UIApplication">
@@ -24,11 +24,11 @@
         <tabBarController id="16">
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
             <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black"/>
-            <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+            <nil key="simulatedBottomBarMetrics"/>
             <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
             <splitViewMasterSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <tabBar key="tabBar" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translucent="NO" id="17">
-                <rect key="frame" x="0.0" y="803" width="320" height="49"/>
+                <rect key="frame" x="0.0" y="709" width="320" height="49"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             </tabBar>
@@ -77,7 +77,7 @@
                         </viewController>
                     </viewControllers>
                 </navigationController>
-                <navigationController id="82" userLabel="Navigation Controller - Favorites" customClass="FavoritesNavigationController">
+                <navigationController id="82" userLabel="Navigation Controller - Favorites">
                     <tabBarItem key="tabBarItem" title="ODS Settings" image="settings.png" id="86"/>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="blackOpaque"/>
                     <nil key="simulatedTopBarMetrics"/>
@@ -90,7 +90,7 @@
                     <viewControllers>
                         <viewController id="83" customClass="FDSettingsViewController">
                             <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" bouncesZoom="NO" style="plain" separatorStyle="default" rowHeight="60" sectionHeaderHeight="22" sectionFooterHeight="22" id="87">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="852"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="709"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
