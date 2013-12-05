@@ -1232,11 +1232,11 @@ NSString * const kMultiSelectMove = @"moveAction";
                 [self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionNone];
             }
         }
-        else
+        /*else
         {
             // For non-iPad devices, re-hide the search view
             [[self tableView] setContentOffset:CGPointMake(0, 40) animated:YES];
-        }
+        }*/
     }
 }
 
