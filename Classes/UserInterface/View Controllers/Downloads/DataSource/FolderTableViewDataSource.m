@@ -479,7 +479,7 @@ NSInteger const kRestrictedImageViewTag = 30;
     }
     else
     {
-        [self.currentTableView setEditing:NO];
+        //[self.currentTableView setEditing:NO]; //we keep edit status
     }
     
     [self setSectionKeys:keys];
