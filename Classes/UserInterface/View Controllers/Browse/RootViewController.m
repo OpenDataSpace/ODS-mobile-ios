@@ -154,6 +154,26 @@ static NSArray *siteTypes;
     [super dealloc];
 }
 
+- (void)loadView
+{
+    UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    
+    [tableView setAutoresizesSubviews:YES];
+    [tableView setAutoresizingMask:UIViewAutoresizingNone];
+    [self setView:tableView];
+    [self setTableView:tableView];
+    
+    if ([tableView respondsToSelector:@selector(setSeparatorInset:)]) {
+        [tableView setSeparatorInset:UIEdgeInsetsZero];
+    }
+    
+    [tableView addLongPressRecognizer];
+    
+    [tableView release];
+    
+    [self.tableView setDelegate:self];
+    [self.tableView setDataSource:self];
+}
 #pragma mark - View Lifecycle
 
 - (void)viewDidUnload 
@@ -243,7 +263,7 @@ static NSArray *siteTypes;
     self.accessoryDownImage = [UIImage imageNamed:@"grey-accessory-down"];
     self.accessoryUpImage = [UIImage imageNamed:@"grey-accessory-up"];
     
-    self.view = self.tableView; //if a tableview add into a view, then autoresizing not work.
+   // self.view = self.tableView; //if a tableview add into a view, then autoresizing not work.
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
     {

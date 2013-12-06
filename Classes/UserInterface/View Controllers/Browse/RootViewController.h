@@ -39,7 +39,7 @@
 
 @class FavoritesSitesHttpRequest;
 
-@interface RootViewController : UIViewController <
+@interface RootViewController : UITableViewController <//UIViewController <
     ASIHTTPRequestDelegate,
     CMISServiceManagerListener,
     DownloadProgressBarDelegate,

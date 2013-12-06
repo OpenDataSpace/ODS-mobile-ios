@@ -231,7 +231,7 @@
 }
 
 - (void)egoRefreshScrollViewDidEndDragging:(UIScrollView *)scrollView {
-	CGRect frame = scrollView.frame;
+	
 	BOOL _loading = NO;
     if (shouldDisplay)
     {
@@ -256,7 +256,7 @@
 }
 
 - (void)egoRefreshScrollViewDataSourceDidFinishedLoading:(UIScrollView *)scrollView {
-	CGRect frame = scrollView.frame;
+	
 	[UIView beginAnimations:nil context:NULL];
 	[UIView setAnimationDuration:.3];
 	[scrollView setContentInset:UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f)];

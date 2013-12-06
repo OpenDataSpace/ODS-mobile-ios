@@ -260,7 +260,7 @@ static NSString *RepositoryInfoKey = @"RepositoryInfo";
         repoName = [repoInfo tenantID];
     }
 #endif
-    RootViewController *nextController = [[RootViewController alloc] initWithNibName:kFDRootViewController_NibName bundle:nil];
+    RootViewController *nextController = [[RootViewController alloc] init];//initWithNibName:kFDRootViewController_NibName bundle:nil];
     [nextController setSelectedAccountUUID:[self selectedAccountUUID]];
     [nextController setTenantID:[repoInfo tenantID]];
     [nextController setRepositoryID:[repoInfo repositoryId]];
