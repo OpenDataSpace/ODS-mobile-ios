@@ -270,6 +270,9 @@
     {
         [self.tableView performSelector:@selector(reloadData) withObject:nil afterDelay:0.3];
         folderDataSource.editing = NO;
+        if ([folderDataSource noDocumentsSaved]) {
+            [self setEditing:NO];
+        }
     }
 }
 
