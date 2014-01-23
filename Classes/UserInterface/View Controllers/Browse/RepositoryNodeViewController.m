@@ -1384,9 +1384,9 @@ NSString * const kMultiSelectMove = @"moveAction";
 - (UploadInfo *)uploadInfoFromAsset:(ALAsset *)asset andExistingDocs:(NSArray *)existingDocs
 {
     UploadInfo *uploadInfo = [[[UploadInfo alloc] init] autorelease];
-    NSURL *previewURL = [AssetUploadItem createPreviewFromAsset:asset];
+    NSURL *previewURL = [[asset defaultRepresentation] url];//[AssetUploadItem createPreviewFromAsset:asset];
     [uploadInfo setUploadFileURL:previewURL];
-    [uploadInfo setUploadFileIsTemporary:YES];
+    //[uploadInfo setUploadFileIsTemporary:YES];
     
     if(isVideoExtension([previewURL pathExtension]))
     {
@@ -1502,8 +1502,9 @@ NSString * const kMultiSelectMove = @"moveAction";
             {
                 [cell setUploadInfo:uploadInfo];
                 // This cell is no longer valid to represent the uploaded file, we need to reload the cell
-                [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
-                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
+                });
                 // Selecting the created document
                 // Special case when creating a document we need to select the cell
                 if (uploadInfo.uploadStatus == UploadInfoStatusUploaded

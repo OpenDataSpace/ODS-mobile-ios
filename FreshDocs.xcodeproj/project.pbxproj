@@ -436,6 +436,9 @@
 		27F3E5F11565427800EEEEDF /* settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27F3E5ED1565427800EEEEDF /* settings@2x.png */; };
 		2D20099F180B936A00014DA5 /* iTunesArtwork@2x in Resources */ = {isa = PBXBuildFile; fileRef = 2D20099E180B936A00014DA5 /* iTunesArtwork@2x */; };
 		2D2009A1180BDD6F00014DA5 /* MainWindow~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2D2009A0180BDD6F00014DA5 /* MainWindow~ipad.xib */; };
+		2D2B82DA188CD28F0070DAA0 /* CMISUploadFileRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D2B82D9188CD28F0070DAA0 /* CMISUploadFileRequest.m */; };
+		2D2B82DD188CD2B10070DAA0 /* CMISUploadFileQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D2B82DC188CD2B10070DAA0 /* CMISUploadFileQueue.m */; };
+		2D2B82E1188CEF2F0070DAA0 /* CMISAppendContentHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D2B82E0188CEF2F0070DAA0 /* CMISAppendContentHTTPRequest.m */; };
 		2D3D5E88182CD78900417CFA /* RenameQueueProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D3D5E87182CD78900417CFA /* RenameQueueProgressBar.m */; };
 		2D3D5E9018334F5000417CFA /* ChooserFolderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D3D5E8F18334F5000417CFA /* ChooserFolderViewController.m */; };
 		2D45A633182746320079AF66 /* CMISMoveObjectHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D45A632182746320079AF66 /* CMISMoveObjectHTTPRequest.m */; };
@@ -1961,6 +1964,12 @@
 		2892E40F0DC94CBA00A64D0F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		2D20099E180B936A00014DA5 /* iTunesArtwork@2x */ = {isa = PBXFileReference; lastKnownFileType = file; path = "iTunesArtwork@2x"; sourceTree = "<group>"; };
 		2D2009A0180BDD6F00014DA5 /* MainWindow~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = "MainWindow~ipad.xib"; path = "Resources/MainWindow~ipad.xib"; sourceTree = "<group>"; };
+		2D2B82D8188CD28F0070DAA0 /* CMISUploadFileRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISUploadFileRequest.h; sourceTree = "<group>"; };
+		2D2B82D9188CD28F0070DAA0 /* CMISUploadFileRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISUploadFileRequest.m; sourceTree = "<group>"; };
+		2D2B82DB188CD2B10070DAA0 /* CMISUploadFileQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISUploadFileQueue.h; sourceTree = "<group>"; };
+		2D2B82DC188CD2B10070DAA0 /* CMISUploadFileQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISUploadFileQueue.m; sourceTree = "<group>"; };
+		2D2B82DF188CEF2F0070DAA0 /* CMISAppendContentHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISAppendContentHTTPRequest.h; sourceTree = "<group>"; };
+		2D2B82E0188CEF2F0070DAA0 /* CMISAppendContentHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISAppendContentHTTPRequest.m; sourceTree = "<group>"; };
 		2D3D5E86182CD78900417CFA /* RenameQueueProgressBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenameQueueProgressBar.h; sourceTree = "<group>"; };
 		2D3D5E87182CD78900417CFA /* RenameQueueProgressBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RenameQueueProgressBar.m; sourceTree = "<group>"; };
 		2D3D5E8E18334F5000417CFA /* ChooserFolderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChooserFolderViewController.h; sourceTree = "<group>"; };
@@ -3604,6 +3613,19 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		2D2B82D7188CD1E50070DAA0 /* OpenDataSpace */ = {
+			isa = PBXGroup;
+			children = (
+				2D2B82DF188CEF2F0070DAA0 /* CMISAppendContentHTTPRequest.h */,
+				2D2B82E0188CEF2F0070DAA0 /* CMISAppendContentHTTPRequest.m */,
+				2D2B82D8188CD28F0070DAA0 /* CMISUploadFileRequest.h */,
+				2D2B82D9188CD28F0070DAA0 /* CMISUploadFileRequest.m */,
+				2D2B82DB188CD2B10070DAA0 /* CMISUploadFileQueue.h */,
+				2D2B82DC188CD2B10070DAA0 /* CMISUploadFileQueue.m */,
+			);
+			path = OpenDataSpace;
+			sourceTree = "<group>";
+		};
 		3323FFB53F464971E6333E74 /* Save Back */ = {
 			isa = PBXGroup;
 			children = (
@@ -4233,6 +4255,7 @@
 		3C82026714E1A82000A67645 /* VendorExtensions */ = {
 			isa = PBXGroup;
 			children = (
+				2D2B82D7188CD1E50070DAA0 /* OpenDataSpace */,
 				3C82026814E1A82000A67645 /* Alfresco */,
 			);
 			path = VendorExtensions;
@@ -6773,6 +6796,7 @@
 				3C82036214E1A82000A67645 /* NSDictionary+URLEncoding.m in Sources */,
 				3C82036514E1A82000A67645 /* NSNotificationCenter+CustomNotification.m in Sources */,
 				3C82036814E1A82000A67645 /* NSString+TokenReplacement.m in Sources */,
+				2D2B82DA188CD28F0070DAA0 /* CMISUploadFileRequest.m in Sources */,
 				3C82036B14E1A82000A67645 /* NSString+Utils.m in Sources */,
 				3C82036E14E1A82000A67645 /* NSURL+HTTPURLUtils.m in Sources */,
 				3C82037114E1A82000A67645 /* UIColor+Theme.m in Sources */,
@@ -6974,9 +6998,11 @@
 				27ADA8E11580A2EA00638ABD /* DownloadFailureTableViewCell.m in Sources */,
 				2747D4801591164600A759BB /* FailedTransferDetailViewController.m in Sources */,
 				3C7E6D6E1594FB76005C38E1 /* FDChoiceCellController.m in Sources */,
+				2D2B82DD188CD2B10070DAA0 /* CMISUploadFileQueue.m in Sources */,
 				3C793A4D1598D49800E3D08A /* FDControlTableViewCell.m in Sources */,
 				3C7C845D15A63B29003955DB /* PasswordPromptQueue.m in Sources */,
 				27820FBC15AF0ABC002EDF92 /* CMISAtomEntryWriter.m in Sources */,
+				2D2B82E1188CEF2F0070DAA0 /* CMISAppendContentHTTPRequest.m in Sources */,
 				3C7C67C615B60E7C00A52536 /* RepositoryNodeDataSource.m in Sources */,
 				3C7C67C915B60E7C00A52536 /* BrowseRepositoryNodeDelegate.m in Sources */,
 				3C7C67CC15B60E7C00A52536 /* RepositoryPreviewManagerDelegate.m in Sources */,
@@ -7712,8 +7738,9 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Junrong Zhang (624T4S7QMP)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -7728,7 +7755,7 @@
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = ODS;
-				PROVISIONING_PROFILE = "CE8B66B9-E34A-494E-AC44-B0879C4542BE";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -7741,8 +7768,8 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7770,8 +7797,8 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Classes/FreshDocs_Prefix.pch;
@@ -7797,8 +7824,8 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7933,7 +7960,7 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Junrong Zhang (624T4S7QMP)";
 				CURRENT_PROJECT_VERSION = "";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
@@ -7947,7 +7974,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "DD47FE47-2FC9-48F3-812B-85153C9EA8F6";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = armv7;
@@ -7962,8 +7989,8 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7988,8 +8015,8 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Junrong Zhang (624T4S7QMP)";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Junrong Zhang (624T4S7QMP)";
 				CURRENT_PROJECT_VERSION = "";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_PREPROCESSOR_DEFINITIONS = "DEBUG=1";
@@ -8006,7 +8033,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "";
-				PROVISIONING_PROFILE = "CE8B66B9-E34A-494E-AC44-B0879C4542BE";
+				PROVISIONING_PROFILE = "DD47FE47-2FC9-48F3-812B-85153C9EA8F6";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = armv7;

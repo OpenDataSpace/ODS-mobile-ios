@@ -42,13 +42,15 @@
 #import "NSString+Utils.h"
 #import "ActionServiceHTTPRequest.h"
 #import "FileProtectionManager.h"
+#import "CMISUploadFileQueue.h"
+#import "CMISUploadFileRequest.h"
 
 @class UploadInfo;
 
 @interface AbstractUploadsManager : NSObject
 
 
-@property (nonatomic, retain, readonly) ASINetworkQueue *uploadsQueue;
+@property (nonatomic, retain, readonly) CMISUploadFileQueue *uploadsQueue;  //ASINetworkQueue *uploadsQueue;
 
 @property (nonatomic, retain) NSString * configFile;
 
@@ -109,6 +111,10 @@
 - (void)requestFailed:(BaseHTTPRequest *)request;
 - (void)queueFinished:(ASINetworkQueue *)queue;
 
+- (void)uploadStarted:(CMISUploadFileRequest *)request;
+- (void)uploadFinished:(CMISUploadFileRequest *)request;
+- (void)uploadFailed:(CMISUploadFileRequest *)request;
+- (void)uploadQueueFinished:(CMISUploadFileQueue *)queue;
 
 - (id)initWithConfigFile:(NSString *)file andUploadQueue:(NSString *) queue;
 // Static selector to access this class singleton instance

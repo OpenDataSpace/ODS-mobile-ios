@@ -171,4 +171,25 @@
         CFRelease(imgRef);
 }
 
++ (ALAsset*) assetFromURL:(NSURL*) assetURL
+{
+    __block ALAsset *assetObj = nil;
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0);
+    dispatch_async(queue, ^{
+        ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+        [library assetForURL:assetURL resultBlock:^(ALAsset *asset) {
+            if (asset) {
+                assetObj = [asset retain];
+            }
+            dispatch_semaphore_signal(semaphore);
+        } failureBlock:^(NSError *error) {
+            AlfrescoLogDebug(@"Counld not crate asset from assetURL:%@. Error %@", [assetURL absoluteString], error);
+        }];
+    });
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    
+    return assetObj;
+}
+
 @end

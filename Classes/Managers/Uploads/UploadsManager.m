@@ -104,13 +104,13 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 #pragma mark - ASINetworkQueueDelegateMethod
 
 - (void)requestStarted:(CMISUploadFileHTTPRequest *)request
-{
-    [super requestStarted:request];
+{   //TODO:not use this any more.
+    /*[super requestStarted:request];
     
     UploadInfo *uploadInfo = request.uploadInfo;
     
     NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:uploadInfo, @"uploadInfo", uploadInfo.uuid, @"uploadUUID", nil];
-    [[NSNotificationCenter defaultCenter] postUploadStartedNotificationWithUserInfo:userInfo];
+    [[NSNotificationCenter defaultCenter] postUploadStartedNotificationWithUserInfo:userInfo];*/
 }
 
 - (void)requestFinished:(BaseHTTPRequest *)request 
@@ -126,6 +126,33 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 - (void)queueFinished:(ASINetworkQueue *)queue 
 {
     [super queueFinished:queue];
+    //[[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:nil];  //TODO:not use this any more.
+}
+
+#pragma mark - Upload File Request Delegate Method
+- (void)uploadStarted:(CMISUploadFileRequest *)request
+{
+    [super uploadStarted:request];
+    
+    UploadInfo *uploadInfo = request.uploadInfo;
+    
+    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:uploadInfo, @"uploadInfo", uploadInfo.uuid, @"uploadUUID", nil];
+    [[NSNotificationCenter defaultCenter] postUploadStartedNotificationWithUserInfo:userInfo];
+}
+
+- (void)uploadFinished:(CMISUploadFileRequest *)request
+{
+    [super uploadFinished:request];
+}
+
+- (void)uploadFailed:(CMISUploadFileRequest *)request
+{
+    [super uploadFailed:request];
+}
+
+- (void)uploadQueueFinished:(CMISUploadFileQueue *)queue
+{
+    [super uploadQueueFinished:queue];
     [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:nil];
 }
 

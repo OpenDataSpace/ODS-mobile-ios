@@ -154,6 +154,10 @@
         {
 			self.item.versionSeriesId = self.valueBuffer;
 		}
+        else if ([self.currentCMISName isEqualToString:kCMISChangeTokenPropertyName])
+        {   //kCMISChangeTokenPropertyName
+            self.item.changeToken = self.valueBuffer;
+        }
 		
         if (self.currentCMISName)
         {

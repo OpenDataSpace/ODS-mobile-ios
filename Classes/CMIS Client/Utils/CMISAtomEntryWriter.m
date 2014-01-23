@@ -84,7 +84,7 @@ NSUInteger const kBase64EncodeChunkSize = 524288;
     
     [self appendFileWithString:contentXMLStart];
     
-    NSFileHandle *fileHandle = [NSFileHandle fileHandleForReadingAtPath:self.filePath];
+   /* NSFileHandle *fileHandle = [NSFileHandle fileHandleForReadingAtPath:self.filePath];   //TODO:we only create an empty file here.
     if (fileHandle)
     {
         // Get the total file length
@@ -113,7 +113,7 @@ NSUInteger const kBase64EncodeChunkSize = 524288;
     {
         AlfrescoLogDebug(@"Could not create a file handle for %@", self.filePath);
     }
-    
+    */
     [self appendFileWithString:@"</cmisra:base64></cmisra:content>"];
 }
 

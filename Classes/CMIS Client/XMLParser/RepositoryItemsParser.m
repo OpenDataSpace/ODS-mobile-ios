@@ -186,6 +186,10 @@
         {
 			[currentItem.metadata setValue:self.valueBuffer forKey:self.currentCMISName];
 		}
+        else if ([self.currentCMISName isEqualToString:kCMISChangeTokenPropertyName])
+        {   //kCMISChangeTokenPropertyName
+            currentItem.changeToken = self.valueBuffer;
+        }
         
 		if (self.currentCMISName)
         {

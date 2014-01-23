@@ -35,7 +35,7 @@ NSString * const kCMISBaseTypeIdPropertyName = @"cmis:baseTypeId";
 NSString * const kCMISObjectIdPropertyName = @"cmis:objectId";
 NSString * const kCMISContentStreamLengthPropertyName = @"cmis:contentStreamLength";
 NSString * const kCMISVersionSeriesIdPropertyName = @"cmis:versionSeriesId";
-
+NSString * const kCMISChangeTokenPropertyName = @"cmis:changeToken";
 /**
  * Alfresco proprietary content model extensions
  * TODO: Should these be externalised somehow (they're relatively benign)

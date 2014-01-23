@@ -26,7 +26,7 @@
 #import "UploadInfo.h"
 #import "AssetUploadItem.h"
 #import "RepositoryItem.h"
-#import "CMISUploadFileHTTPRequest.h"
+#import "CMISUploadFileRequest.h"
 #import "FileUtils.h"
 
 NSString * const kUploadInfoUUID = @"uuid";

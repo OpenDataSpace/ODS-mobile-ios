@@ -88,7 +88,6 @@ const CGFloat kDetailFontSize = 14.0f;
 #pragma mark - Utility methods
 - (void)waitingForUploadState
 {
-    [self transparentViews];
     [self.detailTextLabel setTextColor:[UIColor colorWithHexRed:110 green:110 blue:110 alphaTransparency:1]];
     [self.textLabel setTextColor:[UIColor blackColor]];
     [self.detailTextLabel setHidden:NO];
@@ -160,25 +159,26 @@ const CGFloat kDetailFontSize = 14.0f;
     [uploadInfo retain];
     [_uploadInfo release];
     _uploadInfo = uploadInfo;
-    
-    [self.textLabel setText:[uploadInfo completeFileName]];
-    [self.imageView setImage:imageForFilename(self.textLabel.text)];
-    
-    switch (_uploadInfo.uploadStatus) 
-    {
-        case UploadInfoStatusActive:
-            [self waitingForUploadState];
-            break;
-        case UploadInfoStatusUploading:    
-            [self enableProgressView];
-            break;
-        case UploadInfoStatusFailed:    
-            [self failedUploadState];
-            break;
-        default:
-            [self waitingForUploadState];
-            break;
-    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.textLabel setText:[uploadInfo completeFileName]];
+        [self.imageView setImage:imageForFilename(self.textLabel.text)];
+        
+        switch (_uploadInfo.uploadStatus) 
+        {
+            case UploadInfoStatusActive:
+                [self waitingForUploadState];
+                break;
+            case UploadInfoStatusUploading:    
+                [self enableProgressView];
+                break;
+            case UploadInfoStatusFailed:    
+                [self failedUploadState];
+                break;
+            default:
+                [self waitingForUploadState];
+                break;
+        }
+    });
 }
 
 #pragma mark - Handling the Accessory View

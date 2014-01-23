@@ -281,11 +281,29 @@ UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRo
     [self.delegate dataSourceFinishedLoadingWithSuccess:NO];
 }
 
+- (BOOL)repoItemIsUploading:(RepositoryItem*) item  activeUploads:(NSArray*)activeUploads
+{
+    for(UploadInfo *uploadInfo in activeUploads)
+    {
+        if (uploadInfo && uploadInfo.repositoryItem) {
+            if ([uploadInfo.repositoryItem.guid isEqualToString:item.guid]) {
+                return YES;
+            }
+        }
+    }
+    return NO;
+}
+
 - (void)initRepositoryWrappersWithRepositoryItems:(NSArray *)repositoryItems
 {
     NSMutableArray *allItems = [NSMutableArray arrayWithCapacity:[repositoryItems count]];
+    NSArray *activeUploads = [[UploadsManager sharedManager] uploadsInUplinkRelation:[self.repositoryNode identLink]];
     for(RepositoryItem *child in repositoryItems)
     {
+        if ([self repoItemIsUploading:child activeUploads:activeUploads]) {
+            continue;
+        }
+        
         RepositoryItemCellWrapper *cellWrapper = [[RepositoryItemCellWrapper alloc] initWithRepositoryItem:child];
         [cellWrapper setItemTitle:child.title];
         cellWrapper.selectedAccountUUID = self.selectedAccountUUID;
@@ -295,7 +313,6 @@ UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRo
     }
     
     [self setRepositoryItems:allItems];
-    NSArray *activeUploads = [[UploadsManager sharedManager] uploadsInUplinkRelation:[self.repositoryNode identLink]];
     [self addUploadsToRepositoryItems:activeUploads insertCells:NO];
 }
 

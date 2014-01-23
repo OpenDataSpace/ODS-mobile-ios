@@ -501,14 +501,27 @@ NSString * const kPhotoQualityKey = @"photoQuality";
         {
             //In the photo upload, besides showing the photo preview, we give the user the option to choose the image quality, decreasing
             //the photo size for slower connections
-            UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:self.uploadInfo.uploadFileURL] ];
+            ALAsset *asset = [AssetUploadItem assetFromURL:self.uploadInfo.uploadFileURL];
+            
+            if (asset) {
+                UIImage *image = [UIImage imageWithCGImage:[[asset defaultRepresentation] fullResolutionImage]];
+                [self.model setObject:image forKey:@"media"];
+                [asset release];
+            }
+            cellController = [[IFPhotoCellController alloc] initWithLabel:NSLocalizedString([self uploadTypeCellLabel:self.uploadType], @"Photo")  atKey:@"media" inModel:self.model];
+            [cellController setSelectionStyle:UITableViewCellSelectionStyleNone];
+            [cellController setAccessoryType:UITableViewCellAccessoryNone];
+            
+            [uploadFormCellGroup addObject:cellController];
+            [uploadFormCellGroup addObject:[self qualityChoiceCell]];
+            /*UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:self.uploadInfo.uploadFileURL] ];
             [self.model setObject:image forKey:@"media"];
             cellController = [[IFPhotoCellController alloc] initWithLabel:NSLocalizedString([self uploadTypeCellLabel:self.uploadType], @"Photo")  atKey:@"media" inModel:self.model];
             [cellController setSelectionStyle:UITableViewCellSelectionStyleNone];
             [cellController setAccessoryType:UITableViewCellAccessoryNone];
 
             [uploadFormCellGroup addObject:cellController];
-            [uploadFormCellGroup addObject:[self qualityChoiceCell]];
+            [uploadFormCellGroup addObject:[self qualityChoiceCell]];*/
             break;
         }
         default:

@@ -65,6 +65,7 @@ CGFloat const kWhitePadding = 0.0f;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
     CGRect navFrame = self.view.bounds;
     //We position the view y outside the navigationView height
     ProgressPanelView *progressPanel = [[ProgressPanelView alloc] initWithFrame:CGRectMake(0, navFrame.size.height, navFrame.size.width, kProgressPanelHeight)];
@@ -128,7 +129,12 @@ CGFloat const kWhitePadding = 0.0f;
             
         }
         // Showing position is at the bottom of the navFrame
-        posY -= kProgressPanelHeight + kWhitePadding; 
+        posY -= kProgressPanelHeight + kWhitePadding;
+        
+        if([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)   //to fix ios7 status bar height.
+        {
+            posY -= 20.0;
+        }
     }
     
     //This method can be called to reposition the progress panel, so we have to check if it's currently in the right Y postion

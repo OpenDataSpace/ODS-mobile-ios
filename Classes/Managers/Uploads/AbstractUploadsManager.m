@@ -27,7 +27,7 @@
 
 
 @interface AbstractUploadsManager ()
-@property (nonatomic, retain, readwrite) ASINetworkQueue *uploadsQueue;
+@property (nonatomic, retain, readwrite) CMISUploadFileQueue *uploadsQueue;
 
 @end
 
@@ -75,15 +75,15 @@
             [self setAllUploadsDictionary:[NSMutableDictionary dictionary]];
         }
         
-        [self setUploadsQueue:[ASINetworkQueue queue]];
+        [self setUploadsQueue:[CMISUploadFileQueue queue]];
         [self.uploadsQueue setMaxConcurrentOperationCount:2];
         [self.uploadsQueue setDelegate:self];
-        [self.uploadsQueue setShowAccurateProgress:YES];
+        //[self.uploadsQueue setShowAccurateProgress:YES];
         [self.uploadsQueue setShouldCancelAllRequestsOnFailure:NO];
-        [self.uploadsQueue setRequestDidFailSelector:@selector(requestFailed:)];
-        [self.uploadsQueue setRequestDidFinishSelector:@selector(requestFinished:)];
-        [self.uploadsQueue setRequestDidStartSelector:@selector(requestStarted:)];
-        [self.uploadsQueue setQueueDidFinishSelector:@selector(queueFinished:)];
+        [self.uploadsQueue setRequestDidFailSelector:@selector(uploadFailed:)];
+        [self.uploadsQueue setRequestDidFinishSelector:@selector(uploadFinished:)];
+        [self.uploadsQueue setRequestDidStartSelector:@selector(uploadStarted:)];
+        [self.uploadsQueue setQueueDidFinishSelector:@selector(uploadQueueFinished:)];
         
         [self setTaggingQueue:[ASINetworkQueue queue]];
         [self.taggingQueue setMaxConcurrentOperationCount:2];
@@ -139,14 +139,14 @@
 {
     [self.allUploadsDictionary setObject:uploadInfo forKey:uploadInfo.uuid];
     
-    CMISUploadFileHTTPRequest *request = [CMISUploadFileHTTPRequest cmisUploadRequestWithUploadInfo:uploadInfo];
-    [request setRequestMethod:method];
-    [request setCancelledPromptPasswordSelector:@selector(cancelledPasswordPrompt:)];
-    [request setPromptPasswordDelegate:self];
-    [request setSuppressAccountStatusUpdateOnError:YES];
+    CMISUploadFileRequest *request = [CMISUploadFileRequest cmisUploadRequestWithUploadInfo:uploadInfo];
+    
+    //[request setCancelledPromptPasswordSelector:@selector(cancelledPasswordPrompt:)]; //TODO:password prompt handle
+    //[request setPromptPasswordDelegate:self];
+    //[request setSuppressAccountStatusUpdateOnError:YES];
     [uploadInfo setUploadStatus:UploadInfoStatusActive];
     [uploadInfo setUploadRequest:request];
-    [request setShouldContinueWhenAppEntersBackground:YES];
+    
     [self.uploadsQueue addOperation:request];
 }
 
@@ -194,8 +194,8 @@
     if(uploadInfo.uploadRequest)
     {
         [uploadInfo.uploadRequest clearDelegatesAndCancel];
-        CGFloat remainingBytes = [uploadInfo.uploadRequest postLength] - [uploadInfo.uploadRequest totalBytesSent];
-        [self.uploadsQueue setTotalBytesToUpload:[self.uploadsQueue totalBytesToUpload]-remainingBytes ];
+        CGFloat remainingBytes = [uploadInfo.uploadRequest totalBytes] - [uploadInfo.uploadRequest sentBytes];
+        [self.uploadsQueue setTotalBytesToUpload:[self.uploadsQueue totalBytesToUpload] - remainingBytes ];
     }
     
     
@@ -467,6 +467,49 @@
 - (void)cancelledPasswordPrompt:(CMISUploadFileHTTPRequest *)request
 {
     [self cancelActiveUploadsForAccountUUID:request.accountUUID];
+}
+
+#pragma mark - Upload File Request Delegate Method
+- (void)uploadStarted:(CMISUploadFileRequest *)request
+{
+    UploadInfo *uploadInfo = request.uploadInfo;
+    [uploadInfo setUploadStatus:UploadInfoStatusUploading];
+    [self saveUploadsData];
+}
+
+- (void)uploadFinished:(CMISUploadFileRequest *)request
+{
+    UploadInfo *uploadInfo = [(CMISUploadFileHTTPRequest *)request uploadInfo];
+    AlfrescoLogTrace(@"Successful upload for file %@ and uuid %@", [uploadInfo completeFileName], [uploadInfo uuid]);
+   
+    [uploadInfo setUploadRequest:nil];
+    [self saveUploadsData];
+    
+    if ([uploadInfo.tags count] > 0)   //TODO:ODS not support tag action
+    {
+        AlfrescoLogTrace(@"Starting the tagging request for file %@ and tags %@", [uploadInfo completeFileName], [uploadInfo tags]);
+        [self startTaggingRequestWithUploadInfo:uploadInfo];
+    }
+    else
+    {
+        // If no tags were selected, we procceed to mark the upload as success
+        [self successUpload:uploadInfo];
+    }
+    
+    AlfrescoLogTrace(@"Starting the Action Service extract-metadata request for file %@", [uploadInfo completeFileName]);
+    [self startActionServiceRequestWithUploadInfo:uploadInfo];
+}
+
+- (void)uploadFailed:(CMISUploadFileRequest *)request
+{
+    UploadInfo *uploadInfo = [(CMISUploadFileHTTPRequest *)request uploadInfo];
+    [uploadInfo setUploadRequest:nil];
+    [self failedUpload:uploadInfo withError:nil];  //TODO:not save the last error for request now.
+}
+
+- (void)uploadQueueFinished:(CMISUploadFileQueue *)queue
+{
+    [queue cancelAllOperations];
 }
 
 @end

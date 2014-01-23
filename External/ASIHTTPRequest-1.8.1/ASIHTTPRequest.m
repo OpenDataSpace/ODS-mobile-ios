@@ -560,7 +560,9 @@ static NSOperationQueue *sharedQueue = nil;
 		if ([requestMethod isEqualToString:@"GET"] || [requestMethod isEqualToString:@"DELETE"] || [requestMethod isEqualToString:@"HEAD"]) {
 			[self setRequestMethod:@"POST"];
 		}
-		[self addRequestHeader:@"Content-Length" value:[NSString stringWithFormat:@"%llu",[self postLength]]];
+		if ([self.requestHeaders objectForKey:@"Transfer-Encoding"] == nil) {
+            [self addRequestHeader:@"Content-Length" value:[NSString stringWithFormat:@"%llu",[self postLength]]];
+        }
 	}
 	[self setHaveBuiltPostBody:YES];
 

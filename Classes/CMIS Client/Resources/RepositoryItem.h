@@ -39,6 +39,7 @@
 @property (nonatomic, retain) NSString *contentLocation;
 @property (nonatomic, retain) NSString *contentStreamLengthString;
 @property (nonatomic, retain) NSString *versionSeriesId;
+@property (nonatomic, retain) NSString *changeToken;
 @property (nonatomic) BOOL canCreateDocument;
 @property (nonatomic) BOOL canCreateFolder;
 @property (nonatomic) BOOL canDeleteObject;

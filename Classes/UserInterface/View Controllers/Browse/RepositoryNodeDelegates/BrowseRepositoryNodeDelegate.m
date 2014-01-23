@@ -40,6 +40,7 @@
 #import "RepositoryNodeViewController.h"
 #import "CMISUpdateProperties.h"
 #import "CMISMoveObjectHTTPRequest.h"
+#import "UploadProgressTableViewCell.h"
 
 NSInteger const kCancelUploadPrompt = 2;
 NSInteger const kDismissFailedUploadPrompt = 3;
@@ -215,7 +216,7 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
             }
             else
             {
-                if (child.contentLocation)
+                if (child.contentLocation && ![cellWrapper.cell isKindOfClass:[UploadProgressTableViewCell class]])  //don't preview file when it's uploading.
                 {
                     [tableView setAllowsSelection:NO];
                     //We fetch the current repository items from the DataSource
@@ -237,7 +238,7 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
 	RepositoryItem *child = [cellWrapper anyRepositoryItem];
     UploadInfo *uploadInfo = cellWrapper.uploadInfo;
 	
-    if (child)
+    if (child && ![cellWrapper.cell isKindOfClass:[UploadProgressTableViewCell class]])
     {
         if (cellWrapper.isDownloadingPreview)
         {
