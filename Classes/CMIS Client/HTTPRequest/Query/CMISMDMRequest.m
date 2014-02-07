@@ -35,12 +35,17 @@
 
 - (id)initWithSearchPattern:(NSString *)pattern folderObjectId:(NSString *)objectId accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
-    NSString *cql = [NSString stringWithFormat:@"SELECT d.cmis:objectId, m.%@"
+    NSString *cql = [NSString stringWithFormat:@"SELECT d.cmis:objectId "
+                     " FROM cmis:document AS d"
+                     " JOIN %@ AS m"
+                     " ON d.cmis:objectId = m.cmis:objectId"
+                     " WHERE %@",
+                      kMDMAspectKey, pattern];/*[NSString stringWithFormat:@"SELECT d.cmis:objectId, m.%@"
                         " FROM cmis:document AS d"
                         " JOIN %@ AS m"
                         " ON d.cmis:objectId = m.cmis:objectId"
                         " WHERE %@",
-                        kCMISMDMExpiresAfterPropertyName, kMDMAspectKey, pattern];
+                        kCMISMDMExpiresAfterPropertyName, kMDMAspectKey, pattern];*/
     
     return [self initWithQuery:cql accountUUID:uuid tenantID:aTenantID];
 }
