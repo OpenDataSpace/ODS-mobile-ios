@@ -133,7 +133,7 @@ CGFloat const kWhitePadding = 0.0f;
         
         if([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)   //to fix ios7 status bar height.
         {
-            posY -= 20.0;
+            posY -= !_isFailurePanelHidden?20.0:40.0;
         }
     }
     
