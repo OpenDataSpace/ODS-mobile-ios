@@ -1477,55 +1477,55 @@ NSString * const kMultiSelectMove = @"moveAction";
 - (void)uploadFinished:(NSNotification *)notification
 {
     BOOL reload = [[notification.userInfo objectForKey:@"reload"] boolValue];
-    
-    if (reload)
-    {
-        NSString *itemGuid = [notification.userInfo objectForKey:@"itemGuid"];
-        NSPredicate *guidPredicate = [NSPredicate predicateWithFormat:@"guid == %@", itemGuid];
-        NSArray *itemsMatch = [[self.browseDataSource nodeChildren] filteredArrayUsingPredicate:guidPredicate];
-        
-        //An upload just finished in this node, we should reload the node to see the latest changes
-        //See FileUrlHandler for an example where this notification gets posted
-        if([itemsMatch count] > 0)
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (reload)
         {
-            [self.browseDataSource reloadDataSource];
-        }
-    }
-    else
-    {
-        UploadInfo *uploadInfo = [notification.userInfo objectForKey:@"uploadInfo"];
-        NSIndexPath *indexPath = [self indexPathForNodeWithGuid:uploadInfo.cmisObjectId];
-        if (indexPath != nil)
-        {
-            id cell = [self.tableView cellForRowAtIndexPath:indexPath];
-            if ([cell isKindOfClass:[UploadProgressTableViewCell class]])
+            NSString *itemGuid = [notification.userInfo objectForKey:@"itemGuid"];
+            NSPredicate *guidPredicate = [NSPredicate predicateWithFormat:@"guid == %@", itemGuid];
+            NSArray *itemsMatch = [[self.browseDataSource nodeChildren] filteredArrayUsingPredicate:guidPredicate];
+            
+            //An upload just finished in this node, we should reload the node to see the latest changes
+            //See FileUrlHandler for an example where this notification gets posted
+            if([itemsMatch count] > 0)
             {
-                [cell setUploadInfo:uploadInfo];
-                // This cell is no longer valid to represent the uploaded file, we need to reload the cell
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
-                });
-                // Selecting the created document
-                // Special case when creating a document we need to select the cell
-                if (uploadInfo.uploadStatus == UploadInfoStatusUploaded
-                    && uploadInfo.uploadType == UploadFormTypeCreateDocument
-                    && uploadInfo.repositoryItem != nil
-                    && [self.folderItems.item.identLink isEqualToString:uploadInfo.upLinkRelation])
-                {
-                    [self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionTop];
-                }
+                [self.browseDataSource reloadDataSource];
             }
-        }
-        
-        if (self.isEditing)
-        {
-            [self loadRightBarForEditMode:NO];
         }
         else
         {
-            [self loadRightBarAnimated:NO];
+            UploadInfo *uploadInfo = [notification.userInfo objectForKey:@"uploadInfo"];
+            NSIndexPath *indexPath = [self indexPathForNodeWithGuid:uploadInfo.cmisObjectId];
+            if (indexPath != nil)
+            {
+                id cell = [self.tableView cellForRowAtIndexPath:indexPath];
+                if ([cell isKindOfClass:[UploadProgressTableViewCell class]])
+                {
+                    [cell setUploadInfo:uploadInfo];
+                    // This cell is no longer valid to represent the uploaded file, we need to reload the cell
+                    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
+                   
+                    // Selecting the created document
+                    // Special case when creating a document we need to select the cell
+                    if (uploadInfo.uploadStatus == UploadInfoStatusUploaded
+                        && uploadInfo.uploadType == UploadFormTypeCreateDocument
+                        && uploadInfo.repositoryItem != nil
+                        && [self.folderItems.item.identLink isEqualToString:uploadInfo.upLinkRelation])
+                    {
+                        [self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionTop];
+                    }
+                }
+            }
+            
+            if (self.isEditing)
+            {
+                [self loadRightBarForEditMode:NO];
+            }
+            else
+            {
+                [self loadRightBarAnimated:NO];
+            }
         }
-    }
+    });
 }
 
 

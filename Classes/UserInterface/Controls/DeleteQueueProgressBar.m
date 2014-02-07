@@ -191,7 +191,9 @@ NSInteger const kDeleteCounterTag =  6;
         
         if (self.delegate && [self.delegate respondsToSelector:@selector(deleteQueue:completedDeletes:)])
         {
-            [self.delegate deleteQueue:self completedDeletes:_deletedItems];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.delegate deleteQueue:self completedDeletes:_deletedItems];
+            });
         }
     }
 }
