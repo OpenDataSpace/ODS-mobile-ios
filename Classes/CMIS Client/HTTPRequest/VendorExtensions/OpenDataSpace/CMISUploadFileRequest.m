@@ -250,6 +250,7 @@
 
 - (void) uploadStart
 {
+    [[self cancelledLock] lock];
     if (_delegate && [_delegate respondsToSelector:@selector(uploadStarted:)]) {
 		[_delegate performSelector:@selector(uploadStarted:) withObject:_uploadInfo];
 	}
@@ -257,10 +258,12 @@
     if (_queue && [_queue respondsToSelector:@selector(uploadStarted:)]) {
 		[_queue performSelector:@selector(uploadStarted:) withObject:self];
 	}
+    [[self cancelledLock] unlock];
 }
 
 - (void) uploadFailed
 {
+    [[self cancelledLock] lock];
     if (_delegate && [_delegate respondsToSelector:@selector(uploadFailed:)]) {
 		[_delegate performSelector:@selector(uploadFailed:) withObject:_uploadInfo];
 	}
@@ -268,10 +271,12 @@
     if (_queue && [_queue respondsToSelector:@selector(uploadFailed:)]) {
 		[_queue performSelector:@selector(uploadFailed:) withObject:self];
 	}
+    [[self cancelledLock] unlock];
 }
 
 - (void) uploadFinish
 {
+    [[self cancelledLock] lock];
     if (_delegate && [_delegate respondsToSelector:@selector(uploadFinished:)]) {
 		[_delegate performSelector:@selector(uploadFinished:) withObject:_uploadInfo];
 	}
@@ -279,6 +284,7 @@
     if (_queue && [_queue respondsToSelector:@selector(uploadFinished:)]) {
 		[_queue performSelector:@selector(uploadFinished:) withObject:self];
 	}
+    [[self cancelledLock] unlock];
 }
 
 #pragma mark -

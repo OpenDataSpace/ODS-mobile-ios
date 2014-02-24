@@ -327,6 +327,8 @@ static NSOperationQueue *sharedQueue = nil;
 	[self setURL:newURL];
 	[self setCancelledLock:[[[NSRecursiveLock alloc] init] autorelease]];
 	[self setDownloadCache:[[self class] defaultCache]];
+    [self setTotalBytesDownload:0];//Only for chunked
+    
 	return self;
 }
 
@@ -2261,8 +2263,8 @@ static NSOperationQueue *sharedQueue = nil;
 			theRequest = [self mainRequest];
 		}
 
-		if (cLength) {
-			unsigned long long length = strtoull([cLength UTF8String], NULL, 0);
+		if (cLength || totalBytesDownload > 0) {
+			unsigned long long length = cLength==nil?totalBytesDownload:strtoull([cLength UTF8String], NULL, 0);
 
 			// Workaround for Apache HEAD requests for dynamically generated content returning the wrong Content-Length when using gzip
 			if ([self mainRequest] && [self allowCompressedResponse] && length == 20 && [self showAccurateProgress] && [self shouldResetDownloadProgress]) {
@@ -5094,6 +5096,7 @@ static NSOperationQueue *sharedQueue = nil;
 @synthesize mainRequest;
 @synthesize totalBytesRead;
 @synthesize totalBytesSent;
+@synthesize totalBytesDownload;
 @synthesize showAccurateProgress;
 @synthesize uploadBufferSize;
 @synthesize defaultResponseEncoding;

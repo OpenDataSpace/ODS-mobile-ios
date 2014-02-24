@@ -956,6 +956,7 @@ typedef void (^ASIDataBlock)(NSData *data);
 @property (assign) BOOL showAccurateProgress;
 @property (assign) unsigned long long totalBytesRead;
 @property (assign) unsigned long long totalBytesSent;
+@property (assign) unsigned long long totalBytesDownload;
 @property (assign) NSStringEncoding defaultResponseEncoding;
 @property (assign) NSStringEncoding responseEncoding;
 @property (assign) BOOL allowCompressedResponse;

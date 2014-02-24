@@ -34,6 +34,7 @@
 #import "FileProtectionManager.h"
 #import "WorkflowDefinitionsHTTPRequest.h"
 #import "MDMEnabledHTTPRequest.h"
+#import "SDWebImageManager.h"
 
 NSString * const kCMISServiceManagerErrorDomain = @"CMISServiceManagerErrorDomain";
 NSString * const kQueueListenersKey = @"queueListenersKey";
@@ -393,6 +394,8 @@ NSString * const kProductNameEnterprise = @"Enterprise";
         ServiceDocumentRequest *serviceDocReq = (ServiceDocumentRequest *)request;
         AlfrescoLogDebug(@"Service document request success for UUID=%@", [serviceDocReq accountUUID]);
         
+        NSString *authorization = [[request requestHeaders] objectForKey:@"Authorization"];
+        [[[SDWebImageManager sharedManager] imageDownloader] setValue:authorization forHTTPHeaderField:@"Authorization"];
         RepositoryInfo *thisRepository = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:serviceDocReq.accountUUID tenantID:serviceDocReq.tenantID];
         AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:serviceDocReq.accountUUID];
         

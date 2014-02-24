@@ -251,6 +251,7 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
         [self applyRequestTimeOutValue];
         [self setValidatesSecureCertificate:userPrefValidateSSLCertificate()];
         [self setUseSessionPersistence:NO];
+        [self setTimeOutSeconds:180.0]; //TODO:no cache for thumbnail
         
         if (useAuthentication)
         {

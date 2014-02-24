@@ -305,6 +305,7 @@ UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRo
         }
         
         RepositoryItemCellWrapper *cellWrapper = [[RepositoryItemCellWrapper alloc] initWithRepositoryItem:child];
+        NSLog(@"Thumbnail URL is:%@", [child thumbnailURL]);
         [cellWrapper setItemTitle:child.title];
         cellWrapper.selectedAccountUUID = self.selectedAccountUUID;
         cellWrapper.tenantID = self.tenantID;

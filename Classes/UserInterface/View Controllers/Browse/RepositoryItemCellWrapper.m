@@ -22,7 +22,7 @@
 //
 //  RepositoryItemCellWrapper.m
 //
-
+#import "UIImageView+WebCache.h"
 #import "RepositoryItemCellWrapper.h"
 #import "RepositoryItem.h"
 #import "UploadInfo.h"
@@ -237,8 +237,9 @@
         
         cell.details.text = [[[NSString alloc] initWithFormat:@"%@ • %@", formatDocumentDate(child.lastModifiedDate), 
                               [FileUtils stringForLongFileSize:[contentStreamLengthStr longLongValue]]] autorelease]; // TODO: Externalize to a configurable property?
-        cell.imageView.image = imageForFilename(child.title);
-        
+        //cell.imageView.image = imageForFilename(child.title);        
+        [cell.image setImageWithURL:[child thumbnailURL]
+                       placeholderImage:imageForFilename(child.title)];
         PreviewManager *manager = [PreviewManager sharedManager];
         if ([manager isManagedPreview:child.guid])
         {

@@ -103,6 +103,7 @@
         [request setDelegate:self];
         [downloadInfo setDownloadStatus:DownloadInfoStatusActive];
         [downloadInfo setDownloadRequest:request];
+        [request setTotalBytesDownload:[[[[downloadInfo repositoryItem] metadata] objectForKey:@"cmis:contentStreamLength"] integerValue]];
         [request startAsynchronous];
     }
 }

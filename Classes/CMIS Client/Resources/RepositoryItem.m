@@ -128,6 +128,18 @@
     return url;
 }
 
+- (NSURL*) thumbnailURL
+{
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(rel == %@) && (type == %@)"
+                                                argumentArray:[NSArray arrayWithObjects:@"alternate", @"image/png", nil]];
+    NSArray *result = [[self linkRelations] filteredArrayUsingPredicate:predicate];
+    if ([result count] > 0) {
+        return [NSURL URLWithString:[[result objectAtIndex:0] objectForKey:@"href"]];
+    }
+    
+    return nil;
+}
+
 #pragma mark - NSKeyValueCoding Protocol Methods
 
 - (id)valueForUndefinedKey:(NSString *)key

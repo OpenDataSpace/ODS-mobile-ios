@@ -59,4 +59,5 @@
 - (NSNumber*) contentStreamLength;
 - (id) initWithDictionary:(NSDictionary*)dict;
 
+- (NSURL*) thumbnailURL;
 @end
