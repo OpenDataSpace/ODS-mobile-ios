@@ -301,7 +301,8 @@ NSString * const kMultiSelectMove = @"moveAction";
 }
 
 - (void)cancelAllHTTPConnections
-{    
+{
+    [self.browseDataSource.reloadRequest clearDelegatesAndCancel]; //fixed app will be crashed if back to parent folder when refresh folder items
     [self.folderItems clearDelegatesAndCancel];
     [self.folderDescendantsRequest clearDelegatesAndCancel];
     [self stopHUD];
