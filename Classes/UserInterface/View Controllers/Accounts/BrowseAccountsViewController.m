@@ -80,7 +80,11 @@
         [self.navigationController popToRootViewControllerAnimated:NO];
         [BrowseAccountsActions advanceToNextViewController:accountInfo withController:self animated:NO];
     }
-    [self tabBarController].tabBar.translucent = NO;
+    
+    if([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0) {  //to fix ios6 have no such property
+        [self tabBarController].tabBar.translucent = NO;
+    }
+    
     [[self tabBarController] setSelectedViewController:[self navigationController]];
 }
 @end
