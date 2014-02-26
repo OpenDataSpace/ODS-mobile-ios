@@ -758,7 +758,7 @@ NSString * const kMultiSelectMove = @"moveAction";
 
 - (void)presentModalViewControllerHelper:(UIViewController *)modalViewController animated:(BOOL)animated 
 {
-    /*if (IS_IPAD)
+    if (IS_IPAD && [[[UIDevice currentDevice] systemVersion] floatValue] < 7.0) //to fix ios6 cann't display Image Picker Controller without UIPopoverController
     {
         UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:modalViewController];
         [self setPopover:popoverController];
@@ -771,7 +771,7 @@ NSString * const kMultiSelectMove = @"moveAction";
           [self.popover presentPopoverFromBarButtonItem:self.actionSheetSenderControl
                         permittedArrowDirections:UIPopoverArrowDirectionUp animated:animated];
         }
-    } else */ {
+    } else  {
         [[self navigationController] presentModalViewController:modalViewController animated:animated];
     }
 }
