@@ -124,6 +124,7 @@
     [request setCancelledPromptPasswordSelector:@selector(cancelledPasswordPrompt:)];
     [request setPromptPasswordDelegate:self];
     [request setSuppressAccountStatusUpdateOnError:YES];
+    [request setTotalBytesDownload:[[[[downloadInfo repositoryItem] metadata] objectForKey:@"cmis:contentStreamLength"] integerValue]];
     [downloadInfo setDownloadStatus:DownloadInfoStatusActive];
     [downloadInfo setDownloadRequest:request];
     [self.downloadQueue addOperation:request withFileSize:downloadInfo.repositoryItem.contentStreamLength];
