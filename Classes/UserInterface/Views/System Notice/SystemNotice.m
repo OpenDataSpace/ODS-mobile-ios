@@ -203,6 +203,7 @@ CGFloat hiddenYOrigin;
     self.noticeView = [[[SystemNoticeGradientView alloc] initGradientViewColor:self.gradientColor frame:gradientRect] autorelease];
     self.noticeView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.noticeView.contentMode = UIViewContentModeCenter;
+    [self.noticeView setHidden:YES];   //to fix sometime the notice view always show on the view, we can see it when present video view.
     [self.view addSubview:self.noticeView];
     
     // Icon view
@@ -234,6 +235,7 @@ CGFloat hiddenYOrigin;
 
 - (void)displayNotice
 {
+    [self.noticeView setHidden:NO];
     [UIView animateWithDuration:0.5f delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         CGRect newFrame = self.noticeView.frame;
         newFrame.origin.y = self.offsetY;
