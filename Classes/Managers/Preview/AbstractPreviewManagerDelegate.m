@@ -58,6 +58,7 @@
     RepositoryItemCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
     
     [manager setProgressIndicator:nil];
+    [cell.progressBar setProgress:0.0f];
     [cell.progressBar setHidden:YES];
     [cell.details setHidden:NO];
     [cell.favIcon setHidden:NO];
@@ -74,6 +75,7 @@
     RepositoryItemCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
     
     [manager setProgressIndicator:nil];
+    [cell.progressBar setProgress:0.0f];
     [cell.progressBar setHidden:YES];
     [cell.details setHidden:NO];
     [cell.favIcon setHidden:NO];
@@ -90,6 +92,7 @@
     RepositoryItemCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
     
     [manager setProgressIndicator:nil];
+    [cell.progressBar setProgress:0.0f];
     [cell.progressBar setHidden:YES];
     [cell.details setHidden:NO];
     [cell.favIcon setHidden:NO];
