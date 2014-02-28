@@ -244,8 +244,8 @@
 {
     UploadInfo *uploadInfo = [self.allUploadsDictionary objectForKey:uploadUUID];
     
-    NSString *uploadPath = [uploadInfo.uploadFileURL path];
-    if(!uploadInfo || ![[NSFileManager defaultManager] fileExistsAtPath:uploadPath])
+    //NSString *uploadPath = [uploadInfo.uploadFileURL path];
+    if(!uploadInfo || ![uploadInfo sourceFileExists])
     {
         // We clear the upload since there's no reason to keep the upload visible
         if(uploadInfo)

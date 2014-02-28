@@ -76,4 +76,6 @@ typedef enum
 + (NSString *)typeDescription:(UploadFormType)type plural:(BOOL)plural;
 - (void)removeTemporaryUploadFile;
 
+- (BOOL) sourceFileExists;
+
 @end

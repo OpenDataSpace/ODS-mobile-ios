@@ -265,4 +265,23 @@ NSString * const kUploadInfoUploadFileIsTemporary = @"uploadFileIsTemporary";
     return nil;
 }
 
+#pragma mark -  check source upload file
+
+- (BOOL) sourceFileExists {
+    if (!self.uploadFileURL) {
+        return NO;
+    }
+    
+    NSString *urlStr = [self.uploadFileURL absoluteString];
+    if ([urlStr hasPrefix:@"assets-library://"] && [AssetUploadItem assetFromURL:self.uploadFileURL]) {
+        return YES;
+    }
+    
+    NSString *uploadPath = [self.uploadFileURL path];
+    if (uploadPath && [[NSFileManager defaultManager] fileExistsAtPath:uploadPath]) {
+        return YES;
+    }
+    
+    return NO;
+}
 @end
