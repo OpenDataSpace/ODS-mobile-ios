@@ -102,7 +102,7 @@ NSString * const kServerIsQualifying = @"kServerIsQualifying";
     if(self) {
         _uuid = [[NSString generateUUID] retain];
         
-        [self setServiceDocumentRequestPath:@"/cmis/atom"];  //for open data space
+        [self setServiceDocumentRequestPath:@"/cmis/atom11"];  //for open data space
         [self setPort:kFDHTTPS_DefaultPort];
         [self setProtocol:kFDHTTPS_Protocol];
         [self setMultitenant:[NSNumber numberWithBool:NO]];
