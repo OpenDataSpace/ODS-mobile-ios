@@ -97,7 +97,7 @@
         
         [[self aboutBorderedInfoView] setStartColor:startColor startPoint:CGPointMake(0.5f, 0.0f) 
                                            endColor:endColor endPoint:CGPointMake(0.5f, 0.8f)];
-        [[self aboutBorderedInfoView] setBorderColor:[UIColor redColor]];
+        [[self aboutBorderedInfoView] setBorderColor:[UIColor greenColor]];
         [[self aboutBorderedInfoView] setBorderWidth:2.5f];
         [[self aboutBorderedInfoView] setBorderWidth:2.5f];
         [[self gradientView] setStartColor:[UIColor colorWithHexRed:200.0f green:208.0f blue:217.0f alphaTransparency:1.0f] startPoint:CGPointMake(0.5f, 1.0f/3.0f) 
