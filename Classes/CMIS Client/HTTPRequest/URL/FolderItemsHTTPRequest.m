@@ -107,7 +107,7 @@
 	}
 
 	// sort the docs & folders by title
-	[self.children sortUsingSelector:@selector(compareTitles:)];
+	//[self.children sortUsingSelector:@selector(compareTitles:)];  //TODO:sorted by server?
 }
 
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName 
