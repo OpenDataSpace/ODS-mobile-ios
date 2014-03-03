@@ -60,7 +60,7 @@
 	}
 
 	// sort the sites by title
-	[sites sortUsingSelector:@selector(compareTitles:)];
+	//[sites sortUsingSelector:@selector(compareTitles:)];
 	
 	self.results = sites;
 }

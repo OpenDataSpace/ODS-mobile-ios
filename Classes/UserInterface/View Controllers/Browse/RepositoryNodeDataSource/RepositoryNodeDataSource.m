@@ -305,7 +305,6 @@ UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRo
         }
         
         RepositoryItemCellWrapper *cellWrapper = [[RepositoryItemCellWrapper alloc] initWithRepositoryItem:child];
-        NSLog(@"Thumbnail URL is:%@", [child thumbnailURL]);
         [cellWrapper setItemTitle:child.title];
         cellWrapper.selectedAccountUUID = self.selectedAccountUUID;
         cellWrapper.tenantID = self.tenantID;
@@ -327,7 +326,9 @@ UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRo
             [cellWrapper setItemTitle:[uploadInfo completeFileName]];
             
             NSComparator comparator = ^(RepositoryItemCellWrapper *obj1, RepositoryItemCellWrapper *obj2) {
-                
+                if ([[obj1 repositoryItem] isFolder]) {  //TODO:only compare with file object.
+                    return NSOrderedAscending;
+                }
                 return (NSComparisonResult)[obj1.itemTitle caseInsensitiveCompare:obj2.itemTitle];
             };
             

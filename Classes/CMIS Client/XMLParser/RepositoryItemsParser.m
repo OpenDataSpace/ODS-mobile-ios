@@ -81,7 +81,7 @@
     }
     
     // sort the docs & folders by title
-    [self.children sortUsingSelector:@selector(compareTitles:)];
+    //[self.children sortUsingSelector:@selector(compareTitles:)];
     
     return YES;
 }

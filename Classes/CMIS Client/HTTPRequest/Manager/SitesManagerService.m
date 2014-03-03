@@ -262,7 +262,7 @@ static NSMutableDictionary *sharedInstances;
                 [self.favoriteSiteNames addObject:siteName];
                 // Deliberately bypass getter
                 [_favoriteSites addObject:requestingSite];
-                [_favoriteSites sortUsingSelector:@selector(compareTitles:)];
+                //[_favoriteSites sortUsingSelector:@selector(compareTitles:)];
             }
             else if (request.tag == kTagRemoveSiteFromFavorites)
             {
@@ -276,7 +276,7 @@ static NSMutableDictionary *sharedInstances;
         {
             // Deliberately bypass getter
             [_mySites addObject:requestingSite];
-            [_mySites sortUsingSelector:@selector(compareTitles:)];
+            //[_mySites sortUsingSelector:@selector(compareTitles:)];
         }
         else if ([request isKindOfClass:[SiteLeaveHTTPRequest class]])
         {
