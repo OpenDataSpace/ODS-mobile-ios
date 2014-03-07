@@ -482,6 +482,7 @@
 "settings.cmisRepository.CMISRepository" = "";
 "settings.cmisRepository.ShowCompanyHome" = "Firmen-Home";
 "settings.cmisRepository.ShowHiddenFiles" = "Versteckte Dateien anzeigen";
+"settings.cmisRepository.CleanPreviewCache" = "Zwischenspeicher löschen";
 "settings.cmisRepository.AmpersandFix" = "";
 
 "settings.forgetPassword.title" = "Passwort nicht speichern";
