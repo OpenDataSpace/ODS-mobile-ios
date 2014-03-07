@@ -24,6 +24,7 @@
 #import "DownloadInfo.h"
 #import "DownloadManager.h"
 #import "FileProtectionManager.h"
+#import "PreviewCacheManager.h"
 
 @interface PreviewManager ()
 @property (nonatomic, retain, readwrite) DownloadInfo *currentDownload;
@@ -188,6 +189,7 @@
     [self.currentDownload setDownloadStatus:DownloadInfoStatusDownloaded];
     [self.currentDownload setTempFilePath:request.downloadDestinationPath];
     
+    
     if ([self.delegate respondsToSelector:@selector(previewManager:downloadFinished:)])
     {
         [self.delegate previewManager:self downloadFinished:self.currentDownload];
@@ -196,6 +198,7 @@
     DownloadInfo *downloadInfo = request.downloadInfo;
     [downloadInfo setDownloadRequest:nil];
     [self setCurrentDownload:nil];
+    [[PreviewCacheManager sharedManager] cachePreviewFile:downloadInfo];
 }
 
 - (void)requestFailed:(CMISDownloadFileHTTPRequest *)request

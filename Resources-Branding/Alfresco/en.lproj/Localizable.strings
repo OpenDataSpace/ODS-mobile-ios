@@ -486,6 +486,7 @@
 "settings.cmisRepository.CMISRepository" = "";
 "settings.cmisRepository.ShowCompanyHome" = "Company Home";
 "settings.cmisRepository.ShowHiddenFiles" = "Show Hidden Files";
+"settings.cmisRepository.CleanPreviewCache" = "Clean Preview Caches";
 "settings.cmisRepository.AmpersandFix" = "";
 
 "settings.forgetPassword.title" = "Forget Password";

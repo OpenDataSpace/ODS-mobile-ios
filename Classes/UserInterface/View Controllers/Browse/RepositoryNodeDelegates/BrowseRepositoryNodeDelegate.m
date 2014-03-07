@@ -41,6 +41,8 @@
 #import "CMISUpdateProperties.h"
 #import "CMISMoveObjectHTTPRequest.h"
 #import "UploadProgressTableViewCell.h"
+#import "PreviewCacheManager.h"
+#import "FileDownloadManager.h"
 
 NSInteger const kCancelUploadPrompt = 2;
 NSInteger const kDismissFailedUploadPrompt = 3;
@@ -192,13 +194,16 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
         }
         else
         {
-            FavoriteManager *favoriteManager = [FavoriteManager sharedManager];
-            FavoriteFileDownloadManager *fileManager = [FavoriteFileDownloadManager sharedInstance];
-            NSString *fileName = [fileManager generatedNameForFile:child.title withObjectID:child.guid];
-            
-            if ([favoriteManager isNodeFavorite:child.guid accountUUID:self.selectedAccountUUID tenantID:self.tenantID] && [fileManager downloadExistsForKey:fileName])
+            //FavoriteManager *favoriteManager = [FavoriteManager sharedManager];
+            //FavoriteFileDownloadManager *fileManager = [FavoriteFileDownloadManager sharedInstance];
+            //NSString *fileName = [fileManager generatedNameForFile:child.title withObjectID:child.guid];
+            PreviewCacheManager *previewManager = [PreviewCacheManager sharedManager];
+            FileDownloadManager *downloadManager = [FileDownloadManager sharedInstance];
+            NSDictionary *previewInfo = [previewManager downloadInfoFromCache:child];
+            //if ([favoriteManager isNodeFavorite:child.guid accountUUID:self.selectedAccountUUID tenantID:self.tenantID] && [fileManager downloadExistsForKey:fileName])
+            if (previewInfo) //use preview cache data
             {
-                if ([[AlfrescoMDMLite sharedInstance] isSyncExpired:fileName withAccountUUID:self.selectedAccountUUID])
+                /*if ([[AlfrescoMDMLite sharedInstance] isSyncExpired:fileName withAccountUUID:self.selectedAccountUUID])
                 {
                     [[RepositoryServices shared] removeRepositoriesForAccountUuid:self.selectedAccountUUID];
                     [[AlfrescoMDMLite sharedInstance] setServiceDelegate:self];
@@ -212,7 +217,20 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
                     [downloadInfo setTempFilePath:[fileManager pathToFileDirectory:fileName]];
                     
                     [self.previewDelegate showDocument:downloadInfo];
-                }
+                }*/
+                
+                DownloadInfo *downloadInfo = [[DownloadInfo alloc] initWithRepositoryItem:child];
+                [downloadInfo setSelectedAccountUUID:self.selectedAccountUUID];
+                [downloadInfo setTenantID:self.tenantID];
+                [downloadInfo setTempFilePath:[previewInfo objectForKey:@"path"]];
+
+                [self.previewDelegate showDocument:downloadInfo];
+            }else if ([downloadManager downloadExistsForKey:child.title]) {   //use downloaded data
+                DownloadInfo *downloadInfo = [[DownloadInfo alloc] initWithRepositoryItem:child];
+                [downloadInfo setSelectedAccountUUID:self.selectedAccountUUID];
+                [downloadInfo setTenantID:self.tenantID];
+                [downloadInfo setTempFilePath:[downloadManager pathToFileDirectory:child.title]];
+                [self.previewDelegate showDocument:downloadInfo];
             }
             else
             {

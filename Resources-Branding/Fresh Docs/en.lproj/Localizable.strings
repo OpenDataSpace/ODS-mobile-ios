@@ -490,6 +490,7 @@
 "settings.cmisRepository.CMISRepository" = "CMIS Repository";
 "settings.cmisRepository.ShowCompanyHome" = "Company Home";
 "settings.cmisRepository.ShowHiddenFiles" = "Show Hidden Files";
+"settings.cmisRepository.CleanPreviewCache" = "Clean Preview Caches";
 "settings.cmisRepository.AmpersandFix" = "Ampersand Fix";
 
 

@@ -27,6 +27,18 @@
 #import "Theme.h"
 #import "FDRowRenderer.h"
 #import "FDSettingsPlistReader.h"
+#import "IFSettingsCellController.h"
+#import "PreviewCacheManager.h"
+#import "MBProgressHUD.h"
+#import "Utility.h"
+
+#define kAlertTagCleanCache 10010
+
+@interface FDSettingsViewController() {
+    IFSettingsCellController *cacheCell;
+}
+
+@end
 
 @implementation FDSettingsViewController
 @synthesize settingsReader = _settingsReader;
@@ -51,6 +63,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    cacheCell = nil;
     [Theme setThemeForUINavigationBar:self.navigationController.navigationBar];
 
     [self setTitle:NSLocalizedString([self.settingsReader title],@"Settings View Title")];
@@ -83,7 +96,18 @@
 
 -(void) updateAction:(id) sender
 {
-   
+    if ([sender isKindOfClass:[IFSettingsCellController class]]) {
+        cacheCell = (IFSettingsCellController*)sender;
+        if ([cacheCell.userInfo isEqualToString:@"CleanCache"]) {
+            [self alertCleanPreviewCache];
+        }
+    }
+}
+
+- (void) tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.section == 0 && indexPath.row == 3) {  //force to update size.
+        cell.detailTextLabel.text = [[PreviewCacheManager sharedManager] previewCahceSize];
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section { //fixed the last section footer height
@@ -101,4 +125,48 @@
 #endif
     return 0.0f;
 }
+
+#pragma mark -
+#pragma mark operations
+
+- (void) alertCleanPreviewCache {
+    if (IS_IPAD) {
+        UIAlertView *alerView = [[UIAlertView alloc] initWithTitle:@"" message:@"Are you sure to clean preview cache?" delegate:self cancelButtonTitle:@"cancel" otherButtonTitles:@"ok", nil];
+        alerView.tag = kAlertTagCleanCache;
+        [alerView show];
+    }else {
+        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Are you sure to clean preview cache?" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Ok", nil];
+        actionSheet.tag = kAlertTagCleanCache;
+        [actionSheet showFromToolbar:self.navigationController.toolbar];
+    }
+}
+
+- (void) cleanPreviewCache {
+    __block MBProgressHUD *hud = createAndShowProgressHUDForView(self.navigationController.view);
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [[PreviewCacheManager sharedManager] removeAllCacheFiles];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            cacheCell.subLabel = [[PreviewCacheManager sharedManager] previewCahceSize];
+            stopProgressHUD(hud);
+            hud = nil;
+            [self.tableView reloadData];
+        });
+    });
+}
+
+#pragma mark -
+#pragma mark UIAlertView delegate && UIActionSheet delegate
+
+- (void) alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (alertView.tag == kAlertTagCleanCache && buttonIndex == 1) {  //clean cache
+        [self cleanPreviewCache];
+    }
+}
+
+- (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (actionSheet.tag == kAlertTagCleanCache && buttonIndex == 0) { //clean cache
+        [self cleanPreviewCache];
+    }
+}
+
 @end

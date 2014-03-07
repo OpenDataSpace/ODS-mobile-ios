@@ -28,7 +28,7 @@
 #import "IFGenericTableViewController.h"
 @class FDSettingsPlistReader;
 
-@interface FDSettingsViewController : IFGenericTableViewController
+@interface FDSettingsViewController : IFGenericTableViewController <UIAlertViewDelegate, UIActionSheetDelegate>
 {
     FDSettingsPlistReader *_settingsReader;
 }

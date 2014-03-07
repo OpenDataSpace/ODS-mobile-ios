@@ -53,6 +53,14 @@
 			<string>PSToggleSwitchSpecifier</string>
 		</dict>
 		<dict>
+			<key>DefaultValue</key>
+			<string>CleanCache</string>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+			<key>Title</key>
+			<string>settings.cmisRepository.CleanPreviewCache</string>
+		</dict>
+		<dict>
 			<key>Title</key>
 			<string>settings.header.advanced</string>
 			<key>Type</key>

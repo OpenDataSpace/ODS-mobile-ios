@@ -34,6 +34,8 @@
 #import "IFTextCellController.h"
 #import "UIDeviceHardware.h"
 #import "IFTemporaryModel.h"
+#import "IFSettingsCellController.h"
+#import "PreviewCacheManager.h"
 
 static NSDictionary *kStringToKeyboardTypeEnum;
 static NSDictionary *kStringToAutocapitalizationTypeEnum;
@@ -279,6 +281,7 @@ static NSDictionary *kStringToReturnKeyTypeEnum;
     {
         NSArray *titles = [setting objectForKey:@"Titles"];
         NSArray *values = [setting objectForKey:@"Values"];
+        
         titles = [self localizeArray:titles];
         NSArray *choices = [self labelPairWithValues:values andTitles:titles];
         FDChoiceCellController *cell = [[[FDChoiceCellController alloc] initWithLabel:title andChoices:choices atKey:key inModel:self.model] autorelease];
@@ -286,12 +289,21 @@ static NSDictionary *kStringToReturnKeyTypeEnum;
         [cell setUpdateAction:self.updateAction];
         [cell setUpdateTarget:self.updateTarget];
         return cell;
+        
     }
     else if ([type isEqualToString:@"PSTitleValueSpecifier"])
     {
-        IFValueCellController *cell = [[[IFValueCellController alloc] initWithLabel:title atKey:key inModel:self.model] autorelease];
-        [cell setBackgroundColor:[UIColor whiteColor]];
-        return cell;
+        if ([defaultValue isEqualToString:@"CleanCache"]) {  //TODO://for clean cache cell
+            IFSettingsCellController *cell = [[IFSettingsCellController alloc] initWithLabel:title subLabel:[[PreviewCacheManager sharedManager] previewCahceSize] withAction:self.updateAction onTarget:self.updateTarget];
+            [cell setBackgroundColor:[UIColor whiteColor]];
+            
+            cell.userInfo = defaultValue;
+            return cell;
+        }else {
+            IFValueCellController *cell = [[[IFValueCellController alloc] initWithLabel:title atKey:key inModel:self.model] autorelease];
+            [cell setBackgroundColor:[UIColor whiteColor]];
+            return cell;
+        }
     }
     else if ([type isEqualToString:@"PSTextFieldSpecifier"])
     {

@@ -335,6 +335,28 @@
     return path;
 }
 
++ (NSString *)pathToCacheFile:(NSString*)filename {
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
+	NSString *cacheDir = [[paths objectAtIndex:0] stringByAppendingPathComponent:@"PreviewCache"];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    BOOL isDirectory;
+    
+    if (![fileManager fileExistsAtPath:cacheDir isDirectory:&isDirectory] || !isDirectory)
+    {
+        NSError *error = nil;
+        [fileManager createDirectoryAtPath:cacheDir withIntermediateDirectories:NO attributes:nil error:&error];
+        
+        if (error)
+        {
+            AlfrescoLogError(@"Error creating the %@ folder: %@", kFDLibraryConfigFolderName, [error description]);
+            return  nil;
+        }
+    }
+    
+    NSString *path = [cacheDir stringByAppendingPathComponent:filename];
+    return path;
+}
+
 + (NSString *)sizeOfSavedFile:(NSString *)filename
 {
 	NSError *error = nil;
