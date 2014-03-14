@@ -498,6 +498,10 @@
 "settings.sync.enable" = "Synchronisierung aktivieren";
 "settings.sync.syncOnCellular" = "Mobiltelefon-Daten für die Synchronisierung verwenden";
 
+"confirm.cleanPreviewCache.prompt.message" = "Sind Sie sicher, dass sie die Datei Vorschau-Caches?";
+"confirm.cleanPreviewCache.prompt.ok" = "Reinigen";
+"confirm.cleanPreviewCache.prompt.cancel" = "Abbrechen";
+
 
 "awaitingverification.description" = "Konto wartet auf E-Mail-Überprüfung\n\nSie haben sich mit der E-Mail-Adresse %@ in der Cloud angemeldet.\n\nBitte überprüfen Sie Ihre E-Mails. Wir haben Ihnen einen Link geschickt, den Sie zur Vervollständigung der Registrierung benötigen.\n\nAktivierung nicht möglich?\n\nBitte kontaktieren Sie uns, wenn Sie Ihr Konto nicht aktivieren können.";
 "awaitingverification.description.title" = "Konto wartet auf E-Mail-Überprüfung";
@@ -587,6 +591,7 @@
 "exif:xResolution" = "X-Auflösung";
 "exif:yResolution" = "Y-Auflösung";
 "dp:offlineExpiresAfter" = "Offline läuft ab nach (Stunden)";
+"cmis:thumbnail" = "Vorschau";
 
 "multiselect.button.delete" = "Löschen";
 "multiselect.button.delete.counter" = "Löschen (%u)";

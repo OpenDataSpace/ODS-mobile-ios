@@ -133,7 +133,7 @@ CGFloat const kWhitePadding = 0.0f;
         
         if([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)   //to fix ios7 status bar height.
         {
-            posY -= !_isFailurePanelHidden?20.0:40.0;
+            posY -= 64;
         }
     }
     
@@ -185,7 +185,13 @@ CGFloat const kWhitePadding = 0.0f;
     }
     else 
     {
-        [self.failurePanel setFrame:CGRectMake(0, navFrame.size.height-self.failurePanel.frame.size.height-kWhitePadding, navFrame.size.width, self.failurePanel.frame.size.height)]; //We position the view at the right y minus a white padding
+        float posY = navFrame.size.height-self.failurePanel.frame.size.height;
+        if([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)   //to fix ios7 status bar height.
+        {
+            posY -= 64.0;
+        }
+        [self.failurePanel setFrame:CGRectMake(0, posY, navFrame.size.width, self.failurePanel.frame.size.height)]; //We position the view at the right y minus a white padding
+        
     }
     //We need to reposition the progress panel in case the failure eithers
     [self positionProgressPanel];
@@ -195,7 +201,7 @@ CGFloat const kWhitePadding = 0.0f;
 {
     if(_isFailurePanelHidden && !_externalHidden)
     {
-        _isFailurePanelHidden = NO;        
+        _isFailurePanelHidden = NO;
         [UIView beginAnimations:@"animateFailurePanelShow" context:nil];
         [UIView setAnimationDuration:0.5];
         [self positionFailurePanel];

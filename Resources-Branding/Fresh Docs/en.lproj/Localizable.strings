@@ -507,6 +507,10 @@
 "settings.sync.enable" = "Enable Sync";
 "settings.sync.syncOnCellular" = "Use Cellular Data for Sync";
 
+"confirm.cleanPreviewCache.prompt.message" = "Are you sure to clean preview caches?";
+"confirm.cleanPreviewCache.prompt.ok" = "Clean";
+"confirm.cleanPreviewCache.prompt.cancel" = "Cancel";
+
 "cloudsignup.title" = "Alfresco in the cloud";
 "cloudsignup.buttons.signup" = "Sign Up";
 "cloudsignup.alert.title" = "Alfresco in the cloud Sign Up";
@@ -622,6 +626,7 @@
 "exif:xResolution" = "X Resolution"; 
 "exif:yResolution" = "Y Resolution";
 "dp:offlineExpiresAfter" = "Offline Expires After (hours)";
+"cmis:thumbnail" = "PREVIEW";
 
 "multiselect.button.delete" = "Delete";
 "multiselect.button.delete.counter" = "Delete (%u)";

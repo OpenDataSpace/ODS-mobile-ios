@@ -40,6 +40,9 @@
 
 #define IS_IPAD ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] && [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
 
+#define NLSystemVersionGreaterOrEqualThan(version) ([[[UIDevice currentDevice] systemVersion] floatValue] >= version)
+
+#define IOS7_OR_LATER NLSystemVersionGreaterOrEqualThan(7.0)
 /**
  * System Versioning Preprocessor Macros
  * from: http://stackoverflow.com/questions/3339722/check-iphone-ios-version/5337804#5337804

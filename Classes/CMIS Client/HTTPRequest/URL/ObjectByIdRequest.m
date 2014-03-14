@@ -68,7 +68,7 @@
                                      @"false",@"includePolicyIds",
                                      @"none",@"includeRelationships",  //TODO:our server not support false;
                                      @"false",@"includeACL",
-                                     @"",@"renditionFilter",nil];
+                                     @"cmis:thumbnail",@"renditionFilter",nil];
     
     NSString *url = replaceStringWithNamedParameters(templateUrl, namedParameters);
 	ObjectByIdRequest *getRequest = [ObjectByIdRequest requestWithURL:[NSURL URLWithString:url] accountUUID:uuid];
@@ -78,6 +78,7 @@
 	
 	[getRequest addRequestHeader:@"Accept" value:kAtomPubServiceMediaType];
 	[getRequest setRequestMethod:@"GET"];
+    [getRequest setTimeOutSeconds:120];
 	
 	return [[getRequest retain] autorelease];
 }

@@ -18,6 +18,7 @@
 @property (assign, nonatomic) id delegate;
 @property (retain, nonatomic) id queue;
 @property (assign, nonatomic) id uploadProgressDelegate;
+@property (strong, nonatomic) NSError *error;
 
 @property (assign) SEL didStartSelector;
 @property (assign) SEL didFinishSelector;

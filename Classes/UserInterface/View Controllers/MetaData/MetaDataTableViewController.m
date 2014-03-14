@@ -37,6 +37,7 @@
 #import "MBProgressHUD.h"
 #import "AccountManager.h"
 #import "MetadataMapViewController.h"
+#import "PreviewCellController.h"
 
 static NSArray * cmisPropertiesToDisplay = nil;
 @interface MetaDataTableViewController(private)
@@ -50,6 +51,7 @@ static NSArray * cmisPropertiesToDisplay = nil;
 @synthesize metadata;
 @synthesize propertyInfo;
 @synthesize describedByURL;
+@synthesize cmisThumbnailURL;
 @synthesize tagsArray;
 @synthesize taggingRequest;
 @synthesize cmisObject;
@@ -86,6 +88,7 @@ static NSArray * cmisPropertiesToDisplay = nil;
     [HUD release];
     [selectedAccountUUID release];
     [tenantID release];
+    [cmisThumbnailURL release];
     
     [super dealloc];
 }
@@ -116,6 +119,7 @@ static NSArray * cmisPropertiesToDisplay = nil;
         [self setCmisObject:cmisObj];
         [self setSelectedAccountUUID:uuid];
         [self setTenantID:aTenantID];
+        [self setCmisThumbnailURL:nil];
         self.hasLatitude = NO;
         self.hasLongitude = NO;
         self.latitude = 0;
@@ -157,6 +161,15 @@ static NSArray * cmisPropertiesToDisplay = nil;
         {
         }
     }
+    
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
+    {
+        self.edgesForExtendedLayout = UIRectEdgeNone;
+        self.extendedLayoutIncludesOpaqueBars = NO;
+        self.modalPresentationCapturesStatusBarAppearance = NO;
+    }
+#endif
 }
 
 #pragma mark -
@@ -325,7 +338,15 @@ static NSArray * cmisPropertiesToDisplay = nil;
             [footers addObject:@""];
         }
         
-        
+        NSMutableArray *previewGroup = [NSMutableArray array];
+        if (self.cmisThumbnailURL) {
+            PreviewCellController *previewCell = [[PreviewCellController alloc] initWithThumbnailURL:cmisThumbnailURL];
+            
+            [previewGroup addObject:previewCell];
+            [headers addObject:@""];
+            [groups addObject:previewGroup];
+            [footers addObject:@""];
+        }
     }
     else if (errorMessage)
     {
@@ -342,7 +363,7 @@ static NSArray * cmisPropertiesToDisplay = nil;
         
         [self.tableView setAllowsSelection:NO];
     }
-
+    
     tableGroups = [groups retain];
 	tableHeaders = [headers retain];
 	tableFooters = [footers retain];
@@ -376,7 +397,6 @@ static NSArray * cmisPropertiesToDisplay = nil;
     MetadataMapViewController *mapController = [[[MetadataMapViewController alloc] initWithCoordinates:coordinate andMetadata:metadata] autorelease];
     [self.navigationController pushViewController:mapController animated:YES];
 }
-
 
 #pragma mark -
 #pragma mark DownloadProgressBarDelegate methods
@@ -440,4 +460,16 @@ static NSArray * cmisPropertiesToDisplay = nil;
     [versionHistoryRequest cancel];
 }
 
+-(void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+    CGRect frame = self.tableView.frame;
+    
+    if (IOS7_OR_LATER) {
+        CGRect screenBounds = [UIScreen mainScreen].bounds;
+        frame.size.height = screenBounds.size.height - 108;
+    }
+    
+    self.tableView.frame = frame;
+}
 @end

@@ -492,6 +492,7 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
                                                                                                 tenantID:self.tenantID];
         [viewController setCmisObjectId:object.repositoryItem.guid];
         [viewController setMetadata:object.repositoryItem.metadata];
+        [viewController setCmisThumbnailURL:[object.repositoryItem thumbnailURL]];
         [viewController setSelectedAccountUUID:self.selectedAccountUUID];
         [viewController setTenantID:self.tenantID];
         

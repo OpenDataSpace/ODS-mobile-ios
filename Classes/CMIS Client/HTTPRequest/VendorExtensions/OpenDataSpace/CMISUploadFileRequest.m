@@ -41,6 +41,7 @@
 @synthesize uploadFileAsset = _uploadFileAsset;
 
 @synthesize isCancelled = _isCancelled;
+@synthesize error = _error;
 
 #pragma mark -
 #pragma mark Utils
@@ -66,6 +67,8 @@
         _uploadProgressDelegate = nil;
         
         _isCancelled = NO;
+        
+        _error = nil;
         
         readBuffer = malloc(APPEND_CHUNK_DATA_SIZE);
         
@@ -154,9 +157,9 @@
     [_uploadInfo setUploadStatus:UploadInfoStatusActive];
     
     [createFileRequest startSynchronous];
-    NSError *error = [createFileRequest error];
+    _error = [createFileRequest error];
     
-    if (error == nil && [createFileRequest responseStatusCode] == 201) {  //create successful
+    if (_error == nil && [createFileRequest responseStatusCode] == 201) {  //create successful
         RepositoryItemParser *itemParser = [[RepositoryItemParser alloc] initWithData:[createFileRequest responseData]];
         _uploadInfo.repositoryItem = [itemParser parse];
         [_uploadInfo setCmisObjectId:_uploadInfo.repositoryItem.guid];
@@ -172,8 +175,8 @@
 {
     ObjectByIdRequest *objRequest = [ObjectByIdRequest defaultObjectById:_uploadInfo.repositoryItem.guid accountUUID:_uploadInfo.selectedAccountUUID tenantID:_uploadInfo.tenantID];
     [objRequest startSynchronous];
-    NSError *error = [objRequest error];
-    if (error == nil && [objRequest responseStatusCode] == 200) {
+    _error = [objRequest error];
+    if (_error == nil && [objRequest responseStatusCode] == 200) {
         _uploadInfo.repositoryItem = [objRequest repositoryItem];
         AlfrescoLogDebug(@"uploaded file size:%@",[_uploadInfo.repositoryItem.metadata objectForKey:@"cmis:contentStreamLength"]);
         self.sentBytes = [[_uploadInfo.repositoryItem.metadata objectForKey:@"cmis:contentStreamLength"] longLongValue];
@@ -190,8 +193,8 @@
         [appendRequest setUploadProgressDelegate:self];
         [appendRequest startSynchronous];
         
-        NSError *error = [appendRequest error];
-        if (error == nil && [appendRequest responseStatusCode] == 201) {  //put data successfully
+        _error = [appendRequest error];
+        if (_error == nil && [appendRequest responseStatusCode] == 201) {  //put data successfully
             AlfrescoLogDebug(@"upload size:%llu  total:%llu",self.sentBytes, self.totalBytes);
             
             return YES;

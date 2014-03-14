@@ -87,6 +87,7 @@ const CGFloat kFailedDefaultDescriptionHeight = 60.0f;
     [tableView.layer setCornerRadius:10.0f];
     [tableView.layer setBorderWidth:1.2f];
     [tableView.layer setBorderColor:[[UIColor lightGrayColor] CGColor]];
+    self.tableView = tableView;
     
     UIButton *clearButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [clearButton setTitle:NSLocalizedString(@"failed-uploads.cell.clear-list", @"Clear List") forState:UIControlStateNormal];
@@ -165,6 +166,20 @@ const CGFloat kFailedDefaultDescriptionHeight = 60.0f;
     return YES;
 }
 
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    
+    if (IOS7_OR_LATER) {
+        CGRect frame = self.view.frame;
+        frame.origin.x = kFailedUploadsMarginPadding;
+        frame.origin.y = kFailedUploadsMarginPadding*2 + 30;
+        frame.size.width -= kFailedUploadsMarginPadding*2;
+        frame.size.height = frame.size.height - (74 + kFailedUploadsMarginPadding*2 + 30);
+        
+        self.tableView.frame = frame;
+    }
+}
+
 #pragma  mark - TableView Delegate & Datasource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -199,6 +214,7 @@ const CGFloat kFailedDefaultDescriptionHeight = 60.0f;
         
         //Adding the error description label
         CGFloat errorPadding = kFailedUploadsPadding / 2;
+        
         UILabel *errorLabel = [[UILabel alloc] initWithFrame:CGRectMake(kTableCellTextLeftPadding + badgeRect.size.width + errorPadding, kDefaultTableCellHeight, cell.contentView.frame.size.width - kTableCellTextLeftPadding - badgeRect.size.width - errorPadding - kFailedUploadsPadding, kFailedDefaultDescriptionHeight)];
         [errorLabel setNumberOfLines:0];
         [errorLabel setLineBreakMode:UILineBreakModeWordWrap];
@@ -258,8 +274,9 @@ const CGFloat kFailedDefaultDescriptionHeight = 60.0f;
     if([item isKindOfClass:[UploadInfo class]])
     {
         UploadInfo *uploadInfo = (UploadInfo *) item;
+        NSString *erroString = [uploadInfo.error localizedDescription] == nil ? @"Unknown error!":[uploadInfo.error localizedDescription];
         CGSize cellSize = CGSizeMake(tableView.frame.size.width - kTableCellTextLeftPadding - (kFailedUploadsPadding * 4), CGFLOAT_MAX);
-        errorLabelSize = [[uploadInfo.error localizedDescription] sizeWithFont:[UIFont systemFontOfSize:kFailedUploadsErrorFontSize] constrainedToSize:cellSize];
+        errorLabelSize = [erroString sizeWithFont:[UIFont systemFontOfSize:kFailedUploadsErrorFontSize] constrainedToSize:cellSize];
     }
     else if ([item isKindOfClass:[DownloadInfo class]])
     {

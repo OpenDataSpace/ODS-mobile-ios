@@ -131,11 +131,11 @@
 
 - (void) alertCleanPreviewCache {
     if (IS_IPAD) {
-        UIAlertView *alerView = [[UIAlertView alloc] initWithTitle:@"" message:@"Are you sure to clean preview cache?" delegate:self cancelButtonTitle:@"cancel" otherButtonTitles:@"ok", nil];
+        UIAlertView *alerView = [[UIAlertView alloc] initWithTitle:@"" message:NSLocalizedString(@"confirm.cleanPreviewCache.prompt.message", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"confirm.cleanPreviewCache.prompt.cancel", @"") otherButtonTitles:NSLocalizedString(@"confirm.cleanPreviewCache.prompt.ok", @""), nil];
         alerView.tag = kAlertTagCleanCache;
         [alerView show];
     }else {
-        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Are you sure to clean preview cache?" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Ok", nil];
+        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"confirm.cleanPreviewCache.prompt.message", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"confirm.cleanPreviewCache.prompt.cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"confirm.cleanPreviewCache.prompt.ok", @""), nil];
         actionSheet.tag = kAlertTagCleanCache;
         [actionSheet showFromToolbar:self.navigationController.toolbar];
     }

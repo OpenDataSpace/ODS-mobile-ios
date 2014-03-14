@@ -197,7 +197,7 @@
 	return [self optionalArgumentsForFolderChildrenCollectionWithMaxItems:nil skipCount:nil
                                                                    filter:kCMISExtendedPropertyFilterValue
 												  includeAllowableActions:YES includeRelationships:NO
-														  renditionFilter:@"cmis:thumbnail" orderBy:nil includePathSegment:NO];    
+														  renditionFilter:@"" orderBy:nil includePathSegment:NO];
 }
 
 #pragma mark -

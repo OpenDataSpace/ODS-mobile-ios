@@ -443,6 +443,7 @@
 		2D3D5E9018334F5000417CFA /* ChooserFolderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D3D5E8F18334F5000417CFA /* ChooserFolderViewController.m */; };
 		2D45A633182746320079AF66 /* CMISMoveObjectHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D45A632182746320079AF66 /* CMISMoveObjectHTTPRequest.m */; };
 		2D4E88AA18C96B7500EF4542 /* IFSettingsCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D4E88A918C96B7500EF4542 /* IFSettingsCellController.m */; };
+		2D4E88AE18CD69ED00EF4542 /* PreviewCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D4E88AD18CD69ED00EF4542 /* PreviewCellController.m */; };
 		2D90543B18234EB900AA4771 /* UITableView+LongPress.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D90543A18234EB900AA4771 /* UITableView+LongPress.m */; };
 		2D9847A218068100005BA95E /* ServerURLs_OpenDataSpace.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2D9847A118068100005BA95E /* ServerURLs_OpenDataSpace.plist */; };
 		2DAA822A18165B5000471D4F /* AGImagePickerController+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DAA822918165B5000471D4F /* AGImagePickerController+Helper.m */; };
@@ -1994,6 +1995,8 @@
 		2D45A632182746320079AF66 /* CMISMoveObjectHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISMoveObjectHTTPRequest.m; sourceTree = "<group>"; };
 		2D4E88A818C96B7500EF4542 /* IFSettingsCellController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IFSettingsCellController.h; sourceTree = "<group>"; };
 		2D4E88A918C96B7500EF4542 /* IFSettingsCellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IFSettingsCellController.m; sourceTree = "<group>"; };
+		2D4E88AC18CD69ED00EF4542 /* PreviewCellController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreviewCellController.h; sourceTree = "<group>"; };
+		2D4E88AD18CD69ED00EF4542 /* PreviewCellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreviewCellController.m; sourceTree = "<group>"; };
 		2D90543918234EB900AA4771 /* UITableView+LongPress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+LongPress.h"; sourceTree = "<group>"; };
 		2D90543A18234EB900AA4771 /* UITableView+LongPress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+LongPress.m"; sourceTree = "<group>"; };
 		2D9847A118068100005BA95E /* ServerURLs_OpenDataSpace.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ServerURLs_OpenDataSpace.plist; sourceTree = "<group>"; };
@@ -4807,6 +4810,8 @@
 				3C82030A14E1A82000A67645 /* MetaDataCell.m */,
 				3C82030B14E1A82000A67645 /* MetaDataCellController.h */,
 				3C82030C14E1A82000A67645 /* MetaDataCellController.m */,
+				2D4E88AC18CD69ED00EF4542 /* PreviewCellController.h */,
+				2D4E88AD18CD69ED00EF4542 /* PreviewCellController.m */,
 			);
 			path = "Generic TableView Cells";
 			sourceTree = "<group>";
@@ -7138,6 +7143,7 @@
 				2D4E88AA18C96B7500EF4542 /* IFSettingsCellController.m in Sources */,
 				08D4E9FD15C98D0400593E20 /* FavoriteNodeInfo.m in Sources */,
 				2D3D5E88182CD78900417CFA /* RenameQueueProgressBar.m in Sources */,
+				2D4E88AE18CD69ED00EF4542 /* PreviewCellController.m in Sources */,
 				089BA84E15CBDA85002733DC /* FavoriteDownloadManager.m in Sources */,
 				089BA85715CC11AE002733DC /* FavoriteFileDownloadManager.m in Sources */,
 				089BA85B15D2A328002733DC /* FavoritesTableViewDataSource.m in Sources */,

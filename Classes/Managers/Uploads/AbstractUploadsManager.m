@@ -504,7 +504,7 @@
 {
     UploadInfo *uploadInfo = [(CMISUploadFileHTTPRequest *)request uploadInfo];
     [uploadInfo setUploadRequest:nil];
-    [self failedUpload:uploadInfo withError:nil];  //TODO:not save the last error for request now.
+    [self failedUpload:uploadInfo withError:request.error];  //TODO:not save the last error for request now.
 }
 
 - (void)uploadQueueFinished:(CMISUploadFileQueue *)queue

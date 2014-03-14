@@ -66,6 +66,7 @@
 @property (nonatomic, retain) NSDictionary *propertyInfo;
 @property (nonatomic, retain) NSURL *describedByURL;
 @property (nonatomic, retain) NSArray *tagsArray;
+@property (nonatomic, retain) NSURL *cmisThumbnailURL;
 @property (nonatomic, retain) TaggingHttpRequest *taggingRequest;
 @property (nonatomic, retain) RepositoryItem *cmisObject;
 @property (nonatomic, retain) NSString *errorMessage;
