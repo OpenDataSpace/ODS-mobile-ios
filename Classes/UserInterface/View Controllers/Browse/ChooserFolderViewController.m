@@ -278,7 +278,15 @@ NSString * const  kMoveTargetTypeFolder = @"TYPE_FOLDER";;
 - (void)serviceManagerRequestsFinished:(CMISServiceManager *)serviceManager
 {
     NSArray *array = [NSArray arrayWithArray:[[RepositoryServices shared] getRepositoryInfoArrayForAccountUUID:[self selectedAccountUUID]]];
-    [self setRepositoriesForAccount:array];
+    //TODO:disable config & backup reposiories.
+    NSMutableArray *reposArr = [NSMutableArray array];
+    for (RepositoryInfo *repo in array) {
+        if (repo && ([repo.repositoryName caseInsensitiveCompare:@"config"]
+                    != NSOrderedSame && [repo.repositoryName caseInsensitiveCompare:@"backup"] != NSOrderedSame)) {
+            [reposArr addObject:repo];
+        }
+    }
+    [self setRepositoriesForAccount:reposArr];
     
     [[CMISServiceManager sharedManager] removeQueueListener:self];
     [[CMISServiceManager sharedManager] removeListener:self forAccountUuid:[self selectedAccountUUID]];

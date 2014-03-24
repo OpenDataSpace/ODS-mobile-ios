@@ -35,6 +35,10 @@
 #import "WorkflowDefinitionsHTTPRequest.h"
 #import "MDMEnabledHTTPRequest.h"
 #import "SDWebImageManager.h"
+#import "FolderDescendantsRequest.h"
+#import "LogoManager.h"
+#import "NSURL+HTTPURLUtils.h"
+#import "LinkRelationService.h"
 
 NSString * const kCMISServiceManagerErrorDomain = @"CMISServiceManagerErrorDomain";
 NSString * const kQueueListenersKey = @"queueListenersKey";
@@ -412,7 +416,7 @@ NSString * const kProductNameEnterprise = @"Enterprise";
         {
             [self removeEnterpriseAccount:[serviceDocReq accountUUID]];
         }
-        
+#if 0
         // Check to see if the service document was correctly retrieved
         if (thisRepository)
         {
@@ -426,7 +430,17 @@ NSString * const kProductNameEnterprise = @"Enterprise";
         {
             [self callListeners:@selector(serviceDocumentRequestFailed:) forAccountUuid:[serviceDocReq accountUUID] withObject:request];
         }
-        
+#else
+        //check if already exist
+        if (![[LogoManager shareManager] isExistLogosForAccount:serviceDocReq.accountUUID]
+            && [self getConfigRepoForAccountUUID:serviceDocReq.accountUUID]) {
+            FolderDescendantsRequest *logoRequest = [self logosRequest:serviceDocReq.accountUUID];
+            [logoRequest setUserInfo:[NSDictionary dictionaryWithObject:serviceDocReq forKey:@"serviceDocReq"]];
+            [self.networkQueue addOperation:logoRequest];
+        }else {
+            //TODO:nothing to do
+        }
+#endif
         [self.accountsRunning removeObject:[serviceDocReq accountUUID]];
     }
     else if ([request isKindOfClass:[TenantsHTTPRequest class]])
@@ -468,6 +482,12 @@ NSString * const kProductNameEnterprise = @"Enterprise";
     else if ([request isKindOfClass:[MDMEnabledHTTPRequest class]])
     {
         ServiceDocumentRequest *serviceDocReq = (ServiceDocumentRequest *)[request.userInfo objectForKey:@"serviceDocReq"];
+        [self callListeners:@selector(serviceDocumentRequestFinished:) forAccountUuid:[serviceDocReq accountUUID] withObject:serviceDocReq];
+    }
+    else if ([request isKindOfClass:[FolderDescendantsRequest class]]) {
+        ServiceDocumentRequest *serviceDocReq = (ServiceDocumentRequest *)[request.userInfo objectForKey:@"serviceDocReq"];
+        FolderDescendantsRequest *logoRequest = (FolderDescendantsRequest *)request;
+        [[LogoManager shareManager] setLogoInfo:logoRequest.folderDescendants accountUUID:serviceDocReq.accountUUID];
         [self callListeners:@selector(serviceDocumentRequestFinished:) forAccountUuid:[serviceDocReq accountUUID] withObject:serviceDocReq];
     }
 }
@@ -527,6 +547,37 @@ NSString * const kProductNameEnterprise = @"Enterprise";
         [[FDKeychainUserDefaults standardUserDefaults] setBool:NO forKey:@"dataProtectionPrompted"];
         [[FDKeychainUserDefaults standardUserDefaults] synchronize];
     }
+}
+
+#pragma mark -
+#pragma mark Load logos for open data space
+- (RepositoryInfo*) getConfigRepoForAccountUUID:(NSString*) accountUUID {
+    NSArray *array = [NSArray arrayWithArray:[[RepositoryServices shared] getRepositoryInfoArrayForAccountUUID:accountUUID]];
+    for (RepositoryInfo *repo in array) {
+        if (repo && [repo.repositoryName caseInsensitiveCompare:@"config"] == NSOrderedSame) {
+            return repo;
+        }
+    }
+    return nil;
+}
+
+- (FolderDescendantsRequest*) logosRequest:(NSString*) accountUUID {
+    //find config repository first
+    RepositoryInfo *configRepo = [self getConfigRepoForAccountUUID:accountUUID];
+    
+    NSString *folder = [configRepo rootFolderHref];
+    NSString *folderDescendants = [folder stringByReplacingOccurrencesOfString:@"children" withString:@"descendants"];
+    NSString *folderDescendantsUrl = [folderDescendants stringByAppendingString:@"&depth=-1"];
+    NSDictionary *defaultParamsDictionary = [[LinkRelationService shared] defaultOptionalArgumentsForFolderChildrenCollection];
+    NSURL *folderChildrenCollectionURL = [[NSURL URLWithString:folderDescendantsUrl] URLByAppendingParameterDictionary:defaultParamsDictionary];
+    
+    AlfrescoLogDebug(@"logos request url:%@", folderChildrenCollectionURL);
+    
+    FolderDescendantsRequest *newRequest = [FolderDescendantsRequest requestWithURL:folderChildrenCollectionURL accountUUID:accountUUID];
+    [newRequest setRequestMethod:@"GET"];
+    [newRequest setShouldContinueWhenAppEntersBackground:YES];
+    
+    return newRequest;
 }
 
 #pragma mark - Singleton

@@ -22,14 +22,20 @@
 //
 //  PlaceholderViewController.m
 //
-
+#import "UIImageView+WebCache.h"
 #import "PlaceholderViewController.h"
 #import "Theme.h"
 #import "GradientView.h"
 #import "ThemeProperties.h"
 #import "AlfrescoAppDelegate.h"
+#import "LogoManager.h"
 
 static BOOL launchViewPresented = NO;
+
+@interface PlaceholderViewController() {
+    UIImageView     *noDocImgView_;
+}
+@end
 
 @implementation PlaceholderViewController
 
@@ -76,12 +82,12 @@ static BOOL launchViewPresented = NO;
     self.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     
     UIView *noDocView = [[UIView alloc] init];
-    UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"no-document-selected.png"]];
+    noDocImgView_ = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"no-document-selected.png"]];
     
     NSInteger gradientWidth = gradientView.frame.size.width;
     NSInteger gradientHeight = gradientView.frame.size.height;
     NSInteger imageWidth = self.view.frame.size.width - 40;
-    NSInteger imageHeight = imageView.frame.size.height + 40;
+    NSInteger imageHeight = noDocImgView_.frame.size.height + 40;
     CGRect noDocViewFrame = CGRectMake(0, 0, imageWidth, imageHeight);
     
     //image is centered in the x axis
@@ -91,34 +97,54 @@ static BOOL launchViewPresented = NO;
     noDocView.frame = noDocViewFrame;
     
     // Aligning imageview to center of noDocView
-    CGRect imageViewFrame = imageView.frame;
-    imageViewFrame.origin.x = (noDocView.frame.size.width - imageView.frame.size.width) / 2;
-    imageView.frame = imageViewFrame;
+    CGRect imageViewFrame = noDocImgView_.frame;
+    imageViewFrame.origin.x = (noDocView.frame.size.width - noDocImgView_.frame.size.width) / 2;
+    noDocImgView_.frame = imageViewFrame;
     
-    UILabel *noDocText = [[UILabel alloc] initWithFrame:CGRectMake(0, imageView.frame.size.height, noDocView.frame.size.width, 40)];
+    //loading no doc image from server
+    [noDocImgView_ setImageWithURL:[[LogoManager shareManager] getLogoURLByName:kLogoNoDocumentSelected] placeholderImage:[UIImage imageNamed:kLogoNoDocumentSelected]];
+    
+    UILabel *noDocText = [[UILabel alloc] initWithFrame:CGRectMake(0, noDocImgView_.frame.size.height, noDocView.frame.size.width, 40)];
     noDocText.backgroundColor = [UIColor clearColor];
     noDocText.textAlignment = UITextAlignmentCenter;
     noDocText.textColor = [UIColor colorWithRed:152/255.0 green:152/255.0 blue:152/255.0 alpha:1.0];
     noDocText.font = [UIFont boldSystemFontOfSize:18];
     noDocText.text = NSLocalizedString(@"no.document.selected.text", @"NO Document Selected");
     
-    imageView.autoresizingMask = (UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin);
+    noDocImgView_.autoresizingMask = (UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin);
     
     noDocView.autoresizingMask = (UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin);
     
-    [noDocView addSubview:imageView];
+    [noDocView addSubview:noDocImgView_];
     [noDocView addSubview:noDocText];
     
     [self.view addSubview:noDocView];
     
     [gradientView release];
-    [imageView release];
     [noDocView release];
     [noDocText release];
+    
+    //set notification for update logo
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleNotification:) name:kNotificationUpdateLogos object:nil];
 }
 
 - (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
     return YES;
 }
 
+- (void) dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [noDocImgView_ release];
+    
+    [super dealloc];
+}
+
+#pragma mark -
+#pragma mark Handle Notification
+
+- (void) handleNotification:(NSNotification*) noti {
+    if ([noti.name isEqualToString:kNotificationUpdateLogos]) {
+        [noDocImgView_ setImageWithURL:[[LogoManager shareManager] getLogoURLByName:kLogoNoDocumentSelected] placeholderImage:[UIImage imageNamed:kLogoNoDocumentSelected]];
+    }
+}
 @end

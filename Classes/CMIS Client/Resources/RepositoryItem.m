@@ -45,6 +45,7 @@
 	[_linkRelations release];
     [_node release];
     [_aspects release];
+    [_renditions release];
 	
 	[super dealloc];
 }
@@ -130,11 +131,45 @@
 
 - (NSURL*) thumbnailURL
 {
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(rel == %@) && (type == %@)"
-                                                argumentArray:[NSArray arrayWithObjects:@"alternate", @"image/png", nil]];
-    NSArray *result = [[self linkRelations] filteredArrayUsingPredicate:predicate];
+    //NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(rel == %@) && (type == %@)"
+                                              //  argumentArray:[NSArray arrayWithObjects:@"alternate", @"image/png", nil]];
+   
+   /* NSArray *result = [[self linkRelations] filteredArrayUsingPredicate:predicate];
     if ([result count] > 0) {
         return [NSURL URLWithString:[[result objectAtIndex:0] objectForKey:@"href"]];
+    }*/
+    
+    NSMutableString *urlTemplateString = nil;
+    
+    for (NSDictionary *link in [self linkRelations]) {
+        if (link && [link objectForKey:@"cmisra:renditionKind"]) {
+            urlTemplateString = [NSMutableString stringWithString:[link objectForKey:@"href"]];
+            break;
+        }
+    }
+    
+    NSDictionary *maxSizeRendition = nil;
+    //find the most max thumbnail stream id.
+    for (NSDictionary *rendition in [self renditions]) {
+        if (rendition) {
+            if (maxSizeRendition == nil) {
+                maxSizeRendition = rendition;
+            }else {
+                float lastWidth = [[maxSizeRendition objectForKey:@"width"] floatValue];
+                float lastHeight = [[maxSizeRendition objectForKey:@"height"] floatValue];
+                float currentWidth = [[rendition objectForKey:@"width"] floatValue];
+                float currentHeight = [[rendition objectForKey:@"height"] floatValue];
+                if (lastWidth*lastHeight < currentWidth*currentHeight) {
+                    maxSizeRendition = rendition;
+                }
+            }
+        }
+    }
+    
+    if (urlTemplateString && maxSizeRendition) { //replace streamId to be we need
+        NSRange streamIdRange = [urlTemplateString rangeOfString:@"streamId"];
+        NSString *urlString = [NSString stringWithFormat:@"%@streamId=%@", [urlTemplateString substringToIndex:streamIdRange.location], [maxSizeRendition objectForKey:@"streamId"]];
+        return [NSURL URLWithString:urlString];
     }
     
     return nil;

@@ -37,6 +37,8 @@
 @property (nonatomic, retain) IBOutlet UITextView *aboutText;
 @property (nonatomic, retain) IBOutlet UILabel *librariesLabel;
 @property (nonatomic, retain) IBOutlet UIButton *additionalLogoButton;
+@property (nonatomic, retain) IBOutlet UIImageView *ziaLogoButtonImageView;
+@property (nonatomic, retain) IBOutlet UIImageView *smallZiaButtonImageView;
 
 - (IBAction)buttonPressed:(id)sender;
 - (IBAction)clientButtonPressed:(id)sender;

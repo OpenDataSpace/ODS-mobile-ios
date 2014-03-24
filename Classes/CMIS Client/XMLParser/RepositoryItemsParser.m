@@ -30,6 +30,11 @@
 #import "CMISConstants.h"
 #import "CMISUtils.h"
 
+@interface RepositoryItemsParser () {
+    BOOL   bStartParserRendition;
+}
+@end
+
 @implementation RepositoryItemsParser
 
 - (void)dealloc
@@ -147,6 +152,11 @@
 		}
 	}
     
+    if ([elementName isEqualToString:@"rendition"]) {  //alloc a dict for renditon property
+        bStartParserRendition = YES;
+        [self.item.renditions insertObject:[NSMutableDictionary dictionary] atIndex:0];
+    }
+    
 	self.elementBeingParsed = elementName;
     [self setCurrentNamespaceURI:namespaceURI];
 }
@@ -200,6 +210,11 @@
 		self.currentCMISName = nil;
 		self.valueBuffer = nil;
 	}
+    
+    if (bStartParserRendition && [elementName isEqualToString:@"rendition"]) {
+        bStartParserRendition = NO;  //end parser rendition
+    }
+    
 	self.elementBeingParsed = nil;
 }
 
@@ -235,6 +250,11 @@
     {
 		self.valueBuffer = self.valueBuffer ? [self.valueBuffer stringByAppendingString:string] : string;
 	}
+    
+    if (bStartParserRendition) {
+        NSMutableDictionary *currentParserRendition = [_item.renditions objectAtIndex:0];
+        [currentParserRendition setObject:string forKey:self.elementBeingParsed];
+    }
 }
 
 @end

@@ -53,6 +53,7 @@
 @property (nonatomic, retain) NSString *node;
 @property (nonatomic, readonly) NSString *contentStreamMimeType;
 @property (nonatomic, retain) NSMutableArray *aspects;
+@property (nonatomic, retain) NSMutableArray *renditions;
 
 - (BOOL) isFolder;
 - (NSComparisonResult) compareTitles:(id) other;

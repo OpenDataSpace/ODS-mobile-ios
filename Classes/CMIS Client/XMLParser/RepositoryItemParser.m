@@ -29,6 +29,11 @@
 #import "CMISConstants.h"
 #import "CMISUtils.h"
 
+@interface RepositoryItemParser () {
+    BOOL   bStartParserRendition;
+}
+@end
+
 @implementation RepositoryItemParser
 
 - (void)dealloc
@@ -41,6 +46,7 @@
     [_valueBuffer release];
     [_accountUUID release];
     [_currentAspect release];
+    
     [super dealloc];
 }
 
@@ -52,6 +58,7 @@
         _item = [[RepositoryItem alloc] init];
 		_item.metadata = [NSMutableDictionary dictionary];
         _item.aspects = [NSMutableArray array];
+        _item.renditions = [NSMutableArray array];
     }
     
     return self;
@@ -121,6 +128,11 @@
         [self.item.linkRelations addObject:attributeDict];
 	}
     
+    if ([elementName isEqualToString:@"rendition"]) {  //alloc a dict for renditon property
+        bStartParserRendition = YES;
+        [self.item.renditions insertObject:[NSMutableDictionary dictionary] atIndex:0];
+    }
+    
 	[self setElementBeingParsed:elementName];
     [self setCurrentNamespaceURI:namespaceURI];
 }
@@ -175,6 +187,10 @@
             [self.item.aspects addObject:self.currentAspect];
         }
     }
+    
+    if (bStartParserRendition && [elementName isEqualToString:@"rendition"]) {
+        bStartParserRendition = NO;  //end parser rendition
+    }
 
 	self.elementBeingParsed = nil;
 }
@@ -220,6 +236,11 @@
             self.currentAspect = string;
         }
 	}
+    
+    if (bStartParserRendition) {
+        NSMutableDictionary *currentParserRendition = [_item.renditions objectAtIndex:0];
+        [currentParserRendition setObject:string forKey:self.elementBeingParsed];
+    }
 }
 
 @end

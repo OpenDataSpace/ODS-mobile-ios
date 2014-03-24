@@ -22,11 +22,12 @@
 //
 //  AboutViewController.m
 //
-
+#import "UIImageView+WebCache.h"
 #import "AboutViewController.h"
 #import "Theme.h"
 #import "AppProperties.h"
 #import "LicencesViewController.h"
+#import "LogoManager.h"
 
 @implementation AboutViewController
 @synthesize buildTimeLabel = _buildTimeLabel;
@@ -37,6 +38,8 @@
 @synthesize aboutText = _aboutText;
 @synthesize librariesLabel = _librariesLabel;
 @synthesize additionalLogoButton = _additionalLogoButton;
+@synthesize ziaLogoButtonImageView = _ziaLogoButtonImageView;
+@synthesize smallZiaButtonImageView = _smallZiaButtonImageView;
 
 - (void)dealloc
 {
@@ -118,6 +121,12 @@
 #else
     [self.buildTimeLabel setText:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]];//CFBundleVersion"]];
 #endif
+    if (IS_IPAD) {
+        [_ziaLogoButtonImageView setImageWithURL:[[LogoManager shareManager] getLogoURLByName:kLogoZiaLogoCP_260] placeholderImage:[UIImage imageNamed:kLogoZiaLogoCP_260]];
+        [_smallZiaButtonImageView setImageWithURL:[[LogoManager shareManager] getLogoURLByName:kLogoZiaLogoCP_130] placeholderImage:[UIImage imageNamed:kLogoZiaLogoCP_130]];
+    }else {
+        [_ziaLogoButtonImageView setImageWithURL:[[LogoManager shareManager] getLogoURLByName:kLogoZiaLogoCP_130] placeholderImage:[UIImage imageNamed:kLogoZiaLogoCP_130]];
+    }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

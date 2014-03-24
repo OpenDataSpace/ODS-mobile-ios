@@ -22,7 +22,7 @@
 //
 //  MoreViewController.m
 //
-
+#import "UIImageView+WebCache.h"
 #import "MoreViewController.h"
 #import "Theme.h"
 #import "IFTextViewTableView.h"
@@ -40,6 +40,7 @@
 #import "AccountCellController.h"
 #import "DownloadsViewController.h"
 #import "SearchViewController.h"
+#import "LogoManager.h"
 
 @interface MoreViewController(private)
 - (void) startHUD;
@@ -79,6 +80,9 @@
     
     [Theme setThemeForUINavigationBar:self.navigationController.navigationBar];
     [self.navigationItem setTitle:NSLocalizedString(@"more.view.title", @"More")];
+    
+    //set notification for update logo
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleNotification:) name:kNotificationUpdateLogos object:nil];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -175,7 +179,8 @@
      */
     TableCellViewController *aboutCell = [[[TableCellViewController alloc] initWithAction:@selector(showAboutView) onTarget:self] autorelease];
     aboutCell.textLabel.text = NSLocalizedString(@"About", @"About tab bar button label");
-    aboutCell.imageView.image = [UIImage imageNamed:kAboutMoreIcon_ImageName];
+    //aboutCell.imageView.image = [UIImage imageNamed:kAboutMoreIcon_ImageName];
+    [aboutCell.imageView setImageWithURL:[[LogoManager shareManager] getLogoURLByName:@"about-more.png"] placeholderImage:[UIImage imageNamed:kAboutMoreIcon_ImageName]];
     aboutCell.selectionStyle = UITableViewCellSelectionStyleBlue;
     [moreCellGroup addObject:aboutCell];
     
@@ -343,4 +348,12 @@
     }
 }
 
+#pragma mark -
+#pragma mark Handle Notification 
+
+- (void) handleNotification:(NSNotification*) noti {
+    if ([noti.name isEqualToString:kNotificationUpdateLogos]) {
+        [self updateAndReload];
+    }
+}
 @end

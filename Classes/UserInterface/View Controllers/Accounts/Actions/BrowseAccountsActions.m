@@ -28,6 +28,7 @@
 #import "RootViewController.h"
 #import "IpadSupport.h"
 #import "AwaitingVerificationViewController.h"
+#import "LogoManager.h"
 
 @implementation BrowseAccountsActions
 
@@ -88,6 +89,9 @@
 {
     [controller.navigationItem setTitle:NSLocalizedString(@"Accounts", @"Accounts")];
     [controller setSelectedAccountUUID:[account uuid]];
+    
+    //set account uuid for logo manager
+    [[LogoManager shareManager] setCurrentActiveAccount:[account uuid]];
     
     if([account accountStatus] == FDAccountStatusAwaitingVerification)
     {
