@@ -133,9 +133,12 @@
 
 - (void)updateValue:(id)sender
 {
-	// update the model with the text change
-	[model setObject:[sender text] forKey:key];
-    
+    if (IOS7_OR_LATER) {
+        [model setObject:[[sender text] stringByReplacingOccurrencesOfString:@"\u00a0" withString:@" "] forKey:key];
+    }else {
+        // update the model with the text change
+        [model setObject:[sender text] forKey:key];
+    }
     if (updateTarget && [updateTarget respondsToSelector:editChangedAction])
 	{
 		// action is peformed after keyboard has had a chance to resign
@@ -145,6 +148,20 @@
 
 
 #pragma mark UITextFieldDelegate
+
+-(BOOL)textField:(UITextField *)textFieldIn shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    if (IOS7_OR_LATER) {
+        if (range.location == textFieldIn.text.length && [string isEqualToString:@" "]) {
+            // ignore replacement string and add your own
+            textFieldIn.text = [textFieldIn.text stringByAppendingString:@"\u00a0"];
+            return NO;
+        }
+    }
+    
+    // for all other cases, proceed with replacement
+    return YES;
+}
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textFieldIn
 {
