@@ -396,7 +396,8 @@ UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRo
         if ([indexPaths count] > 0)
         {
             [repositoryItems removeObjectsAtIndexes:indexSet];
-            [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:kRepositoryNodeDataSourceAnimation];
+            //[self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:kRepositoryNodeDataSourceAnimation];
+            [self.tableView reloadData];
         }
     }
 }

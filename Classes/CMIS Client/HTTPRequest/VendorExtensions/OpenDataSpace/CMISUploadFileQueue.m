@@ -53,6 +53,13 @@
 	[self setSuspended:NO];
 }
 
+- (void)cancelAllOperations
+{
+	[self setBytesUploadedSoFar:0];
+	[self setTotalBytesToUpload:0];
+	[super cancelAllOperations];
+}
+
 - (void)addOperation:(NSOperation *)operation
 {
 	if (![operation isKindOfClass:[CMISUploadFileRequest class]]) {

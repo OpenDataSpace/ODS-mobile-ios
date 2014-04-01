@@ -84,6 +84,8 @@
     if (_uploadFileHandle) {
         fclose(_uploadFileHandle);
     }
+    
+    _cancelledLock = nil;
 }
 
 - (void) setUploadInfo:(UploadInfo *)uploadInfo
@@ -176,6 +178,7 @@
     ObjectByIdRequest *objRequest = [ObjectByIdRequest defaultObjectById:_uploadInfo.repositoryItem.guid accountUUID:_uploadInfo.selectedAccountUUID tenantID:_uploadInfo.tenantID];
     [objRequest startSynchronous];
     _error = [objRequest error];
+    
     if (_error == nil && [objRequest responseStatusCode] == 200) {
         _uploadInfo.repositoryItem = [objRequest repositoryItem];
         AlfrescoLogDebug(@"uploaded file size:%@",[_uploadInfo.repositoryItem.metadata objectForKey:@"cmis:contentStreamLength"]);
@@ -194,13 +197,14 @@
         [appendRequest startSynchronous];
         
         _error = [appendRequest error];
+        
         if (_error == nil && [appendRequest responseStatusCode] == 201) {  //put data successfully
             AlfrescoLogDebug(@"upload size:%llu  total:%llu",self.sentBytes, self.totalBytes);
             
             return YES;
         }
         
-        AlfrescoLogDebug(@"appendChunkData:%@", [NSString stringWithUTF8String:[[appendRequest responseData] bytes]]);
+        //AlfrescoLogDebug(@"appendChunkData:%@", [NSString stringWithUTF8String:[[appendRequest responseData] bytes]]);
     }
     
     return NO;
@@ -254,6 +258,7 @@
 - (void) uploadStart
 {
     [[self cancelledLock] lock];
+    
     if (_delegate && [_delegate respondsToSelector:@selector(uploadStarted:)]) {
 		[_delegate performSelector:@selector(uploadStarted:) withObject:_uploadInfo];
 	}
@@ -262,11 +267,13 @@
 		[_queue performSelector:@selector(uploadStarted:) withObject:self];
 	}
     [[self cancelledLock] unlock];
+    
 }
 
 - (void) uploadFailed
 {
     [[self cancelledLock] lock];
+    
     if (_delegate && [_delegate respondsToSelector:@selector(uploadFailed:)]) {
 		[_delegate performSelector:@selector(uploadFailed:) withObject:_uploadInfo];
 	}
@@ -275,11 +282,13 @@
 		[_queue performSelector:@selector(uploadFailed:) withObject:self];
 	}
     [[self cancelledLock] unlock];
+    
 }
 
 - (void) uploadFinish
 {
     [[self cancelledLock] lock];
+    
     if (_delegate && [_delegate respondsToSelector:@selector(uploadFinished:)]) {
 		[_delegate performSelector:@selector(uploadFinished:) withObject:_uploadInfo];
 	}
@@ -288,15 +297,38 @@
 		[_queue performSelector:@selector(uploadFinished:) withObject:self];
 	}
     [[self cancelledLock] unlock];
+    
 }
 
 #pragma mark -
 #pragma mark Main Thread
 
-- (void)clearDelegatesAndCancel
-{
+- (void) cancelRequestThread {
+    _error = [[NSError alloc] initWithDomain:NetworkRequestErrorDomain code:ASIRequestCancelledErrorType userInfo:[NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(@"asihttprequest.request.cancelled", @"The request was cancelled"),NSLocalizedDescriptionKey,nil]];
+    
 	[[self cancelledLock] lock];
     
+    if (![self isCancelled]) {
+        // Clear delegates
+        [self setDelegate:nil];
+        [self setQueue:nil];
+        [self setUploadProgressDelegate:nil];
+        _isCancelled = YES;
+    }	
+    
+	[[self cancelledLock] unlock];
+    
+}
+
+- (void)cancel
+{
+    [self performSelectorInBackground:@selector(cancelRequestThread) withObject:nil];
+}
+
+- (void)clearDelegatesAndCancel
+{
+    [[self cancelledLock] lock];
+
 	// Clear delegates
 	[self setDelegate:nil];
 	[self setQueue:nil];
@@ -304,6 +336,7 @@
     _isCancelled = YES;
     
 	[[self cancelledLock] unlock];
+    
 	[self cancel];
 }
 

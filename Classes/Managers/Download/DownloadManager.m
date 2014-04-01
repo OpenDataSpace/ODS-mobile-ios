@@ -165,7 +165,12 @@
         NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:downloadInfo, @"downloadInfo", downloadInfo.cmisObjectId, @"downloadObjectId", nil];
         [[NSNotificationCenter defaultCenter] postDownloadFinishedNotificationWithUserInfo:userInfo];
         [[NSNotificationCenter defaultCenter] postDownloadQueueChangedNotificationWithUserInfo:userInfo];
-        
+        SystemNotice *notice = [SystemNotice systemNoticeWithStyle:SystemNoticeStyleInformation
+                                                            inView:activeView()
+                                                           message:[NSString stringWithFormat:@"%@ %@", downloadInfo.repositoryItem.title, NSLocalizedString(@"download.progress.successed", @"Download finished.")]
+                                                             title:@""];
+        notice.displayTime = 3.0;
+        [notice show];        
     }
     else
     {

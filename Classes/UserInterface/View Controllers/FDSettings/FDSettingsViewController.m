@@ -110,22 +110,6 @@
     }
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section { //fixed the last section footer height
-    if (section < 4) {
-        return 0.0f;
-    }
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
-    {
-        if (IS_IPAD) {
-            return 80.0f;
-        }
-        return 44.0f;
-    }
-#endif
-    return 0.0f;
-}
-
 #pragma mark -
 #pragma mark operations
 

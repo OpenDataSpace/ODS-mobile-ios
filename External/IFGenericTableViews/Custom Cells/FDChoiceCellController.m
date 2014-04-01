@@ -47,13 +47,14 @@
 	{
 		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier] autorelease];
         [cell.textLabel setBackgroundColor:[UIColor clearColor]];
-        CGRect frame = CGRectMake(0.0f, 0.0f, 0, 22.0f);
+        CGRect frame = CGRectMake(0.0f, 0.0f, 0, 20.0f);
 		UILabel *choiceLabel = [[UILabel alloc] initWithFrame:frame];
-		[choiceLabel setFont:[UIFont systemFontOfSize:17.0f]];
+		[choiceLabel setFont:[UIFont systemFontOfSize:10.0f]];
 		[choiceLabel setBackgroundColor:[UIColor clearColor]];
 		[choiceLabel setHighlightedTextColor:[UIColor whiteColor]];
-        [choiceLabel setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
+        [choiceLabel setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
 		//[choiceLabel setTextAlignment:UITextAlignmentLeft];
+
 		[choiceLabel setTextAlignment:UITextAlignmentRight];
 		[choiceLabel setTextColor:[UIColor colorWithRed:0.20f green:0.31f blue:0.52f alpha:1.0f]];
         [choiceLabel setTag:100];
@@ -115,7 +116,7 @@
     CGFloat viewWidth = cellWidth - (labelSize.width + (0.0f * indentationLevel) + (groupedMargin * 2));
     
     valueFrame.size.width = viewWidth;
-    valueFrame.origin.x = cellWidth - viewWidth - 8.0f;
+    valueFrame.origin.x = cellWidth - viewWidth + 8.0f;
     valueFrame.origin.y = floorf((cell.contentView.frame.size.height - valueFrame.size.height) / 2.0f);
     [choiceLabel setFrame:valueFrame];
 	

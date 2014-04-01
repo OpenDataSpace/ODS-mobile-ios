@@ -40,13 +40,14 @@
 	if (cell == nil)
 	{
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(20, 0, cell.frame.size.width - 40,IS_IPAD?PREVIEW_CELL_HEIGHT_IPAD:PREVIEW_CELL_HEIGHT_IPHONE)];//IS_IPAD?CGRectZero:
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, cell.frame.size.width,IS_IPAD?PREVIEW_CELL_HEIGHT_IPAD:PREVIEW_CELL_HEIGHT_IPHONE)];//IS_IPAD?CGRectZero:
         imageView.tag = 1001;
         if (IS_IPAD) {
             imageView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin|UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleWidth;
         }else {
             imageView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
         }
+        imageView.contentMode = UIViewContentModeScaleAspectFit;
         [cell addSubview:imageView];
     }
 	

@@ -343,6 +343,9 @@
 "metadata.exif.orientation.portrait" = "Portrait";
 "metadata.exif.orientation.portrait.upsidedown" = "Portrait Up-side Down";
 "metadata.exit.orientation.undefined" = "Undefined";
+"metadata.button.download"="Download";
+"metadata.group.header.preview"="PREVIEW";
+"metadata.group.header.action"="ACTIONS";
 
 "popover.button.title" = "ODS";
 
@@ -536,6 +539,7 @@
 "awaitingverification.alert.refresh.awaiting" = "Your account is still waiting for verification";
 "awaitingverification.alert.refresh.verified" = "Your account is now verified";
 
+
 "homescreen.header" = "Let's get you started...";
 "homescreen.button.signup" = "Sign up for Alfresco Cloud";
 "homescreen.description.signup" = "New to Alfresco? Create a free online account to store your documents and access them from anywhere.";
@@ -639,8 +643,10 @@
 "download.failures.clearAll" = "Clear All";
 "download.failuresView.title" = "Failures";
 "download.failureDetail.title" = "Failed Download";
-"download.progress.waiting" = "Waiting to download...";
-"download.progress.starting" = "Download starting...";
+"download.progress.waiting" = "Waiting to download ...";
+"download.progress.starting" = "Download starting ...";
+"download.progress.files.starting" = " files download starting ...";
+"download.progress.successed" = "Download finished.";
 "download.progress.failed" = "Failed to download";
 "download.progress.stopAll" = "Stop All";
 "download.progress.details" = "%@ of %@";

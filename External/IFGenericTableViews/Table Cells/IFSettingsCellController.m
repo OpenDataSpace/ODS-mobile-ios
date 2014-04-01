@@ -83,6 +83,7 @@
 	cell.textLabel.text = label;
     cell.detailTextLabel.text = subLabel;
 	cell.textLabel.font = [UIFont boldSystemFontOfSize:17.0f];
+    cell.detailTextLabel.font = [UIFont systemFontOfSize:10.0];
 	cell.accessoryType = accessoryType;
 	cell.selectionStyle = selectionStyle;
 	

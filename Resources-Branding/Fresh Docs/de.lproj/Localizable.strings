@@ -343,6 +343,9 @@
 "metadata.exif.orientation.portrait" = "Hochformat";
 "metadata.exif.orientation.portrait.upsidedown" = "Hochformat umgedreht";
 "metadata.exit.orientation.undefined" = "Undefiniert";
+"metadata.button.download"="Download";
+"metadata.group.header.preview"="PREVIEW";
+"metadata.group.header.action"="ACTIONS";
 
 "popover.button.title" = "ODS";
 
@@ -556,7 +559,7 @@
 "failed-sync.title.plural" = "%d fehlgeschlagene Synchronsierungen";
 "failed-sync.detailSubtitle" = "Herunterladen auf: %@";
 "failed-sync.cell.clear-list" = "Liste löschen";
-"sync.state.waiting-to-sync" = "Waiting to sync...";
+"sync.state.waiting-to-sync" = "Wachten om te synchroniseren...";
 "sync.failureDetail.title" = "Synchronisierung fehlgeschlagen";
 
 /* MDMLite strings */
@@ -611,6 +614,8 @@
 "download.failureDetail.title" = "Fehlgeschlagener Download";
 "download.progress.waiting" = "Warten auf Download ...";
 "download.progress.starting" = "Download starten ...";
+"download.progress.files.starting" = " bestanden Download starten ...";
+"download.progress.successed" = "Downloaden afgewerkte.";
 "download.progress.failed" = "Download fehlgeschlagen";
 "download.progress.stopAll" = "Alle anhalten";
 "download.progress.details" = "%@ von %@";

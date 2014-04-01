@@ -1599,6 +1599,20 @@ NSString * const kMultiSelectMove = @"moveAction";
 {
     if ([name isEqual:kMultiSelectDownload])
     {
+        NSString *downloadMessage = nil;
+        if ([selectedItems count] == 1) {
+            RepositoryItem *item = [selectedItems objectAtIndex:0];
+            downloadMessage = [NSString stringWithFormat:@"%@ %@", [item title], NSLocalizedString(@"download.progress.starting", @"Download starting...")];
+        }else {
+            downloadMessage = [NSString stringWithFormat:@"%d %@", [selectedItems count], NSLocalizedString(@"download.progress.files.starting", @"files Download starting...")];
+        }
+        
+        SystemNotice *notice = [SystemNotice systemNoticeWithStyle:SystemNoticeStyleInformation
+                                                            inView:activeView()
+                                                           message:downloadMessage
+                                                             title:@""];
+        notice.displayTime = 3.0;
+        [notice show];
         [[DownloadManager sharedManager] queueRepositoryItems:selectedItems withAccountUUID:self.selectedAccountUUID andTenantId:self.tenantID];
         [self setEditing:NO];
     }

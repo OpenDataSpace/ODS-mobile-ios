@@ -252,7 +252,7 @@
 		CGRect frame = CGRectMake(0.0f, 0.0f, viewWidth, 22.0f);
 		UILabel *choiceLabel = [[UILabel alloc] initWithFrame:frame];
 		[choiceLabel setText:choiceLabelText];
-		[choiceLabel setFont:[UIFont systemFontOfSize:17.0f]];
+		[choiceLabel setFont:[UIFont systemFontOfSize:12.0f]];
 		[choiceLabel setBackgroundColor:[UIColor clearColor]];
 		[choiceLabel setHighlightedTextColor:[UIColor whiteColor]];
 		//[choiceLabel setTextAlignment:UITextAlignmentLeft];

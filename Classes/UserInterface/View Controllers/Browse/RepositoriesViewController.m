@@ -183,8 +183,7 @@ static NSString *RepositoryInfoKey = @"RepositoryInfo";
     
     for (RepositoryInfo *repoInfo in [self repositoriesForAccount]) 
     {
-        if ([repoInfo.repositoryName caseInsensitiveCompare:@"config"] == NSOrderedSame ||  //TODO:disable config and backup repo.
-            [repoInfo.repositoryName caseInsensitiveCompare:@"backup"] == NSOrderedSame) {
+        if ([repoInfo.repositoryName caseInsensitiveCompare:@"config"] == NSOrderedSame) { //TODO:disable config and backup repo.
             continue;
         }
         IFTemporaryModel *tmpModel = [[IFTemporaryModel alloc] init];

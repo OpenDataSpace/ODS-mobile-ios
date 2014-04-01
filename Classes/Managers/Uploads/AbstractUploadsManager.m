@@ -220,7 +220,6 @@
         [self.allUploadsDictionary removeObjectForKey:activeUpload.uuid];
     }
     [self saveUploadsData];
-    
     [self.uploadsQueue cancelAllOperations];
 }
 
@@ -257,6 +256,7 @@
 
         return NO;
     }
+    
     [self queueUpload:uploadInfo];
     
     return YES;
@@ -503,6 +503,9 @@
 - (void)uploadFailed:(CMISUploadFileRequest *)request
 {
     UploadInfo *uploadInfo = [(CMISUploadFileHTTPRequest *)request uploadInfo];
+    //reset upload progress.
+    self.uploadsQueue.bytesUploadedSoFar -= uploadInfo.uploadRequest.sentBytes;
+    self.uploadsQueue.totalBytesToUpload -= uploadInfo.uploadRequest.totalBytes;
     [uploadInfo setUploadRequest:nil];
     [self failedUpload:uploadInfo withError:request.error];  //TODO:not save the last error for request now.
 }

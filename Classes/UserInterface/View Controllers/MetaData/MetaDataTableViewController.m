@@ -38,6 +38,7 @@
 #import "AccountManager.h"
 #import "MetadataMapViewController.h"
 #import "PreviewCellController.h"
+#import "DownloadManager.h"
 
 static NSArray * cmisPropertiesToDisplay = nil;
 @interface MetaDataTableViewController(private)
@@ -337,13 +338,25 @@ static NSArray * cmisPropertiesToDisplay = nil;
             [groups addObject:versionsHistoryGroup];
             [footers addObject:@""];
         }
+        //add download button
+        NSMutableArray *actionGroup = [NSMutableArray array];
+        IFButtonCellController *downloadButton = [[IFButtonCellController alloc]
+                                             initWithLabel:NSLocalizedString(@"metadata.button.download", @"Download")
+                                             withAction:@selector(downloadButtonClicked) onTarget:self];
+        [downloadButton setBackgroundColor:[UIColor whiteColor]];
+        [actionGroup addObject:downloadButton];
+        [downloadButton release];
+        [headers addObject:NSLocalizedString(@"metadata.group.header.action", @"ACTIONS")];
+        [groups addObject:actionGroup];
+        [footers addObject:@""];
         
+        //preview
         NSMutableArray *previewGroup = [NSMutableArray array];
         if (self.cmisThumbnailURL) {
             PreviewCellController *previewCell = [[PreviewCellController alloc] initWithThumbnailURL:cmisThumbnailURL];
             
             [previewGroup addObject:previewCell];
-            [headers addObject:@""];
+            [headers addObject:NSLocalizedString(@"metadata.group.header.preview", @"PREVIEW")];
             [groups addObject:previewGroup];
             [footers addObject:@""];
         }
@@ -421,6 +434,16 @@ static NSArray * cmisPropertiesToDisplay = nil;
     [item release];
 }
 
+- (void)downloadButtonClicked {
+    SystemNotice *notice = [SystemNotice systemNoticeWithStyle:SystemNoticeStyleInformation
+                                                        inView:activeView()
+                                                       message:[NSString stringWithFormat:@"%@ %@", cmisObject.title, NSLocalizedString(@"download.progress.starting", @"Download starting...")]
+                                                         title:@""];
+    notice.displayTime = 3.0;
+    [notice show];
+    [[DownloadManager sharedManager] queueRepositoryItems:[NSArray arrayWithObject:cmisObject] withAccountUUID:self.selectedAccountUUID andTenantId:self.tenantID];
+}
+
 - (void)download:(DownloadProgressBar *)down completeWithPath:(NSString *)filePath
 {
     DownloadMetadata *fileMetadata = down.downloadMetadata;
@@ -467,7 +490,11 @@ static NSArray * cmisPropertiesToDisplay = nil;
     
     if (IOS7_OR_LATER) {
         CGRect screenBounds = [UIScreen mainScreen].bounds;
-        frame.size.height = screenBounds.size.height - 108;
+        float viewHeight = screenBounds.size.height;
+        if ([UIApplication sharedApplication].statusBarOrientation == UIDeviceOrientationLandscapeRight || [UIApplication sharedApplication].statusBarOrientation == UIDeviceOrientationLandscapeLeft) {
+            viewHeight = screenBounds.size.width;
+        }
+        frame.size.height = viewHeight - 64;
     }
     
     self.tableView.frame = frame;
