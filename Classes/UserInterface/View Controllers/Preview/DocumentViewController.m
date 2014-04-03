@@ -50,6 +50,7 @@
 #import "NodeLocationHTTPRequest.h"
 #import "DownloadInfo.h"
 #import "CustomLongPressGestureRecognizer.h"
+#import "DetailNavigationController.h"
 
 #define kToolbarSpacerWidth 7.5f
 #define kFrameLoadCodeError 102
@@ -218,6 +219,13 @@ NSInteger const kGetCommentsCountTag = 6;
         
         CGRect webViewFrame = self.webView.frame;
         CGFloat webViewHeight = webViewFrame.size.height+ offset;
+        if (IOS7_OR_LATER) {
+            if (isFullScreen) {  //to fix the status bar for ios7
+                webViewHeight += 20;
+            }else {
+                webViewHeight -= 20;
+            }
+        }
         webViewFrame.size.height = webViewHeight;
         self.webView.frame = webViewFrame;
         // Fade it in/out
@@ -230,6 +238,7 @@ NSInteger const kGetCommentsCountTag = 6;
     }
     
     [self.navigationController setNavigationBarHidden:isFullScreen animated:YES];
+    
     [UIView commitAnimations];
 }
 

@@ -747,6 +747,17 @@ NSString * const kMultiSelectMove = @"moveAction";
         [_itemsToMove release];
         _itemsToMove = [[NSMutableArray alloc] initWithObjects:_selectedItem, nil];
         [self showChooseMoveTarget];
+    }else if ([buttonLabel isEqualToString:NSLocalizedString(@"operation.pop.menu.download", @"Download")]){
+        if (_selectedItem) {
+            NSString *downloadMessage  = [NSString stringWithFormat:@"%@ %@", [_selectedItem title], NSLocalizedString(@"download.progress.starting", @"Download starting...")];
+            SystemNotice *notice = [SystemNotice systemNoticeWithStyle:SystemNoticeStyleInformation
+                                                                inView:activeView()
+                                                               message:downloadMessage
+                                                                 title:@""];
+            notice.displayTime = 3.0;
+            [notice show];
+            [[DownloadManager sharedManager] queueRepositoryItems:[NSArray arrayWithObject:_selectedItem] withAccountUUID:self.selectedAccountUUID andTenantId:self.tenantID];
+        }
     }
 }
 
@@ -1719,6 +1730,10 @@ NSString * const kMultiSelectMove = @"moveAction";
     if ([_selectedItem canMoveObject])
     {
         [sheet addButtonWithTitle:NSLocalizedString(@"operation.pop.menu.move", @"Move")];
+    }
+    
+    if (![_selectedItem isFolder]) {
+        [sheet addButtonWithTitle:NSLocalizedString(@"operation.pop.menu.download", @"Download")];
     }
     
 	[sheet setCancelButtonIndex:[sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")]];

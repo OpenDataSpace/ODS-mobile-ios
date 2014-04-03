@@ -875,6 +875,7 @@
 "operation.pop.menu.delete"="Löschen";
 "operation.pop.menu.rename"="Umbenennen";
 "operation.pop.menu.move"="Verschieben";
+"operation.pop.menu.download"="Downloaden";
 
 "confirm.delete.prompt.title" = "Warnung";
 "confirm.delete.prompt.message" = "Sind Sie sicher, dass sie die Datei %@ löschen wollen?";

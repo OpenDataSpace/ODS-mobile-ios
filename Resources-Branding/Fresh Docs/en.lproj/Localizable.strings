@@ -907,6 +907,7 @@
 "operation.pop.menu.delete"="Delete";
 "operation.pop.menu.rename"="Rename";
 "operation.pop.menu.move"="Move";
+"operation.pop.menu.download"="Download";
 
 "confirm.delete.prompt.title" = "Warning";
 "confirm.delete.prompt.message" = "Are you sure to delete file %@?";
