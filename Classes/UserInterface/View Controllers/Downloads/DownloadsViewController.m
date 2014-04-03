@@ -183,7 +183,7 @@
         [viewController setHidesBottomBarWhenPushed:YES];
         [viewController setIsDownloaded:YES];
         [viewController setSelectedAccountUUID:[downloadMetadata accountUUID]];
-        [viewController setShowReviewButton:YES];
+        [viewController setShowReviewButton:NO];
         [viewController setIsRestrictedDocument:[[AlfrescoMDMLite sharedInstance] isRestrictedDownload:fileName]];
 
         //

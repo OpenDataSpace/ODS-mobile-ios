@@ -302,7 +302,7 @@ static const NSInteger delayToShowErrors = 2.0f;
             
             [viewController setCanEditDocument:repoItem.canSetContentStream];
             [viewController setContentMimeType:repoItem.contentStreamMimeType];
-            [viewController setShowReviewButton:YES];
+            [viewController setShowReviewButton:NO];
             [viewController setIsRestrictedDocument:[[AlfrescoMDMLite sharedInstance] isRestrictedSync:fileName]];
             
             [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
