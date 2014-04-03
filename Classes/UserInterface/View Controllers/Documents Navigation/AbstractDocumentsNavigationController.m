@@ -148,7 +148,8 @@ CGFloat const kWhitePadding = 0.0f;
 {
     if(_isProgressPanelHidden && !_externalHidden)
     {
-        _isProgressPanelHidden = NO;        
+        _isProgressPanelHidden = NO;
+        [[[self progressPanel] progressBar] setProgress:0.0];
         [UIView beginAnimations:@"animateProgressPanelShow" context:nil];
         [UIView setAnimationDuration:0.5];
         [self positionProgressPanel];
@@ -169,7 +170,6 @@ CGFloat const kWhitePadding = 0.0f;
         [UIView setAnimationDuration:0.5];
         [self positionProgressPanel];
         [UIView commitAnimations];
-        
         [self resizeView:[[self.viewControllers lastObject] view]];
     }
 }

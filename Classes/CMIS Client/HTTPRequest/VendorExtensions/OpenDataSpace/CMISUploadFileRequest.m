@@ -14,6 +14,7 @@
 #import "RepositoryItemParser.h"
 
 #define APPEND_CHUNK_DATA_SIZE  4194304   //1024*1024*4  The maxmium value for chunk size.
+#define MIN_CHUNK_SIZE  8192
 
 @interface CMISUploadFileRequest() {
     uint8_t *readBuffer;   //read buffer
@@ -24,6 +25,7 @@
 @property (nonatomic, assign, readwrite) uint64_t    sentBytes;
 @property (nonatomic, strong) ALAsset *uploadFileAsset; //Asset from library.If the source file url is asset URL
 @property (nonatomic, assign) BOOL isCancelled;
+@property (nonatomic, assign) uint64_t chunkSize;
 @end
 
 @implementation CMISUploadFileRequest
@@ -39,6 +41,7 @@
 @synthesize totalBytes = _totalBytes;
 @synthesize sentBytes = _sentBytes;
 @synthesize uploadFileAsset = _uploadFileAsset;
+@synthesize chunkSize = _chunkSize;
 
 @synthesize isCancelled = _isCancelled;
 @synthesize error = _error;
@@ -69,6 +72,8 @@
         _isCancelled = NO;
         
         _error = nil;
+        
+        _chunkSize = MIN_CHUNK_SIZE;
         
         readBuffer = malloc(APPEND_CHUNK_DATA_SIZE);
         
@@ -212,10 +217,13 @@
 
 - (BOOL) uplaodWholeFile
 {
+    //cal chunk size first
+    self.chunkSize = [self getChunkSize];
+    
     while (self.sentBytes != self.totalBytes) {
         uint64_t leftBytes = self.totalBytes - self.sentBytes;
         
-        NSInteger readLength = (leftBytes >= APPEND_CHUNK_DATA_SIZE)?APPEND_CHUNK_DATA_SIZE:leftBytes;
+        NSInteger readLength = (leftBytes >= self.chunkSize)?self.chunkSize:leftBytes;
         AlfrescoLogDebug(@"leftBytes:%llu readLength:%d total:%llu",leftBytes, readLength, self.totalBytes);
         NSMutableData *data = [self readDataFromFile:self.sentBytes length:readLength];
         if (!data) {
@@ -236,6 +244,17 @@
     }
     
     return YES;
+}
+
+- (uint64_t) getChunkSize {
+    uint64_t avgSize = (uint64_t)self.totalBytes/50;
+    if (avgSize > APPEND_CHUNK_DATA_SIZE) {
+        avgSize == APPEND_CHUNK_DATA_SIZE;
+    }else if (avgSize < MIN_CHUNK_SIZE) {
+        avgSize = MIN_CHUNK_SIZE;
+    }
+    
+    return avgSize;
 }
 
 #pragma mark -
