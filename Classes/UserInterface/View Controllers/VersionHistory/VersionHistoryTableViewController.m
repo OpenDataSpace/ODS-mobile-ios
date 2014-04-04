@@ -386,7 +386,7 @@
         [doc setHidesBottomBarWhenPushed:YES];
         [doc setSelectedAccountUUID:self.selectedAccountUUID];
         [doc setTenantID:self.tenantID];
-        [doc setShowReviewButton:YES];
+        [doc setShowReviewButton:NO];
 
         [doc setFileName:filename];
         [doc setFilePath:filePath];

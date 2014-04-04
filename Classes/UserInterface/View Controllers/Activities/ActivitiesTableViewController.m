@@ -486,7 +486,7 @@
     [doc setHidesBottomBarWhenPushed:YES];
     [doc setSelectedAccountUUID:[down selectedAccountUUID]];
     [doc setTenantID:[down tenantID]];
-    [doc setShowReviewButton:YES];
+    [doc setShowReviewButton:NO];
     
     DownloadMetadata *fileMetadata = down.downloadMetadata;
     NSString *filename;

@@ -134,7 +134,7 @@
     [doc setPresentEditMode:self.presentEditMode];
     [doc setSelectedAccountUUID:self.selectedAccountUUID];
     [doc setTenantID:self.tenantID];
-    [doc setShowReviewButton:YES];
+    [doc setShowReviewButton:NO];
     DownloadMetadata *fileMetadata = info.downloadMetadata;
     NSString *filename = fileMetadata.key;
     [doc setFileMetadata:fileMetadata];

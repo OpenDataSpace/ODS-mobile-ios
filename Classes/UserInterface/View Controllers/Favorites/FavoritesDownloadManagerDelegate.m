@@ -155,7 +155,7 @@
         [doc setPresentNewDocumentPopover:self.presentNewDocumentPopover];
         [doc setSelectedAccountUUID:info.selectedAccountUUID];
         [doc setTenantID:info.tenantID];
-        [doc setShowReviewButton:YES];
+        [doc setShowReviewButton:NO];
         
         DownloadMetadata *fileMetadata = info.downloadMetadata;
         NSString *filename = fileMetadata.key;
