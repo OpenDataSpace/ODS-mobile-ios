@@ -573,7 +573,10 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
 - (NSDictionary *)dictionaryFromJSONResponse
 {
     NSError *jsonError = nil;
-    NSDictionary *jsonObject = [NSJSONSerialization JSONObjectWithData:[self.responseString dataUsingEncoding:NSUTF8StringEncoding] options:0 error:&jsonError];
+    NSDictionary *jsonObject = nil;
+    if (self.responseString) {
+        jsonObject = [NSJSONSerialization JSONObjectWithData:[self.responseString dataUsingEncoding:NSUTF8StringEncoding] options:0 error:&jsonError];
+    }
     
     return (jsonError == nil) ? jsonObject : nil;
 }
@@ -581,7 +584,10 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
 - (NSArray *)arrayFromJSONResponse
 {
     NSError *jsonError = nil;
-    NSArray *jsonObject = [NSJSONSerialization JSONObjectWithData:[self.responseString dataUsingEncoding:NSUTF8StringEncoding] options:0 error:&jsonError];
+    NSArray *jsonObject = nil;
+    if (self.responseString) {
+        jsonObject = [NSJSONSerialization JSONObjectWithData:[self.responseString dataUsingEncoding:NSUTF8StringEncoding] options:0 error:&jsonError];
+    }
     
     return (jsonError == nil) ? jsonObject : nil;
 }
@@ -589,7 +595,10 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
 - (NSMutableDictionary *)mutableDictionaryFromJSONResponseWithOptions:(NSJSONReadingOptions)options
 {
     NSError *jsonError = nil;
-    NSMutableDictionary *jsonObject = [NSJSONSerialization JSONObjectWithData:[self.responseString dataUsingEncoding:NSUTF8StringEncoding] options:options error:&jsonError];
+    NSMutableDictionary *jsonObject = nil;
+    if (self.responseString) {
+        jsonObject = [NSJSONSerialization JSONObjectWithData:[self.responseString dataUsingEncoding:NSUTF8StringEncoding] options:options error:&jsonError];
+    }
     
     return (jsonError == nil) ? jsonObject : nil;
 }
@@ -597,7 +606,10 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
 - (NSMutableArray *)mutableArrayFromJSONResponseWithOptions:(NSJSONReadingOptions)options
 {
     NSError *jsonError = nil;
-    NSMutableArray *jsonObject = [NSJSONSerialization JSONObjectWithData:[self.responseString dataUsingEncoding:NSUTF8StringEncoding] options:options error:&jsonError];
+    NSMutableArray *jsonObject = nil;
+    if (self.responseString) {
+        jsonObject = [NSJSONSerialization JSONObjectWithData:[self.responseString dataUsingEncoding:NSUTF8StringEncoding] options:options error:&jsonError];
+    }
     
     return (jsonError == nil) ? jsonObject : nil;
 }

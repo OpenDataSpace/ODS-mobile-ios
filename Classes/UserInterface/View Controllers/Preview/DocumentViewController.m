@@ -881,10 +881,10 @@ NSInteger const kGetCommentsCountTag = 6;
         [self.actionSheet addButtonWithTitle:NSLocalizedString(@"documentview.action.delete", @"Delete action text") andImage:[UIImage imageNamed:@"delete-action.png"]];
     }
     
-    if (self.showReviewButton && !self.isDownloaded && self.canPerformRemoteRequests)
+    /*if (self.showReviewButton && !self.isDownloaded && self.canPerformRemoteRequests)  //Issue 3794
     {
         [self.actionSheet addButtonWithTitle:NSLocalizedString(@"documentview.action.review", @"Start review workflow") andImage:[UIImage imageNamed:@"task-action.png"]];
-    }
+    }*/
     
     // Not allowed to print audio or video files
     if (!self.isRestrictedDocument && !isAudio && !isVideo)
