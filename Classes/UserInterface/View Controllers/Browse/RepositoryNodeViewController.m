@@ -112,6 +112,7 @@ NSString * const kMultiSelectMove = @"moveAction";
 @synthesize selectedAccountUUID = _selectedAccountUUID;
 @synthesize tenantID = _tenantID;
 @synthesize actionSheetSenderControl = _actionSheetSenderControl;
+@synthesize actionSheetSenderRect = _actionSheetSenderRect;
 @synthesize refreshHeaderView = _refreshHeaderView;
 @synthesize lastUpdated = _lastUpdated;
 @synthesize multiSelectToolbar = _multiSelectToolbar;
@@ -450,6 +451,12 @@ NSString * const kMultiSelectMove = @"moveAction";
         {
             // iOS 5.1 bug workaround
             CGRect actionButtonRect = [(UIView *)[event.allTouches.anyObject view] frame];
+            self.actionSheetSenderRect = actionButtonRect;
+            if ([[UIApplication sharedApplication] statusBarOrientation] == UIDeviceOrientationPortraitUpsideDown) {
+                CGRect screen = [[UIScreen mainScreen] bounds];
+                actionButtonRect.origin.x = screen.size.width - (actionButtonRect.origin.x + actionButtonRect.size.width);
+                actionButtonRect.origin.y = screen.size.height - (actionButtonRect.origin.y + actionButtonRect.size.height + 20.0);
+            }
             [sheet showFromRect:actionButtonRect inView:self.view.window animated:YES];
         }
         [actionButton setEnabled:NO];
@@ -597,7 +604,22 @@ NSString * const kMultiSelectMove = @"moveAction";
         if (IS_IPAD)
         {
             [sheet setActionSheetStyle:UIActionSheetStyleDefault];
-            [sheet showFromBarButtonItem:self.actionSheetSenderControl animated:YES];
+            //[sheet showFromBarButtonItem:self.actionSheetSenderControl animated:YES];
+            if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]))
+            {
+                [sheet showFromBarButtonItem:self.actionSheetSenderControl animated:YES];
+            }
+            else
+            {
+                // iOS 5.1 bug workaround
+                CGRect actionButtonRect = self.actionSheetSenderRect;                
+                if ([[UIApplication sharedApplication] statusBarOrientation] == UIDeviceOrientationPortraitUpsideDown) {
+                    CGRect screen = [[UIScreen mainScreen] bounds];
+                    actionButtonRect.origin.x = screen.size.width - (actionButtonRect.origin.x + actionButtonRect.size.width);
+                    actionButtonRect.origin.y = screen.size.height - (actionButtonRect.origin.y + actionButtonRect.size.height + 20.0);
+                }
+                [sheet showFromRect:actionButtonRect inView:self.view.window animated:YES];
+            }
         } 
         else 
         {

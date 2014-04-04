@@ -111,6 +111,7 @@
 @property (nonatomic, retain) NSString *selectedAccountUUID;
 @property (nonatomic, retain) NSString *tenantID;
 @property (nonatomic, retain) UIBarButtonItem *actionSheetSenderControl;
+@property (nonatomic, assign) CGRect  actionSheetSenderRect;
 @property (nonatomic, retain) EGORefreshTableHeaderView *refreshHeaderView;
 @property (nonatomic, retain) NSDate *lastUpdated;
 @property (nonatomic, retain) MultiSelectActionsToolbar *multiSelectToolbar;
