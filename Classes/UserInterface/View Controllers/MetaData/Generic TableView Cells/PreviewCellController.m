@@ -11,6 +11,7 @@
 
 #define PREVIEW_CELL_HEIGHT_IPHONE 160.0
 #define PREVIEW_CELL_HEIGHT_IPAD   320.0
+#define PREVIEW_CELL_HEIGHT        200.0
 
 @implementation PreviewCellController
 
@@ -40,7 +41,7 @@
 	if (cell == nil)
 	{
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, cell.frame.size.width,IS_IPAD?PREVIEW_CELL_HEIGHT_IPAD:PREVIEW_CELL_HEIGHT_IPHONE)];//IS_IPAD?CGRectZero:
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, cell.frame.size.width,PREVIEW_CELL_HEIGHT)];//IS_IPAD?PREVIEW_CELL_HEIGHT_IPAD:PREVIEW_CELL_HEIGHT_IPHONE)];//IS_IPAD?CGRectZero:
         imageView.tag = 1001;
         if (IS_IPAD) {
             imageView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin|UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleWidth;
@@ -62,7 +63,7 @@
 
 
 - (float) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return IS_IPAD?PREVIEW_CELL_HEIGHT_IPAD:PREVIEW_CELL_HEIGHT_IPHONE;
+    return PREVIEW_CELL_HEIGHT;//IS_IPAD?PREVIEW_CELL_HEIGHT_IPAD:PREVIEW_CELL_HEIGHT_IPHONE;
 }
 
 @end

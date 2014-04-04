@@ -494,6 +494,10 @@ static NSArray * cmisPropertiesToDisplay = nil;
         if ([UIApplication sharedApplication].statusBarOrientation == UIDeviceOrientationLandscapeRight || [UIApplication sharedApplication].statusBarOrientation == UIDeviceOrientationLandscapeLeft) {
             viewHeight = screenBounds.size.width;
         }
+        if (!IS_IPAD) {
+            viewHeight -= 44.0;
+        }
+        
         frame.size.height = viewHeight - 64;
     }
     
