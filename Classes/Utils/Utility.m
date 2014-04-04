@@ -77,7 +77,7 @@ UIImage *imageForFilename(NSString *filename)
 
 NSString *mimeTypeForFilename(NSString *filename)
 {
-    return mimeTypeForFilenameWithDefault(filename, @"text/plain");
+    return mimeTypeForFilenameWithDefault(filename, @"application/octet-stream");//@"text/plain"); Issue 3792
 }
 
 NSString *mimeTypeForFilenameWithDefault(NSString *filename, NSString *defaultMimeType)
