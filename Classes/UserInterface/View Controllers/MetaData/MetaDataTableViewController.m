@@ -339,16 +339,18 @@ static NSArray * cmisPropertiesToDisplay = nil;
             [footers addObject:@""];
         }
         //add download button
-        NSMutableArray *actionGroup = [NSMutableArray array];
-        IFButtonCellController *downloadButton = [[IFButtonCellController alloc]
-                                             initWithLabel:NSLocalizedString(@"metadata.button.download", @"Download")
-                                             withAction:@selector(downloadButtonClicked) onTarget:self];
-        [downloadButton setBackgroundColor:[UIColor whiteColor]];
-        [actionGroup addObject:downloadButton];
-        [downloadButton release];
-        [headers addObject:NSLocalizedString(@"metadata.group.header.action", @"ACTIONS")];
-        [groups addObject:actionGroup];
-        [footers addObject:@""];
+        if (![cmisObject isFolder]) {
+            NSMutableArray *actionGroup = [NSMutableArray array];
+            IFButtonCellController *downloadButton = [[IFButtonCellController alloc]
+                                                      initWithLabel:NSLocalizedString(@"metadata.button.download", @"Download")
+                                                      withAction:@selector(downloadButtonClicked) onTarget:self];
+            [downloadButton setBackgroundColor:[UIColor whiteColor]];
+            [actionGroup addObject:downloadButton];
+            [downloadButton release];
+            [headers addObject:NSLocalizedString(@"metadata.group.header.action", @"ACTIONS")];
+            [groups addObject:actionGroup];
+            [footers addObject:@""];
+        }        
         
         //preview
         NSMutableArray *previewGroup = [NSMutableArray array];
