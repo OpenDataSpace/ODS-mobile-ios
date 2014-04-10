@@ -612,7 +612,7 @@ NSString * const kMultiSelectMove = @"moveAction";
             else
             {
                 // iOS 5.1 bug workaround
-                CGRect actionButtonRect = self.actionSheetSenderRect;                
+                CGRect actionButtonRect = self.actionSheetSenderRect;
                 if ([[UIApplication sharedApplication] statusBarOrientation] == UIDeviceOrientationPortraitUpsideDown) {
                     CGRect screen = [[UIScreen mainScreen] bounds];
                     actionButtonRect.origin.x = screen.size.width - (actionButtonRect.origin.x + actionButtonRect.size.width);

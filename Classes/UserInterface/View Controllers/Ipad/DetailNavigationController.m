@@ -267,9 +267,17 @@ static CGFloat masterViewControllerWidth = 320.0;
 
 - (void)showMasterPopoverController
 {
-    if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation) && self.masterPopoverController && self.masterPopoverBarButton)
-    {
-        [self.masterPopoverBarButton.target performSelector:self.masterPopoverBarButton.action];
+    @try {
+        if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation) && self.masterPopoverController && self.masterPopoverBarButton)
+        {
+            [self.masterPopoverBarButton.target performSelector:self.masterPopoverBarButton.action];
+        }
+    }
+    @catch (NSException *exception) {
+        AlfrescoLogDebug(@"exception:%@", exception);
+    }
+    @finally {
+        
     }
 }
 
