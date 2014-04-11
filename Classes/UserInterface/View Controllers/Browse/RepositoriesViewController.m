@@ -113,6 +113,7 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    [self stopHUD];
     [[CMISServiceManager sharedManager] removeAllListeners:self];
 }
 
