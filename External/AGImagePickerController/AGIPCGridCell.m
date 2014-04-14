@@ -33,7 +33,7 @@
 {
     if (_items != items)
     {
-        for (AGIPCGridItem *view in [self.contentView subviews])
+        for (AGIPCGridItem *view in _items)//[self subviews])
         {
             if ([view isKindOfClass:[AGIPCGridItem class]]){                
                 [view removeFromSuperview];
@@ -74,8 +74,7 @@
         UITapGestureRecognizer *selectionGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:gridItem action:@selector(tap)];
         selectionGestureRecognizer.numberOfTapsRequired = 1;
 		[gridItem addGestureRecognizer:selectionGestureRecognizer];
-        
-		[self.contentView addSubview:gridItem];
+		[self addSubview:gridItem];
 		
 		frame.origin.x = frame.origin.x + frame.size.width + leftMargin;
 	}

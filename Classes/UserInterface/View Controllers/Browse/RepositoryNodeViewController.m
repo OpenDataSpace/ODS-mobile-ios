@@ -455,7 +455,7 @@ NSString * const kMultiSelectMove = @"moveAction";
             if ([[UIApplication sharedApplication] statusBarOrientation] == UIDeviceOrientationPortraitUpsideDown) {
                 CGRect screen = [[UIScreen mainScreen] bounds];
                 actionButtonRect.origin.x = screen.size.width - (actionButtonRect.origin.x + actionButtonRect.size.width);
-                actionButtonRect.origin.y = screen.size.height - (actionButtonRect.origin.y + actionButtonRect.size.height + 20.0);
+                actionButtonRect.origin.y = screen.size.height - (actionButtonRect.origin.y + actionButtonRect.size.height + 25.0);
             }
             [sheet showFromRect:actionButtonRect inView:self.view.window animated:YES];
         }
@@ -616,7 +616,7 @@ NSString * const kMultiSelectMove = @"moveAction";
                 if ([[UIApplication sharedApplication] statusBarOrientation] == UIDeviceOrientationPortraitUpsideDown) {
                     CGRect screen = [[UIScreen mainScreen] bounds];
                     actionButtonRect.origin.x = screen.size.width - (actionButtonRect.origin.x + actionButtonRect.size.width);
-                    actionButtonRect.origin.y = screen.size.height - (actionButtonRect.origin.y + actionButtonRect.size.height + 20.0);
+                    actionButtonRect.origin.y = screen.size.height - (actionButtonRect.origin.y + actionButtonRect.size.height + 25.0);
                 }
                 [sheet showFromRect:actionButtonRect inView:self.view.window animated:YES];
             }

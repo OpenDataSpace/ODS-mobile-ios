@@ -142,6 +142,7 @@
                                                                style:UIBarButtonItemStyleBordered
                                                               target:self
                                                               action:@selector(performButtonAction:)] autorelease];
+    button.width = 90;
     [button setPossibleTitles:[NSSet setWithObjects:[item labelWithCounterValue:0], [item labelWithCounterValue:100], nil]];
     [button setEnabled:NO];
     if (destructive)
