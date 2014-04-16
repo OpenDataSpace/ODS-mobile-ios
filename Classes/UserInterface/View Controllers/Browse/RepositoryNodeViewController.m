@@ -873,7 +873,7 @@ NSString * const kMultiSelectMove = @"moveAction";
     else
     {
         // For non-iPad devices we'll hide the search view to save screen real estate
-        [self.tableView setContentOffset:CGPointMake(0, 40)];
+        //[self.tableView setContentOffset:CGPointMake(0, 40)];
     }
 }
 
