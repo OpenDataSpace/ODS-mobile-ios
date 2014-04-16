@@ -144,12 +144,12 @@
     number.font = [UIFont systemFontOfSize:10.0];
     //number.fillColor = [UIColor blueColor];
     number.tag = 101;
-    number.value = 100;
+    number.value = 0;
     
     UIButton *customButton = [UIButton  buttonWithType:UIButtonTypeCustom];
     customButton.frame = CGRectMake(0, 0, 90, 44);
     customButton.layer.cornerRadius = 8;
-    customButton.tag = 0;
+    customButton.tag = 100;
     
     [customButton setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@_enable.png", name]] forState:UIControlStateNormal];
     [customButton setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@_disable.png", name]] forState:UIControlStateDisabled];
@@ -202,7 +202,8 @@
 {
     for (MultiSelectActionItem *item in self.actionItems)
     {
-        if ([item.button isEqual:button])
+        UIButton *btnItem = (UIButton*)[[item.button customView] viewWithTag:100];
+        if (btnItem && [btnItem isEqual:button])
         {
             return item;
         }
