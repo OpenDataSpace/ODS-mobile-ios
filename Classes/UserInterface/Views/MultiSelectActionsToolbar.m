@@ -23,6 +23,7 @@
 #import "MultiSelectActionsToolbar.h"
 #import "MultiSelectActionItem.h"
 #import "Utility.h"
+#import "MKNumberBadgeView.h"
 
 /**
  * Private methods
@@ -137,13 +138,36 @@
     item.index = index;
     item.isDestructive = destructive;
     
+    MKNumberBadgeView *number = [[MKNumberBadgeView alloc] initWithFrame:CGRectMake(55, 00, 30, 30)];
+    number.hideWhenZero = YES;
+    number.shadow = NO;
+    number.font = [UIFont systemFontOfSize:10.0];
+    //number.fillColor = [UIColor blueColor];
+    number.tag = 101;
+    number.value = 100;
+    
+    UIButton *customButton = [UIButton  buttonWithType:UIButtonTypeCustom];
+    customButton.frame = CGRectMake(0, 0, 90, 44);
+    customButton.layer.cornerRadius = 8;
+    customButton.tag = 0;
+    
+    [customButton setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@_enable.png", name]] forState:UIControlStateNormal];
+    [customButton setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@_disable.png", name]] forState:UIControlStateDisabled];
+    [customButton addTarget:self action:@selector(performButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [customButton addSubview:number];
+    
+    // Create a button
+    UIBarButtonItem *button = [[UIBarButtonItem alloc] initWithCustomView:customButton];
+    
+    /*
     // Create a button
     UIBarButtonItem *button = [[[UIBarButtonItem alloc] initWithTitle:[item labelWithCounterValue:0]
                                                                style:UIBarButtonItemStyleBordered
                                                               target:self
                                                               action:@selector(performButtonAction:)] autorelease];
     button.width = 90;
-    [button setPossibleTitles:[NSSet setWithObjects:[item labelWithCounterValue:0], [item labelWithCounterValue:100], nil]];
+    [button setPossibleTitles:[NSSet setWithObjects:[item labelWithCounterValue:0], [item labelWithCounterValue:100], nil]];*/
     [button setEnabled:NO];
     if (destructive)
     {
@@ -201,7 +225,9 @@
     NSUInteger nSelectedItems = [self.selectedItems count];
     for (MultiSelectActionItem *item in self.actionItems)
     {
-        [item setButtonTitleWithCounterValue:nSelectedItems];
+        //[item setButtonTitleWithCounterValue:nSelectedItems];
+        MKNumberBadgeView *number = (MKNumberBadgeView*)[[item.button customView] viewWithTag:101];
+        number.value = nSelectedItems;
     }
 }
 
