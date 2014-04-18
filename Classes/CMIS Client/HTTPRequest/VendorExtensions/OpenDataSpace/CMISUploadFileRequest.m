@@ -6,12 +6,18 @@
 //
 //
 #import <AssetsLibrary/AssetsLibrary.h>
-
 #import "CMISUploadFileRequest.h"
 #import "RepositoryItem.h"
 #import "AssetUploadItem.h"
 #import "ObjectByIdRequest.h"
 #import "RepositoryItemParser.h"
+
+#if TARGET_OS_IPHONE
+#import <MobileCoreServices/UTType.h>
+#import <UIKit/UIDevice.h>
+#else
+#import <CoreServices/CoreServices.h>
+#endif
 
 #define APPEND_CHUNK_DATA_SIZE  4194304   //1024*1024*4  The maxmium value for chunk size.
 #define MIN_CHUNK_SIZE  8192
@@ -19,6 +25,7 @@
 @interface CMISUploadFileRequest() {
     uint8_t *readBuffer;   //read buffer
     FILE  *_uploadFileHandle;  //Document File Handle. If the source file url is file path.
+    NSString *_mimeType;
 }
 @property (strong) NSRecursiveLock *cancelledLock;
 @property (nonatomic, assign, readwrite) uint64_t    totalBytes;
@@ -72,6 +79,8 @@
         _isCancelled = NO;
         
         _error = nil;
+        
+        _mimeType = nil;
         
         _chunkSize = MIN_CHUNK_SIZE;
         
@@ -198,6 +207,7 @@
 {
     @autoreleasepool {
         CMISAppendContentHTTPRequest *appendRequest = [CMISAppendContentHTTPRequest cmisAppendRequestWithUploadInfo:_uploadInfo contentData:contentData isLastChunk:isLastChunk];
+        [appendRequest addRequestHeader:@"Content-Type" value:_mimeType];
         [appendRequest setUploadProgressDelegate:self];
         [appendRequest startSynchronous];
         
@@ -255,6 +265,26 @@
     }
     
     return avgSize;
+}
+
+//mimetype from file extension
+- (NSString*) mimeTypeFromFileExtension {
+    //get mimetype from file extension
+    CFStringRef pathExtension = (__bridge_retained CFStringRef)self.uploadInfo.extension;
+    CFStringRef type = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, pathExtension, NULL);
+    CFRelease(pathExtension);
+    
+    // The UTI can be converted to a mime type:
+    
+    NSString* mimeType = (__bridge_transfer NSString *)UTTypeCopyPreferredTagWithClass(type, kUTTagClassMIMEType);
+    if (type != NULL)
+        CFRelease(type);
+    
+    if (mimeType == nil) {
+        mimeType = @"application/octet-stream";
+    }
+    
+    return mimeType;
 }
 
 #pragma mark -
@@ -367,6 +397,9 @@
                 [self uploadFailed];
                 return;
             }
+            
+            _mimeType = [self mimeTypeFromFileExtension];
+            AlfrescoLogDebug(@"upload file mime type:%@", _mimeType);
             
             if (_uploadInfo.repositoryItem.guid == nil || [_uploadInfo.repositoryItem.guid length] < 2) {  //create the file on serve if it's not exist.
                 if (![self createFileOnServer]) {
