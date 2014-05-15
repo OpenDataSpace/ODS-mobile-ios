@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="5056" systemVersion="13C1021" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none">
     <dependencies>
         <deployment defaultVersion="1296" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
@@ -34,7 +34,7 @@
                             <nil key="highlightedColor"/>
                             <color key="shadowColor" cocoaTouchSystemColor="lightTextColor"/>
                         </label>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ZiaLogo-240.png" id="D1o-qt-V9h">
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Logo-240.png" id="D1o-qt-V9h">
                             <rect key="frame" x="264" y="53" width="240" height="128"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         </imageView>
@@ -71,7 +71,7 @@ Copyright(C) 2013-2014 The Open DataSpace Project.</string>
                                     <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="17"/>
                                     <textInputTraits key="textInputTraits"/>
                                 </textView>
-                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ZiaLogoCP-130.png" id="W1h-BO-1hz">
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LogoCP-130.png" id="W1h-BO-1hz">
                                     <rect key="frame" x="235" y="99" width="130" height="43"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 </imageView>
@@ -398,7 +398,7 @@ Copyright(C) 2013-2014 The Open DataSpace Project.</string>
         </scrollView>
     </objects>
     <resources>
-        <image name="ZiaLogo-240.png" width="240" height="149"/>
-        <image name="ZiaLogoCP-130.png" width="130" height="43"/>
+        <image name="Logo-240.png" width="240" height="149"/>
+        <image name="LogoCP-130.png" width="130" height="43"/>
     </resources>
 </document>

@@ -10,14 +10,14 @@
 #import "RepositoryItem.h"
 
 /* logo file name we would use */
-NSString * const kLogoAboutZiaLogo_500 = @"aboutZiaLogo-500.png";
-NSString * const kLogoAboutZiaLogo = @"aboutZiaLogo.png";
-NSString * const kLogoAboutZiaLotoBottom = @"aboutZiaLogoBottom.png";
-NSString * const kLogoZiaLogo_60 = @"ZiaLogo-60.png";
-NSString * const kLogoZiaLogo_144 = @"ZiaLogo-144.png";
-NSString * const kLogoZiaLogo_240 = @"ZiaLogo-240.png";
-NSString * const kLogoZiaLogoCP_130 = @"ZiaLogoCP-130.png";
-NSString * const kLogoZiaLogoCP_260 = @"ZiaLogoCP-260.png";
+NSString * const kLogoAboutZiaLogo_500 = @"aboutLogo-500.png";
+NSString * const kLogoAboutZiaLogo = @"aboutLogo.png";
+NSString * const kLogoAboutZiaLotoBottom = @"aboutLogoBottom.png";
+NSString * const kLogoZiaLogo_60 = @"Logo-60.png";
+NSString * const kLogoZiaLogo_144 = @"Logo-144.png";
+NSString * const kLogoZiaLogo_240 = @"Logo-240.png";
+NSString * const kLogoZiaLogoCP_130 = @"LogoCP-130.png";
+NSString * const kLogoZiaLogoCP_260 = @"LogoCP-260.png";
 NSString * const kLogoNoDocumentSelected = @"no-document-selected.png";
 NSString * const kLogoTabAboutLogo = @"tabAboutLogo.png";
 
