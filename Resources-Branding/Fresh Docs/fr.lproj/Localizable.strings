@@ -900,39 +900,39 @@
 "agipc.select.all" = "Sélectionner tout";
 "agipc.deselect.all" = "Désélectionner tout";
 
-"operation.pop.menu.title"="Operations";
-"operation.pop.menu.delete"="Delete";
-"operation.pop.menu.rename"="Rename";
-"operation.pop.menu.move"="Move";
-"operation.pop.menu.download"="Download";
-"operation.pop.menu.link"="Link management";
-"operation.pop.menu.createlink"="Create Download Link";
+"operation.pop.menu.title" = "Opérations";
+"operation.pop.menu.delete" = "Supprimer";
+"operation.pop.menu.rename" = "Renommer";
+"operation.pop.menu.move" = "Déplacer";
+"operation.pop.menu.download" = "Télécharger";
+"operation.pop.menu.link" = "Management des liens";
+"operation.pop.menu.createlink" = "Créer lien de téléchargement";
 
-"confirm.delete.prompt.title" = "Warning";
-"confirm.delete.prompt.message" = "Are you sure to delete file %@?";
-"confirm.delete.prompt.ok" = "Delete";
-"confirm.delete.prompt.cancel" = "Cancel";
+"confirm.delete.prompt.title" = "Avis";
+"confirm.delete.prompt.message" = "Voulez-vous vraimet supprimer fichier %@?";
+"confirm.delete.prompt.ok" = "Supprimer";
+"confirm.delete.prompt.cancel" = "Annuler";
 
-"confirm.rename.prompt.title" = "Rename";
+"confirm.rename.prompt.title" = "Renommer";
 "confirm.rename.prompt.message" = "";
-"confirm.rename.prompt.ok" = "Ok";
-"confirm.rename.prompt.cancel" = "Cancel";
+"confirm.rename.prompt.ok" = "OK";
+"confirm.rename.prompt.cancel" = "Annuler";
 
-"rename.progressbar.message" = "Renaming Item";
-"Moving Item" = "Moving Item";
-"dialog.chooser.confirm" ="Choose";
-"dialog.chooser.cancel" = "Cancel";
-"moveprogress.file-left" = "1 item remaining";
-"moveprogress.files-left" = "%d items remaining";
+"rename.progressbar.message" = "Élément renommé";
+"Moving Item" = "Élément déplacé";
+"dialog.chooser.confirm" ="Choisir";
+"dialog.chooser.cancel" = "Annuler";
+"moveprogress.file-left" = "1 élément restant";
+"moveprogress.files-left" = "%d éléments restants";
 
 /* create links */
 "create-link.fields.email" = "Email";
-"create-link.fields.subject" = "Subject";
-"create-link.fields.expirationdate" = "Expiration Date";
-"create-link.fields.password" = "Password";
+"create-link.fields.subject" = "Sujet";
+"create-link.fields.expirationdate" = "Date d'expiration";
+"create-link.fields.password" = "Mot de passe";
 "create-link.fields.message" = "Message";
-"create-link.placeholder.required" = "Required";
-"create-link.placeholder.optional" = "Optional";
-"creating.link" = "Creating Link";
-"create-link.success" = "Created download link successful.";
-"create-link.failure" = "Failed to create download link.";
+"create-link.placeholder.required" = "Requis";
+"create-link.placeholder.optional" = "Optionnel";
+"creating.link" = "Création du lien";
+"create-link.success" = "Création du lien effectuée avec succès";
+"create-link.failure" = "La création du lien a échoué";
