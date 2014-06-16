@@ -876,6 +876,8 @@
 "operation.pop.menu.rename"="Umbenennen";
 "operation.pop.menu.move"="Verschieben";
 "operation.pop.menu.download"="Downloaden";
+"operation.pop.menu.link" = "Link Management";
+"operation.pop.menu.createlink" = "Create Downlaod Link";
 
 "confirm.delete.prompt.title" = "Warnung";
 "confirm.delete.prompt.message" = "Sind Sie sicher, dass sie die Datei %@ löschen wollen?";
@@ -893,3 +895,20 @@
 "dialog.chooser.cancel" = "Abbrechen";
 "moveprogress.file-left" = "1 Objekt verbleibend";
 "moveprogress.files-left" = "%d Objekte vebleibend";
+
+/* create links */
+"create-link.fields.email" = "Email";
+"create-link.fields.subject" = "Subject";
+"create-link.fields.expirationdate" = "Expiration Date";
+"create-link.fields.password" = "Password";
+"create-link.fields.message" = "Message";
+"create-link.placeholder.required" = "Required";
+"create-link.placeholder.optional" = "Optional";
+"creating.link" = "Creating link...";
+"create-link.success" = "Craete link successful.";
+"create-link.failure" = "Failed to create link.";
+
+/* Repository name */
+"My" = "My";
+"Shared" = "Shared";
+"Global" = "Global";

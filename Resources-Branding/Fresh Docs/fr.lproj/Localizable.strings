@@ -936,3 +936,8 @@
 "creating.link" = "Création du lien";
 "create-link.success" = "Création du lien effectuée avec succès";
 "create-link.failure" = "La création du lien a échoué";
+
+/* Repository name */
+"my" = "mes classeurs";
+"shared" = "Classeurs partagés";
+"global" = "Classeurs globals";

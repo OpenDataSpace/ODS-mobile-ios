@@ -190,7 +190,7 @@ static NSString *RepositoryInfoKey = @"RepositoryInfo";
         IFTemporaryModel *tmpModel = [[IFTemporaryModel alloc] init];
         [tmpModel setObject:repoInfo forKey:RepositoryInfoKey];
         
-        NSString *labelText = [repoInfo repositoryName];
+        NSString *labelText = NSLocalizedString([repoInfo repositoryName], nil) ;
 #ifndef OPEN_DATA_SPACE
         if ([repoInfo tenantID]) {
             labelText = [repoInfo tenantID];
@@ -268,7 +268,7 @@ static NSString *RepositoryInfoKey = @"RepositoryInfo";
     [nextController setSelectedAccountUUID:[self selectedAccountUUID]];
     [nextController setTenantID:[repoInfo tenantID]];
     [nextController setRepositoryID:[repoInfo repositoryId]];
-    [[nextController navigationItem] setTitle:repoName];
+    [[nextController navigationItem] setTitle:NSLocalizedString(repoName, nil)];
     
     [[self navigationController] pushViewController:nextController animated:YES];
     [nextController release];
