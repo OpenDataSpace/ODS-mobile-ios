@@ -36,6 +36,8 @@
 #import "IFTemporaryModel.h"
 #import "IFSettingsCellController.h"
 #import "PreviewCacheManager.h"
+#import "DateInputCellController.h"
+#import "TextViewCellController.h"
 
 static NSDictionary *kStringToKeyboardTypeEnum;
 static NSDictionary *kStringToAutocapitalizationTypeEnum;
@@ -338,6 +340,42 @@ static NSDictionary *kStringToReturnKeyTypeEnum;
         {
             [cell setReturnKeyType:[[kStringToReturnKeyTypeEnum objectForKey:returnKeyType] intValue]];
         }
+        return cell;
+    }else if ([type isEqualToString:@"PSDatePickerSpecifier"]) {
+        DateInputCellController *cell = [[[DateInputCellController alloc] initWithLabel:title atKey:key inModel:self.model] autorelease];
+        
+        return cell;
+    }else if ([type isEqualToString:@"PSTextViewSpecifier"]) {
+        NSString *keyboardType = [setting objectForKey:@"KeyboardType"];
+        NSString *autocapitalizationType = [setting objectForKey:@"AutocapitalizationType"];
+        NSString *autocorrectionType = [setting objectForKey:@"AutocorrectionType"];
+        NSString *returnKeyType = [setting objectForKey:@"ReturnKeyType"];
+        
+        TextViewCellController *cell = [[[TextViewCellController alloc] initWithLabel:title andPlaceholder:@"" atKey:key inModel:self.model] autorelease];
+        [cell setBackgroundColor:[UIColor whiteColor]];
+        [cell setEditChangedAction:self.updateAction];
+        [cell setUpdateTarget:self.updateTarget];
+        
+        if(keyboardType && [kStringToKeyboardTypeEnum objectForKey:keyboardType])
+        {
+            [cell setKeyboardType:[[kStringToKeyboardTypeEnum objectForKey:keyboardType] intValue]];
+        }
+        
+        if(autocapitalizationType && [kStringToAutocapitalizationTypeEnum objectForKey:autocapitalizationType])
+        {
+            [cell setAutocapitalizationType:[[kStringToAutocapitalizationTypeEnum objectForKey:autocapitalizationType] intValue]];
+        }
+        
+        if(autocorrectionType && [kStringToAutocorrectionTypeEnum objectForKey:autocorrectionType])
+        {
+            [cell setAutocorrectionType:[[kStringToAutocorrectionTypeEnum objectForKey:autocorrectionType] intValue]];
+        }
+        
+        if(returnKeyType && [kStringToReturnKeyTypeEnum objectForKey:returnKeyType])
+        {
+            [cell setReturnKeyType:[[kStringToReturnKeyTypeEnum objectForKey:returnKeyType] intValue]];
+        }
+        
         return cell;
     }
     // TODO: Render the type PSSliderSpecifier configured in the Root.plist

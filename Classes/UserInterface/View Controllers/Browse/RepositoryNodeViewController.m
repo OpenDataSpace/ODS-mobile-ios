@@ -47,6 +47,9 @@
 #import "AGImagePickerControllerDefines.h"
 #import "UITableView+LongPress.h"
 #import "ChooserFolderViewController.h"
+#import "LinkManagementViewController.h"
+#import "CreateLinkViewController.h"
+#import "LinkRelationService.h"
 
 
 NSInteger const kDownloadFolderAlert = 1;
@@ -779,6 +782,19 @@ NSString * const kMultiSelectMove = @"moveAction";
             notice.displayTime = 3.0;
             [notice show];
             [[DownloadManager sharedManager] queueRepositoryItems:[NSArray arrayWithObject:_selectedItem] withAccountUUID:self.selectedAccountUUID andTenantId:self.tenantID];
+        }
+    }else if ([buttonLabel isEqualToString:NSLocalizedString(@"operation.pop.menu.createlink", @"Create Download Link")]) {
+        if (_selectedItem) {
+            CreateLinkViewController *createLinkController = [[CreateLinkViewController alloc] initWithRepositoryItem:_selectedItem accountUUID:self.selectedAccountUUID];
+            createLinkController.linkCreateURL = [NSURL URLWithString:[[LinkRelationService shared] hrefForHierarchyNavigationLinkRelation:HierarchyNavigationLinkRelationDown  cmisService:@"Children" cmisObject:self.folderItems.item]];
+            createLinkController.delegate = self;
+            if (IS_IPAD) {
+                [createLinkController setModalPresentationStyle:UIModalPresentationFormSheet];
+                [IpadSupport presentModalViewController:createLinkController withNavigation:self.navigationController];
+            }else {
+                //[self.navigationController pushViewController:createLinkController animated:YES];
+                [IpadSupport presentModalViewController:createLinkController withNavigation:self.navigationController];
+            }
         }
     }
 }
@@ -1728,6 +1744,19 @@ NSString * const kMultiSelectMove = @"moveAction";
     [self.browseDataSource reloadDataSource];
 }
 
+#pragma mark -
+#pragma mark Create Link Delegate medthods
+
+- (void)createLink:(CreateLinkViewController *)createLink succeededForName:(NSString *)linkName {
+    displayInformationMessage(NSLocalizedString(@"create-link.success", @"Created link"));
+}
+
+- (void)createLink:(CreateLinkViewController *)createLink failedForName:(NSString *)linkName {
+    displayErrorMessage(NSLocalizedString(@"create-link.failure", @"Failed to create link"));
+}
+
+//- (void)createLinkCancelled:(CreateLinkViewController *)createLink;
+
 #pragma mark - UITable View Cell Long Press Delegate methods
 
 - (void) showOperationMenu:(id)parameters
@@ -1757,6 +1786,8 @@ NSString * const kMultiSelectMove = @"moveAction";
     if (![_selectedItem isFolder]) {
         [sheet addButtonWithTitle:NSLocalizedString(@"operation.pop.menu.download", @"Download")];
     }
+    
+    [sheet addButtonWithTitle:NSLocalizedString(@"operation.pop.menu.createlink", @"Create Downlaod Link")];
     
 	[sheet setCancelButtonIndex:[sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")]];
     

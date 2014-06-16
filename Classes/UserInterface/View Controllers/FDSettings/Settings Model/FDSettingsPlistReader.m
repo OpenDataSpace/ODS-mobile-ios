@@ -49,7 +49,7 @@
 - (NSArray *)allSettings
 {
     NSMutableArray *filteredSettings = [NSMutableArray arrayWithCapacity:[_allSettings count]];
-    BOOL enterpriseEnabled = [[AccountManager sharedManager] hasQualifyingAccount];
+    BOOL enterpriseEnabled = YES;//[[AccountManager sharedManager] hasQualifyingAccount]; //TODO:Always display data protection optional
     for(NSDictionary *setting in _allSettings)
     {
         NSString *permission = [setting objectForKey:@"Permission"];

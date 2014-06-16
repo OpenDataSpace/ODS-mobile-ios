@@ -447,6 +447,16 @@
 		2D4E88AE18CD69ED00EF4542 /* PreviewCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D4E88AD18CD69ED00EF4542 /* PreviewCellController.m */; };
 		2D90543B18234EB900AA4771 /* UITableView+LongPress.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D90543A18234EB900AA4771 /* UITableView+LongPress.m */; };
 		2D9847A218068100005BA95E /* ServerURLs_OpenDataSpace.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2D9847A118068100005BA95E /* ServerURLs_OpenDataSpace.plist */; };
+		2DA3B91E194E924700F54443 /* CMISCreateLinkHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DA3B91D194E924700F54443 /* CMISCreateLinkHTTPRequest.m */; };
+		2DA3B92B194E925800F54443 /* CreateLinkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DA3B921194E925800F54443 /* CreateLinkViewController.m */; };
+		2DA3B92C194E925800F54443 /* DateInputCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DA3B924194E925800F54443 /* DateInputCellController.m */; };
+		2DA3B92D194E925800F54443 /* DateInputTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DA3B926194E925800F54443 /* DateInputTableViewCell.m */; };
+		2DA3B92E194E925800F54443 /* TextViewCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DA3B928194E925800F54443 /* TextViewCellController.m */; };
+		2DA3B92F194E925800F54443 /* LinkManagementViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DA3B92A194E925800F54443 /* LinkManagementViewController.m */; };
+		2DA3B932194E92DE00F54443 /* LinkTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DA3B931194E92DE00F54443 /* LinkTableViewCell.m */; };
+		2DA3B934194E92F800F54443 /* LinkTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2DA3B933194E92F800F54443 /* LinkTableViewCell.xib */; };
+		2DA3B936194E930C00F54443 /* CreateLinkConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2DA3B935194E930C00F54443 /* CreateLinkConfiguration.plist */; };
+		2DA3B939194E943F00F54443 /* NSString+SHA.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DA3B938194E943F00F54443 /* NSString+SHA.m */; };
 		2DAA822A18165B5000471D4F /* AGImagePickerController+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DAA822918165B5000471D4F /* AGImagePickerController+Helper.m */; };
 		2DAA822C18165CDC00471D4F /* AGImagePickerController.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2DAA822B18165CDC00471D4F /* AGImagePickerController.bundle */; };
 		2DD8C7AB18FE80D8003E7D6B /* deleteAction_disable.png in Resources */ = {isa = PBXBuildFile; fileRef = 2DD8C79F18FE80D8003E7D6B /* deleteAction_disable.png */; };
@@ -2015,6 +2025,24 @@
 		2D90543918234EB900AA4771 /* UITableView+LongPress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+LongPress.h"; sourceTree = "<group>"; };
 		2D90543A18234EB900AA4771 /* UITableView+LongPress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+LongPress.m"; sourceTree = "<group>"; };
 		2D9847A118068100005BA95E /* ServerURLs_OpenDataSpace.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ServerURLs_OpenDataSpace.plist; sourceTree = "<group>"; };
+		2DA3B91C194E924700F54443 /* CMISCreateLinkHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISCreateLinkHTTPRequest.h; sourceTree = "<group>"; };
+		2DA3B91D194E924700F54443 /* CMISCreateLinkHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISCreateLinkHTTPRequest.m; sourceTree = "<group>"; };
+		2DA3B920194E925800F54443 /* CreateLinkViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateLinkViewController.h; sourceTree = "<group>"; };
+		2DA3B921194E925800F54443 /* CreateLinkViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateLinkViewController.m; sourceTree = "<group>"; };
+		2DA3B923194E925800F54443 /* DateInputCellController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateInputCellController.h; sourceTree = "<group>"; };
+		2DA3B924194E925800F54443 /* DateInputCellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DateInputCellController.m; sourceTree = "<group>"; };
+		2DA3B925194E925800F54443 /* DateInputTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateInputTableViewCell.h; sourceTree = "<group>"; };
+		2DA3B926194E925800F54443 /* DateInputTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DateInputTableViewCell.m; sourceTree = "<group>"; };
+		2DA3B927194E925800F54443 /* TextViewCellController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextViewCellController.h; sourceTree = "<group>"; };
+		2DA3B928194E925800F54443 /* TextViewCellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextViewCellController.m; sourceTree = "<group>"; };
+		2DA3B929194E925800F54443 /* LinkManagementViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinkManagementViewController.h; sourceTree = "<group>"; };
+		2DA3B92A194E925800F54443 /* LinkManagementViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LinkManagementViewController.m; sourceTree = "<group>"; };
+		2DA3B930194E92DE00F54443 /* LinkTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinkTableViewCell.h; sourceTree = "<group>"; };
+		2DA3B931194E92DE00F54443 /* LinkTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LinkTableViewCell.m; sourceTree = "<group>"; };
+		2DA3B933194E92F800F54443 /* LinkTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LinkTableViewCell.xib; sourceTree = "<group>"; };
+		2DA3B935194E930C00F54443 /* CreateLinkConfiguration.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = CreateLinkConfiguration.plist; sourceTree = "<group>"; };
+		2DA3B937194E943F00F54443 /* NSString+SHA.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+SHA.h"; sourceTree = "<group>"; };
+		2DA3B938194E943F00F54443 /* NSString+SHA.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+SHA.m"; sourceTree = "<group>"; };
 		2DAA822718165ABE00471D4F /* AGImagePickerControllerDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGImagePickerControllerDefines.h; sourceTree = "<group>"; };
 		2DAA822818165B5000471D4F /* AGImagePickerController+Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AGImagePickerController+Helper.h"; sourceTree = "<group>"; };
 		2DAA822918165B5000471D4F /* AGImagePickerController+Helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AGImagePickerController+Helper.m"; sourceTree = "<group>"; };
@@ -3710,6 +3738,8 @@
 		2D2B82D7188CD1E50070DAA0 /* OpenDataSpace */ = {
 			isa = PBXGroup;
 			children = (
+				2DA3B91C194E924700F54443 /* CMISCreateLinkHTTPRequest.h */,
+				2DA3B91D194E924700F54443 /* CMISCreateLinkHTTPRequest.m */,
 				2D2B82DF188CEF2F0070DAA0 /* CMISAppendContentHTTPRequest.h */,
 				2D2B82E0188CEF2F0070DAA0 /* CMISAppendContentHTTPRequest.m */,
 				2D2B82D8188CD28F0070DAA0 /* CMISUploadFileRequest.h */,
@@ -3727,6 +3757,31 @@
 				2D3882FB18D9764F00425135 /* LogoManager.m */,
 			);
 			path = Logo;
+			sourceTree = "<group>";
+		};
+		2DA3B91F194E925800F54443 /* Link Management */ = {
+			isa = PBXGroup;
+			children = (
+				2DA3B922194E925800F54443 /* Custom Table Cells */,
+				2DA3B920194E925800F54443 /* CreateLinkViewController.h */,
+				2DA3B921194E925800F54443 /* CreateLinkViewController.m */,
+				2DA3B929194E925800F54443 /* LinkManagementViewController.h */,
+				2DA3B92A194E925800F54443 /* LinkManagementViewController.m */,
+			);
+			path = "Link Management";
+			sourceTree = "<group>";
+		};
+		2DA3B922194E925800F54443 /* Custom Table Cells */ = {
+			isa = PBXGroup;
+			children = (
+				2DA3B923194E925800F54443 /* DateInputCellController.h */,
+				2DA3B924194E925800F54443 /* DateInputCellController.m */,
+				2DA3B925194E925800F54443 /* DateInputTableViewCell.h */,
+				2DA3B926194E925800F54443 /* DateInputTableViewCell.m */,
+				2DA3B927194E925800F54443 /* TextViewCellController.h */,
+				2DA3B928194E925800F54443 /* TextViewCellController.m */,
+			);
+			path = "Custom Table Cells";
 			sourceTree = "<group>";
 		};
 		2DFD725C18B6EEDE007BEB5A /* SDWebImage */ = {
@@ -4263,6 +4318,8 @@
 				3C82023214E1A82000A67645 /* UIColor+Theme.m */,
 				3C82023314E1A82000A67645 /* UIImageUtils.h */,
 				3C82023414E1A82000A67645 /* UIImageUtils.m */,
+				2DA3B937194E943F00F54443 /* NSString+SHA.h */,
+				2DA3B938194E943F00F54443 /* NSString+SHA.m */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -4622,6 +4679,8 @@
 		3C8202B214E1A82000A67645 /* Table Cells */ = {
 			isa = PBXGroup;
 			children = (
+				2DA3B930194E92DE00F54443 /* LinkTableViewCell.h */,
+				2DA3B931194E92DE00F54443 /* LinkTableViewCell.m */,
 				3C7C394A15D0629000E95049 /* AccountCellController.h */,
 				3C7C394B15D0629000E95049 /* AccountCellController.m */,
 				3C7C395015D07FAE00E95049 /* AccountTableViewCell.h */,
@@ -4708,6 +4767,7 @@
 		3C8202D814E1A82000A67645 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				2DA3B91F194E925800F54443 /* Link Management */,
 				3C8202D914E1A82000A67645 /* About */,
 				275486E915DC53A000C88CD1 /* Account Autocreate */,
 				3C79885C1561BFDA003B47DF /* Accounts */,
@@ -5242,6 +5302,7 @@
 		A46A10E81191E860006268D8 /* Table Cells */ = {
 			isa = PBXGroup;
 			children = (
+				2DA3B933194E92F800F54443 /* LinkTableViewCell.xib */,
 				3CA9068E14B2823600714170 /* DetailFirstTableViewCell.xib */,
 				3CA9069414B2823600714170 /* ExpandTableViewCell.xib */,
 				3CA9069714B2823600714170 /* MetaDataTableViewCell.xib */,
@@ -5360,6 +5421,7 @@
 		AA7F9A25144D0EE60047FA9F /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				2DA3B935194E930C00F54443 /* CreateLinkConfiguration.plist */,
 				2D9847A118068100005BA95E /* ServerURLs_OpenDataSpace.plist */,
 				275486F815DC6D4300C88CD1 /* AccountAutocreateConfiguration.plist */,
 				087E1D1D15B7045D00D84D82 /* Activities.strings */,
@@ -6651,6 +6713,7 @@
 				3C79894A1561C851003B47DF /* help-guide.png in Resources */,
 				3C79894D1561C851003B47DF /* help-guide@2x.png in Resources */,
 				3C7989501561C851003B47DF /* help-more.png in Resources */,
+				2DA3B934194E92F800F54443 /* LinkTableViewCell.xib in Resources */,
 				3C7989531561C851003B47DF /* help-more@2x.png in Resources */,
 				3C7989741561C8A2003B47DF /* no-document-selected@2x.png in Resources */,
 				F7AF6B621809971E0081C4F9 /* Icon_60.png in Resources */,
@@ -6780,6 +6843,7 @@
 				274CA26F15F649DB008793AA /* blue-accessory-up@2x.png in Resources */,
 				274CA29915F66394008793AA /* cell-actions-inner-shadow.png in Resources */,
 				274CA29B15F66394008793AA /* site-action-favorite.png in Resources */,
+				2DA3B936194E930C00F54443 /* CreateLinkConfiguration.plist in Resources */,
 				2DAA822C18165CDC00471D4F /* AGImagePickerController.bundle in Resources */,
 				274CA29D15F66394008793AA /* site-action-favorite@2x.png in Resources */,
 				274CA29F15F66394008793AA /* site-action-unfavorite.png in Resources */,
@@ -7007,8 +7071,10 @@
 				3C82040714E1A82000A67645 /* MetaDataDatePicker.m in Sources */,
 				3C82040A14E1A82000A67645 /* PostProgressBar.m in Sources */,
 				3C82040D14E1A82000A67645 /* ToggleBarButtonItemDecorator.m in Sources */,
+				2DA3B92F194E925800F54443 /* LinkManagementViewController.m in Sources */,
 				3C82041014E1A82000A67645 /* ActivityTableCellController.m in Sources */,
 				3C82041314E1A82000A67645 /* ActivityTableViewCell.m in Sources */,
+				2DA3B92D194E925800F54443 /* DateInputTableViewCell.m in Sources */,
 				3C82041614E1A82000A67645 /* CommentCellViewController.m in Sources */,
 				3C82041914E1A82000A67645 /* CommentTableViewCell.m in Sources */,
 				3C82041C14E1A82000A67645 /* DetailFirstTableViewCell.m in Sources */,
@@ -7073,6 +7139,7 @@
 				3C842E0914E50EEC004CB6BF /* MigrationManager.m in Sources */,
 				3C82F88514E5AAD900398AD9 /* AccountMigrationCommand.m in Sources */,
 				3C84515214E9C203005905BA /* MetadataMigrationCommand.m in Sources */,
+				2DA3B91E194E924700F54443 /* CMISCreateLinkHTTPRequest.m in Sources */,
 				3C84D42714EADF7C00EA6616 /* PasswordPromptViewController.m in Sources */,
 				3C84C9E414ED8F9C00B479CF /* SessionKeychainManager.m in Sources */,
 				3C868E7014EEFDB500DB9403 /* IdleDetectorApplication.m in Sources */,
@@ -7171,7 +7238,9 @@
 				3C7C67CC15B60E7C00A52536 /* RepositoryPreviewManagerDelegate.m in Sources */,
 				3C7C67CF15B60E7C00A52536 /* SearchRepositoryNodeDelegate.m in Sources */,
 				3C7C67D515B60EA500A52536 /* CMISObjectAndChildrenRequest.m in Sources */,
+				2DA3B92B194E925800F54443 /* CreateLinkViewController.m in Sources */,
 				3C7C67DA15B60EAC00A52536 /* CMISURITemplateHTTPRequest.m in Sources */,
+				2DA3B92C194E925800F54443 /* DateInputCellController.m in Sources */,
 				3C7B1DD915B879A3004F8DE9 /* ImageActionSheet.m in Sources */,
 				3C7CA0E815BE11BA0098D55A /* MessageViewController.m in Sources */,
 				3C79EE6515BF2BDF00DF3FD2 /* UIBarButtonItem+WEPopover.m in Sources */,
@@ -7191,6 +7260,7 @@
 				3C7C394C15D0629000E95049 /* AccountCellController.m in Sources */,
 				3C7C395215D07FAE00E95049 /* AccountTableViewCell.m in Sources */,
 				3C7C396B15D08FF200E95049 /* ConnectivityManager.m in Sources */,
+				2DA3B92E194E925800F54443 /* TextViewCellController.m in Sources */,
 				FCFEAE5313F1E16F00453D9C /* TaskDocumentViewCell.m in Sources */,
 				FCFEAE5313F1E16F00453DA0 /* DateIconView.m in Sources */,
 				FCFEAE5313F1E16F00453DA5 /* UILabel+Utils.m in Sources */,
@@ -7277,6 +7347,7 @@
 				2D3882FC18D9764F00425135 /* LogoManager.m in Sources */,
 				2733DD68161F69C6009ECE7F /* TaskManager.m in Sources */,
 				2733DD69161F69DE009ECE7F /* MyTaskListHTTPRequest.m in Sources */,
+				2DA3B939194E943F00F54443 /* NSString+SHA.m in Sources */,
 				2733DD6A161F69E2009ECE7F /* PeopleManager.m in Sources */,
 				2733DD6B161F69ED009ECE7F /* Person.m in Sources */,
 				2733DD6C161F69F1009ECE7F /* PersonTableViewCell.m in Sources */,
@@ -7313,6 +7384,7 @@
 				27C5EEA916D574500075E70F /* CreateFolderViewController.m in Sources */,
 				2DFD727D18B6EEDE007BEB5A /* SDWebImageCompat.m in Sources */,
 				27C5EEB016D594450075E70F /* CMISCreateFolderHTTPRequest.m in Sources */,
+				2DA3B932194E92DE00F54443 /* LinkTableViewCell.m in Sources */,
 				2DFD728718B6EEDE007BEB5A /* UIImageView+WebCache.m in Sources */,
 				27DB063716DD25EC0002B040 /* CustomLongPressGestureRecognizer.m in Sources */,
 			);

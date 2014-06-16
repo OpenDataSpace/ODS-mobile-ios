@@ -56,6 +56,7 @@
 #import "RenameQueueProgressBar.h"
 #import "MoveQueueProgressBar.h"
 #import "ChooserFolderViewController.h"
+#import "CreateLinkViewController.h"
 
 @class CMISSearchHTTPRequest;
 @class FolderDescendantsRequest;
@@ -68,6 +69,7 @@
 @interface RepositoryNodeViewController : UIViewController < // Protocols alphabetized & on separate lines to help source control!
     ASIHTTPRequestDelegate,
     CreateFolderRequestDelegate,
+    CreateLinkRequestDelegate,
     DeleteQueueDelegate,
     RenameQueueDelegate,
     MoveQueueDelegate,
