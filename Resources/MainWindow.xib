@@ -26,14 +26,14 @@
             <nil key="simulatedBottomBarMetrics"/>
             <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
             <nil key="simulatedDestinationMetrics"/>
-            <tabBar key="tabBar" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translucent="NO" selectedItem="139" id="17">
+            <tabBar key="tabBar" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translucent="NO" selectedItem="23" id="17">
                 <rect key="frame" x="0.0" y="431" width="320" height="49"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             </tabBar>
             <viewControllers>
-                <navigationController title="Documents" id="9" userLabel="Navigation Controller - Documents" customClass="DocumentsNavigationController">
-                    <tabBarItem key="tabBarItem" title="Documents" image="tabDoc.png" id="23"/>
+                <navigationController id="9" userLabel="Navigation Controller - Documents" customClass="DocumentsNavigationController">
+                    <tabBarItem key="tabBarItem" title="" image="tabDoc.png" id="23"/>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <nil key="simulatedBottomBarMetrics"/>
@@ -76,7 +76,7 @@
                     </viewControllers>
                 </navigationController>
                 <navigationController id="82" userLabel="Navigation Controller - Favorites">
-                    <tabBarItem key="tabBarItem" title="ODS Settings" image="settings.png" id="86"/>
+                    <tabBarItem key="tabBarItem" title="" image="settings.png" id="86"/>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <nil key="simulatedBottomBarMetrics"/>

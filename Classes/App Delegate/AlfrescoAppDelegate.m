@@ -257,6 +257,7 @@ void uncaughtExceptionHandler(NSException *exception)
     [self.activitiesNavController setTitle:NSLocalizedString(@"activities.view.title", @"Activities")];
     [self.tasksNavController setTitle:NSLocalizedString(@"tasks.view.title", @"Tasks")];
     [self.documentsNavController setTitle:NSLocalizedString(@"documents.view.title", @"Documents")];
+    [self.favoritesNavController setTitle:NSLocalizedString(@"settings.title", @"Settings")];
     
     mainViewController = nil;
     if (IS_IPAD)

@@ -486,10 +486,13 @@
 
 "settings.fullTextSearch" = "Recherche de texte";
 
+"settings.useRelativeDate" = "Utiliser les données relatives";
+"settings.useDownloadCache" = "Utiliser le chargement du cache";
+
 "settings.cmisRepository.CMISRepository" = "CMIS Repository";
 "settings.cmisRepository.ShowCompanyHome" = "Espace racine";
 "settings.cmisRepository.ShowHiddenFiles" = "Afficher les fichiers masqués";
-"settings.cmisRepository.CleanPreviewCache" = "Clean Preview Caches";
+"settings.cmisRepository.CleanPreviewCache" = "Vider le cache de prévisualisation";
 "settings.cmisRepository.AmpersandFix" = "Ampersand Fix";
 
 "settings.forgetPassword.title" = "Oublier le mot de passe";
@@ -507,7 +510,7 @@
 
 "confirm.cleanPreviewCache.prompt.message" = "Are you sure to clean preview caches?";
 "confirm.cleanPreviewCache.prompt.ok" = "Clean";
-"confirm.cleanPreviewCache.prompt.cancel" = "Cancel";
+"confirm.cleanPreviewCache.prompt.cancel" = "Annuler";
 
 "cloudsignup.title" = "Alfresco in the cloud";
 "cloudsignup.buttons.signup" = "Créer un compte";
@@ -938,6 +941,6 @@
 "create-link.failure" = "La création du lien a échoué";
 
 /* Repository name */
-"my" = "mes classeurs";
-"shared" = "Classeurs partagés";
-"global" = "Classeurs globals";
+"my" = "Fichiers privés";
+"shared" = "Fichiers partagés";
+"global" = "Fichiers globals";

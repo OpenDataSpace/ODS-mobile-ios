@@ -121,7 +121,29 @@ NSString * const kMicrosoftRepositoryVendorName = @"Microsoft Corporation";
 - (NSArray *)getRepositoryInfoArrayForAccountUUID:(NSString *)uuid
 {
     NSMutableDictionary *dict = [[[[self repositories] objectForKey:uuid] copy] autorelease];
-    return [dict allValues];
+    NSMutableArray *result = [NSMutableArray array];
+    for (RepositoryInfo *repoInfo in [dict allValues]) { //TODO:should we have this order?
+        if (repoInfo) {
+            if ([repoInfo.repositoryName isEqualToString:@"my"]) {
+                [result insertObject:repoInfo atIndex:0];
+            }else if ([repoInfo.repositoryName isEqualToString:@"shared"]) {
+                if ([result count] == 0) {
+                    [result insertObject:repoInfo atIndex:0];
+                }else {
+                    RepositoryInfo *firstRepo = [result objectAtIndex:0];
+                    if ([firstRepo.repositoryName isEqualToString:@"my"]) {
+                        [result insertObject:repoInfo atIndex:1];
+                    }else {
+                        [result insertObject:repoInfo atIndex:0];
+                    }
+                }
+            }else {
+                [result addObject:repoInfo];
+            }
+        }
+    }
+    
+    return [result count] > 0? result: nil;
 }
 
 - (RepositoryInfo *)getRepositoryInfoForAccountUUID:(NSString *)uuid tenantID:(NSString *)tenantID
