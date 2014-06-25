@@ -26,12 +26,14 @@
 #import <Foundation/Foundation.h>
 #import "BaseHTTPRequest.h"
 #import "RepositoryItem.h"
+#import "RepositoryInfo.h"
 
 @protocol NSXMLParserDelegate;
 
 @protocol RespositoryNodeRequest <NSObject>
 @property (nonatomic, retain) RepositoryItem *item;
 @property (nonatomic, retain) NSMutableArray *children;
+@property (nonatomic, retain) RepositoryInfo *repoInfo;
 @end
 
 @interface FolderItemsHTTPRequest : BaseHTTPRequest<NSXMLParserDelegate, RespositoryNodeRequest>

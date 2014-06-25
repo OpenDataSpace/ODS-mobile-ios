@@ -31,6 +31,9 @@
 #import "AccountManager.h"
 #import "Utility.h"
 #import "ThemeProperties.h"
+#import "LinkRelationService.h"
+#import "RepositoryNodeViewController.h"
+#import "NSURL+HTTPURLUtils.h"
 
 @interface RepositoriesViewController ()
 - (void)repositoryCellPressed:(id)sender;
@@ -258,12 +261,14 @@ static NSString *RepositoryInfoKey = @"RepositoryInfo";
     IFTemporaryModel *tmpModel = [cellController model];
     RepositoryInfo *repoInfo = [tmpModel objectForKey:RepositoryInfoKey];
     
+#if 0
     NSString *repoName = [repoInfo repositoryName];
 #ifndef OPEN_DATA_SPACE
     if ([repoInfo tenantID]) {
         repoName = [repoInfo tenantID];
     }
 #endif
+
     RootViewController *nextController = [[RootViewController alloc] init];//initWithNibName:kFDRootViewController_NibName bundle:nil];
     [nextController setSelectedAccountUUID:[self selectedAccountUUID]];
     [nextController setTenantID:[repoInfo tenantID]];
@@ -272,6 +277,23 @@ static NSString *RepositoryInfoKey = @"RepositoryInfo";
     
     [[self navigationController] pushViewController:nextController animated:YES];
     [nextController release];
+#else
+    
+    NSString *folder = [repoInfo rootFolderHref];
+    NSDictionary *defaultParamsDictionary = [[LinkRelationService shared] defaultOptionalArgumentsForFolderChildrenCollection];
+    NSURL *folderChildrenCollectionURL = [[NSURL URLWithString:folder] URLByAppendingParameterDictionary:defaultParamsDictionary];
+    FolderItemsHTTPRequest *request = [[[FolderItemsHTTPRequest alloc] initWithURL:folderChildrenCollectionURL accountUUID:self.selectedAccountUUID] autorelease];
+    [request setDelegate:self];
+    [request setDidFinishSelector:@selector(folderItemsRequestFinished:)];
+    [request setDidFailSelector:@selector(folderItemsRequestFailed:)];
+    [request setParentTitle:[[self navigationItem] title]];
+    [request setTenantID:[repoInfo tenantID]];
+    [request setRepoInfo:repoInfo];
+    
+    [request startAsynchronous];
+    
+    [self startHUD];
+#endif
 }
 
 - (void)reloadData
@@ -362,6 +384,35 @@ static NSString *RepositoryInfoKey = @"RepositoryInfo";
 - (NSDate *)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view
 {
 	return [self lastUpdated];
+}
+
+#pragma mark - FolderItemsHTTPRequest delegate methods
+
+- (void)folderItemsRequestFinished:(ASIHTTPRequest *)request
+{
+    [self stopHUD];
+    if ([request isKindOfClass:[FolderItemsHTTPRequest class]])
+    {
+        FolderItemsHTTPRequest *fid = (FolderItemsHTTPRequest *) request;
+        
+        // create a new view controller for the list of repository items (documents and folders)
+        RepositoryNodeViewController *vc = [[RepositoryNodeViewController alloc] initWithStyle:UITableViewStylePlain];
+        [vc setFolderItems:fid];
+        [vc setTitle:[fid parentTitle]];
+        [vc setGuid:[[fid repoInfo] repositoryId]];
+        [vc setSelectedAccountUUID:self.selectedAccountUUID];
+        [vc setTenantID:fid.tenantID];
+        
+        
+        // push that view onto the nav controller's stack
+        [self.navigationController pushViewController:vc animated:YES];
+        [vc release];
+    }
+}
+
+- (void)folderItemsRequestFailed:(ASIHTTPRequest *)request
+{
+    [self clearAllHUDs];
 }
 
 @end

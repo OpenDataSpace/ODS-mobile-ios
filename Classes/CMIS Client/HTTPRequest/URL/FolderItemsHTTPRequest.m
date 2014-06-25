@@ -43,6 +43,7 @@
 @synthesize valueBuffer = _valueBuffer;
 @synthesize currentNamespaceURI = _currentNamespaceURI;
 @synthesize currentAspect = _currentAspect;
+@synthesize repoInfo = _repoInfo;
 
 - (void)dealloc
 {
@@ -55,6 +56,8 @@
 	[_valueBuffer release];
     [_currentNamespaceURI release];
     [_currentAspect release];
+    [_repoInfo release];
+    
 	[super dealloc];
 }
 
@@ -63,6 +66,7 @@
     if (self = [self initWithURL:[[AlfrescoUtils sharedInstanceForAccountUUID:uuid] childrenURLforNode:node] accountUUID:uuid])
     {
         _item = nil;
+        _repoInfo = nil;
     }
 	
 	return self;
@@ -75,6 +79,7 @@
     if (self = [self initWithURL:[[NSURL URLWithString:urlString] URLByAppendingParameterDictionary:paramDictionary] accountUUID:uuid])
     {
         _item = nil;
+        _repoInfo = nil;
     }
 	
 	return self;

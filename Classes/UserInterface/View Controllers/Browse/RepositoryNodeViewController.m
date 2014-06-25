@@ -50,6 +50,7 @@
 #import "LinkManagementViewController.h"
 #import "CreateLinkViewController.h"
 #import "LinkRelationService.h"
+#import "AlfrescoUtils.h"
 
 
 NSInteger const kDownloadFolderAlert = 1;
@@ -206,7 +207,13 @@ NSString * const kMultiSelectMove = @"moveAction";
     BrowseRepositoryNodeDelegate *browseDelegate = [[[BrowseRepositoryNodeDelegate alloc] initWithViewController:self] autorelease];
     [browseDelegate setMultiSelectToolbar:self.multiSelectToolbar];
     [browseDelegate setScrollViewDelegate:self];
-    RepositoryNodeDataSource *browseDataSource = [[RepositoryNodeDataSource alloc] initWithRepositoryItem:[self.folderItems item] andSelectedAccount:[self selectedAccountUUID]];
+    RepositoryNodeDataSource *browseDataSource = nil;
+    if ([self.folderItems item]) {
+        browseDataSource = [[RepositoryNodeDataSource alloc] initWithRepositoryItem:[self.folderItems item] andSelectedAccount:[self selectedAccountUUID]];
+    }else {
+        browseDataSource = [[RepositoryNodeDataSource alloc] initWithRepositoryInfo:[self.folderItems repoInfo] andSelectedAccount:[self selectedAccountUUID]];
+    }
+    
     [browseDataSource preLoadChildren:[self.folderItems children]];
     [browseDataSource setTableView:[self tableView]];
     [browseDataSource setDelegate:self];
@@ -319,8 +326,7 @@ NSString * const kMultiSelectMove = @"moveAction";
 
 - (void)loadRightBarAnimated:(BOOL)animated
 {
-    BOOL showAddButton = ([[AppProperties propertyForKey:kBShowAddButton] boolValue] && nil != [self.folderItems item]
-                          && ([self.folderItems item].canCreateFolder || [self.folderItems item].canCreateDocument));
+    BOOL showAddButton = ([[AppProperties propertyForKey:kBShowAddButton] boolValue] && (nil != [self.folderItems item] || nil != [self.folderItems repoInfo]) && ([self canCreateFolder] || [self canCreateDocuments]));
     BOOL showEditButton = ([[AppProperties propertyForKey:kBShowEditButton] boolValue]);
     
     // We only show the second button if any option is going to be displayed
@@ -407,12 +413,12 @@ NSString * const kMultiSelectMove = @"moveAction";
         [sheet addButtonWithTitle:NSLocalizedString(@"create.actionsheet.text-file", @"Create Text file")];
     }*/
     
-    if (self.folderItems.item.canCreateFolder)
+    if ([self canCreateFolder])
     {
         [sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.create-folder", @"Create Folder")];
     }
     
-	if (self.folderItems.item.canCreateDocument)
+	if ([self canCreateDocuments])
     {
         NSArray *sourceTypes = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
         BOOL hasCamera = [sourceTypes containsObject:(NSString *) kUTTypeImage];
@@ -581,7 +587,15 @@ NSString * const kMultiSelectMove = @"moveAction";
     }
     else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.create-folder", @"Create Folder")]) 
     {
-        CreateFolderViewController *createFolder = [[[CreateFolderViewController alloc] initWithParentItem:self.folderItems.item accountUUID:self.selectedAccountUUID] autorelease];
+        RepositoryItem *item = nil;
+        if ([self.folderItems item]) {
+            item = [self.folderItems item];
+        }else {
+            item = [[RepositoryItem alloc] init];
+            item.identLink = [NSString stringWithFormat:@"%@/%@/children?id=%@",[[[AlfrescoUtils sharedInstanceForAccountUUID:self.selectedAccountUUID] serviceDocumentURL] absoluteString], [self.folderItems repoInfo].repositoryId, [self.folderItems repoInfo].repositoryId];
+        }
+        
+        CreateFolderViewController *createFolder = [[[CreateFolderViewController alloc] initWithParentItem:item accountUUID:self.selectedAccountUUID] autorelease];
         createFolder.delegate = self;
         [createFolder setModalPresentationStyle:UIModalPresentationFormSheet];
         [IpadSupport presentModalViewController:createFolder withNavigation:self.navigationController];
@@ -698,7 +712,7 @@ NSString * const kMultiSelectMove = @"moveAction";
                  {
                      ALAsset *asset = [info lastObject];
                      UploadInfo *uploadInfo = [blockSelf uploadInfoFromAsset:asset andExistingDocs:existingDocs];
-                     [[UploadsManager sharedManager] setExistingDocuments:existingDocs forUpLinkRelation:[[blockSelf.folderItems item] identLink]];
+                     [[UploadsManager sharedManager] setExistingDocuments:existingDocs forUpLinkRelation:[self identLinkFromRepositoryNodeController:blockSelf]];
                      dispatch_async(dispatch_get_main_queue(), ^{
                          [blockSelf presentUploadFormWithItem:uploadInfo andHelper:[uploadInfo uploadHelper]];
                          [blockSelf stopHUD];
@@ -719,7 +733,7 @@ NSString * const kMultiSelectMove = @"moveAction";
                          }
                      }
                      
-                     [[UploadsManager sharedManager] setExistingDocuments:existingDocs forUpLinkRelation:[[blockSelf.folderItems item] identLink]];
+                     [[UploadsManager sharedManager] setExistingDocuments:existingDocs forUpLinkRelation:[self identLinkFromRepositoryNodeController:blockSelf]];
                      dispatch_async(dispatch_get_main_queue(), ^{
                          [blockSelf presentUploadFormWithMultipleItems:uploadItems andUploadType:UploadFormTypeLibrary];
                          [blockSelf stopHUD];
@@ -786,7 +800,12 @@ NSString * const kMultiSelectMove = @"moveAction";
     }else if ([buttonLabel isEqualToString:NSLocalizedString(@"operation.pop.menu.createlink", @"Create Download Link")]) {
         if (_selectedItem) {
             CreateLinkViewController *createLinkController = [[CreateLinkViewController alloc] initWithRepositoryItem:_selectedItem accountUUID:self.selectedAccountUUID];
-            createLinkController.linkCreateURL = [NSURL URLWithString:[[LinkRelationService shared] hrefForHierarchyNavigationLinkRelation:HierarchyNavigationLinkRelationDown  cmisService:@"Children" cmisObject:self.folderItems.item]];
+            if ([self.folderItems item]) {
+                createLinkController.linkCreateURL = [NSURL URLWithString:[[LinkRelationService shared] hrefForHierarchyNavigationLinkRelation:HierarchyNavigationLinkRelationDown  cmisService:@"Children" cmisObject:[self.folderItems item]]];
+            }else {
+                createLinkController.linkCreateURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/children?id=%@",[[[AlfrescoUtils sharedInstanceForAccountUUID:self.selectedAccountUUID] serviceDocumentURL] absoluteString], [self.folderItems repoInfo].repositoryId, [self.folderItems repoInfo].repositoryId]];
+            }
+            
             createLinkController.delegate = self;
             if (IS_IPAD) {
                 [createLinkController setModalPresentationStyle:UIModalPresentationFormSheet];
@@ -895,10 +914,10 @@ NSString * const kMultiSelectMove = @"moveAction";
 
 #pragma mark - Download all items in folder methods
 
-- (void)prepareDownloadAllDocuments 
+- (void)prepareDownloadAllDocuments
 {    
     BOOL downloadFolderTree = [[AppProperties propertyForKey:kBDownloadFolderTree] boolValue];
-    if(downloadFolderTree) {
+    if(downloadFolderTree) { //TODO: ODS not support this operation at the moment
         [self startHUD];
         
         FolderDescendantsRequest *down = [FolderDescendantsRequest folderDescendantsRequestWithItem:[self.folderItems item] accountUUID:self.selectedAccountUUID];
@@ -1365,7 +1384,7 @@ NSString * const kMultiSelectMove = @"moveAction";
 
 - (void)presentUploadFormWithItem:(UploadInfo *)uploadInfo andHelper:(id<UploadHelper>)helper;
 {
-    [[UploadsManager sharedManager] setExistingDocuments:[self existingDocuments] forUpLinkRelation:[[self.folderItems item] identLink]];
+    [[UploadsManager sharedManager] setExistingDocuments:[self existingDocuments] forUpLinkRelation:[self parentIdentLink]];
     UploadFormTableViewController *formController = [[UploadFormTableViewController alloc] init];
     [formController setExistingDocumentNameArray:[self existingDocuments]];
     [formController setUploadType:uploadInfo.uploadType];
@@ -1373,7 +1392,7 @@ NSString * const kMultiSelectMove = @"moveAction";
     [formController setUpdateTarget:self];
     [formController setSelectedAccountUUID:self.selectedAccountUUID];
     [formController setTenantID:self.tenantID];
-    [uploadInfo setUpLinkRelation:[[self.folderItems item] identLink]];
+    [uploadInfo setUpLinkRelation:[self parentIdentLink]];
     [uploadInfo setSelectedAccountUUID:self.selectedAccountUUID];
     [uploadInfo setTenantID:self.tenantID];
     [uploadInfo setFolderName:[self.folderItems parentTitle]];
@@ -1401,7 +1420,7 @@ NSString * const kMultiSelectMove = @"moveAction";
 
 - (void)presentUploadFormWithMultipleItems:(NSArray *)infos andUploadType:(UploadFormType)uploadType
 {
-    [[UploadsManager sharedManager] setExistingDocuments:[self existingDocuments] forUpLinkRelation:[[self.folderItems item] identLink]];
+    [[UploadsManager sharedManager] setExistingDocuments:[self existingDocuments] forUpLinkRelation:[self parentIdentLink]];
     UploadFormTableViewController *formController = [[UploadFormTableViewController alloc] init];
     [formController setExistingDocumentNameArray:[self existingDocuments]];
     [formController setUploadType:uploadType];
@@ -1413,7 +1432,7 @@ NSString * const kMultiSelectMove = @"moveAction";
     
     for(UploadInfo *uploadInfo in infos)
     {
-        [uploadInfo setUpLinkRelation:[[self.folderItems item] identLink]];
+        [uploadInfo setUpLinkRelation:[self parentIdentLink]];
         [uploadInfo setSelectedAccountUUID:self.selectedAccountUUID];
         [uploadInfo setTenantID:self.tenantID];
         [uploadInfo setFolderName:[self.folderItems parentTitle]];
@@ -1559,7 +1578,7 @@ NSString * const kMultiSelectMove = @"moveAction";
                     if (uploadInfo.uploadStatus == UploadInfoStatusUploaded
                         && uploadInfo.uploadType == UploadFormTypeCreateDocument
                         && uploadInfo.repositoryItem != nil
-                        && [self.folderItems.item.identLink isEqualToString:uploadInfo.upLinkRelation])
+                        && [[self parentIdentLink] isEqualToString:uploadInfo.upLinkRelation])
                     {
                         [self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionTop];
                     }
@@ -1933,11 +1952,64 @@ NSString * const kMultiSelectMove = @"moveAction";
 
 #pragma mark - Chooser Folder Delegate
 - (void)selectedItem:(RepositoryItem *)selectedItem repositoryID:(NSString*) repoID{
-    self.moveQueueProgressBar = [MoveQueueProgressBar createWithItems:_itemsToMove targetFolder:selectedItem delegate:self andMessage:NSLocalizedString(@"Moving Item", @"Moving Item")];
+    RepositoryItem *item = nil;
+    if ([selectedItem isKindOfClass:[RepositoryItem class]]) {
+        item = selectedItem;
+    }else {
+        RepositoryInfo *repoInfo = (RepositoryInfo*) selectedItem;
+        item = [[RepositoryItem alloc] init];
+        item.identLink = [NSString stringWithFormat:@"%@/%@/children?id=%@",[[[AlfrescoUtils sharedInstanceForAccountUUID:self.selectedAccountUUID] serviceDocumentURL] absoluteString], repoInfo.repositoryId, repoInfo.repositoryId];
+    }
+
+    self.moveQueueProgressBar = [MoveQueueProgressBar createWithItems:_itemsToMove targetFolder:item delegate:self andMessage:NSLocalizedString(@"Moving Item", @"Moving Item")];
     [self.moveQueueProgressBar setSelectedUUID:self.selectedAccountUUID];
     [self.moveQueueProgressBar setTenantID:self.tenantID];
     [self.moveQueueProgressBar setSourceFolderId:_guid];
     [self.moveQueueProgressBar startMoving];
+}
+
+#pragma mark - Folder Permission
+- (BOOL) canCreateFolder {
+    if ([self.folderItems item]) {
+        return self.folderItems.item.canCreateFolder;
+    }
+    
+    if (self.folderItems.repoInfo) {//TODO: How to know the repository permission?
+        return YES;
+    }
+    
+    return NO;
+}
+
+- (BOOL) canCreateDocuments {
+    if ([self.folderItems item]) {
+        return self.folderItems.item.canCreateDocument;
+    }
+    
+    if (self.folderItems.repoInfo) {//TODO: How to know the repository permission?
+        return YES;
+    }
+
+    return NO;
+}
+
+- (NSString*) parentIdentLink {    
+    if ([self.folderItems item]) {
+        return [[self.folderItems item] identLink];
+    }else {
+        return [NSString stringWithFormat:@"%@/%@/children?id=%@",[[[AlfrescoUtils sharedInstanceForAccountUUID:self.selectedAccountUUID] serviceDocumentURL] absoluteString], [self.folderItems repoInfo].repositoryId, [self.folderItems repoInfo].repositoryId];
+    }
+    
+    return nil;
+}
+
+- (NSString*) identLinkFromRepositoryNodeController:(RepositoryNodeViewController*) repoNodeController {
+    if ([repoNodeController.folderItems item]) {
+        return [[repoNodeController.folderItems item] identLink];
+    }else {
+        return [NSString stringWithFormat:@"%@/%@/children?id=%@",[[[AlfrescoUtils sharedInstanceForAccountUUID:repoNodeController.selectedAccountUUID] serviceDocumentURL] absoluteString], [repoNodeController.folderItems repoInfo].repositoryId, [repoNodeController.folderItems repoInfo].repositoryId];
+    }
+    return nil;
 }
 
 @end

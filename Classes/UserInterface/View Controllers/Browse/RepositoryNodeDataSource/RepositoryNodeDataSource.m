@@ -34,6 +34,7 @@
 #import "IpadSupport.h"
 #import "FavoriteManager.h"
 #import "AlfrescoMDMLite.h"
+#import "NSURL+HTTPURLUtils.h"
 
 UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRowAnimationFade;
 
@@ -60,6 +61,8 @@ UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRo
 @synthesize objectId = _objectId;
 @synthesize cmisPath = _cmisPath;
 
+@synthesize repositoryInfo = _repositoryInfo;
+
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -73,6 +76,8 @@ UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRo
     [_HUD release];
     [_objectId release];
     [_cmisPath release];
+    [_repositoryInfo release];
+    
     [super dealloc];
 }
 
@@ -106,18 +111,41 @@ UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRo
     return self;
 }
 
+- (id)initWithRepositoryInfo:(RepositoryInfo *)repositoryInfo andSelectedAccount:(NSString *)selectedAccountUUID {
+    self = [self initWithSelectedAccountUUID:selectedAccountUUID tenantID:nil];
+    if(self)
+    {
+        _repositoryInfo = [repositoryInfo retain];
+        _reloadRequestFactory = @selector(folderItemsHTTPRequest);
+    }
+    return self;
+}
+
 - (id)folderItemsHTTPRequest
 {
-    NSDictionary *optionalArguments = [[LinkRelationService shared] defaultOptionalArgumentsForFolderChildrenCollection];
-    NSURL *getChildrenURL = [[LinkRelationService shared] getChildrenURLForCMISFolder:self.repositoryNode 
-                                                                withOptionalArguments:optionalArguments];
-
-    FolderItemsHTTPRequest *down = [[[FolderItemsHTTPRequest alloc] initWithURL:getChildrenURL accountUUID:self.selectedAccountUUID] autorelease];
+    FolderItemsHTTPRequest *down = nil;
+    
+    if (_repositoryInfo) {
+        NSString *folder = [self.repositoryInfo rootFolderHref];
+        NSDictionary *defaultParamsDictionary = [[LinkRelationService shared] defaultOptionalArgumentsForFolderChildrenCollection];
+        NSURL *folderChildrenCollectionURL = [[NSURL URLWithString:folder] URLByAppendingParameterDictionary:defaultParamsDictionary];
+        down = [[[FolderItemsHTTPRequest alloc] initWithURL:folderChildrenCollectionURL accountUUID:self.selectedAccountUUID] autorelease];
+        [down setRepoInfo:self.repositoryInfo];
+        [down setParentTitle:[self.repositoryInfo repositoryName]];
+    }else {
+        NSDictionary *optionalArguments = [[LinkRelationService shared] defaultOptionalArgumentsForFolderChildrenCollection];
+        NSURL *getChildrenURL = [[LinkRelationService shared] getChildrenURLForCMISFolder:self.repositoryNode
+                                                                    withOptionalArguments:optionalArguments];
+        
+        down = [[[FolderItemsHTTPRequest alloc] initWithURL:getChildrenURL accountUUID:self.selectedAccountUUID] autorelease];
+        [down setItem:self.repositoryNode];
+        [down setParentTitle:[self.repositoryNode title]];
+    }    
+    
     [down setDelegate:self];
     [down setDidFinishSelector:@selector(repositoryNodeRequestFinished:)];
     [down setDidFailSelector:@selector(repositoryNodeRequestFailed:)];
-    [down setItem:self.repositoryNode];
-    [down setParentTitle:[self.repositoryNode title]];
+    
     return down;
 }
 

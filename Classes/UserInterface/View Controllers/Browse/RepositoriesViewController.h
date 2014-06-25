@@ -27,8 +27,9 @@
 #import "CMISServiceManager.h"
 #import "MBProgressHUD.h"
 #import "EGORefreshTableHeaderView.h"
+#import "FolderItemsHTTPRequest.h"
 
-@interface RepositoriesViewController : IFGenericTableViewController <EGORefreshTableHeaderDelegate, UITableViewDelegate, CMISServiceManagerListener, MBProgressHUDDelegate>
+@interface RepositoriesViewController : IFGenericTableViewController <EGORefreshTableHeaderDelegate, UITableViewDelegate, CMISServiceManagerListener, MBProgressHUDDelegate, ASIHTTPRequestDelegate>
 {
 @private
     NSString *_viewTitle;

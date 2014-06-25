@@ -97,7 +97,7 @@ NSString * const  kMoveTargetTypeFolder = @"TYPE_FOLDER";;
     UIBarButtonItem *fixSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace        target:self action:nil];
     UIBarButtonItem *doneBtn = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"dialog.chooser.confirm", @"Choose") style:UIBarButtonItemStyleBordered target:self action:@selector(chooseButtonPress)];
     
-   if (_parentItem != nil && [_parentItem isKindOfClass:[RepositoryItem class]]) {
+   if (_parentItem != nil) {  // && [_parentItem isKindOfClass:[RepositoryItem class]]  //TODO:support move files to dataroom level.
        [doneBtn setEnabled:YES];
    }else {
        [doneBtn setEnabled:NO];

@@ -213,7 +213,7 @@
         
         _error = [appendRequest error];
         
-        if (_error == nil && [appendRequest responseStatusCode] == 201) {  //put data successfully
+        if (_error == nil && ([appendRequest responseStatusCode] == 201 || [appendRequest responseStatusCode] == 200)) {  //put data successfully
             AlfrescoLogDebug(@"upload size:%llu  total:%llu",self.sentBytes, self.totalBytes);
             
             return YES;

@@ -32,6 +32,7 @@
 #import <Foundation/Foundation.h>
 #import "RepositoryItem.h"
 #import "MBProgressHUD.h"
+#import "RepositoryInfo.h"
 
 @protocol RepositoryNodeDataSourceDelegate <NSObject>
 
@@ -56,12 +57,19 @@
 @property (nonatomic, copy) NSString *objectId;
 @property (nonatomic, copy) NSString *cmisPath;
 
+@property (nonatomic, retain) RepositoryInfo *repositoryInfo;
+
 - (id)initWithSelectedAccountUUID:(NSString *)selectedAccountUUID tenantID:(NSString *)tenantID;
 
 // Returns a Repository Node Data Source initialized with a repository node
 // The reload action will be the getChildren request.
 // 
 - (id)initWithRepositoryItem:(RepositoryItem *)repositoryNode andSelectedAccount:(NSString *)selectedAccountUUID;
+
+// Returns a Repository Node Data Source initialized with a repository node
+// The reload action will be the getChildren request.
+//
+- (id)initWithRepositoryInfo:(RepositoryInfo *)repositoryInfo andSelectedAccount:(NSString *)selectedAccountUUID;
 
 // Returns a Repository Node Data Source initialized with a cmis path
 // The reload action will be the ObjectByPath request
@@ -86,5 +94,6 @@
 
 // Adds a list of uploads to the repository wrappers
 - (void)addUploadsToRepositoryItems:(NSArray *)uploads insertCells:(BOOL)insertCells;
+
 
 @end
