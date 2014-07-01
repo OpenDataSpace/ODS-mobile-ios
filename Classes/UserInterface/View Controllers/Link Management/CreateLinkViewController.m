@@ -159,6 +159,26 @@
     self.createButton.enabled = [self validateFormValues];
 }
 
+#pragma mark -
+#pragma mark Handle Expiration Date
+- (NSDate *) handleExpirationDate:(NSDate*) orgDate {
+    
+    NSInteger unitFlags = NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit | NSDayCalendarUnit | NSMonthCalendarUnit | NSYearCalendarUnit;
+    NSDateComponents *orgDateComponents = [[NSCalendar currentCalendar] components:unitFlags fromDate:orgDate == nil?[NSDate date]: orgDate];
+    [orgDateComponents setDay:[orgDateComponents day] + 1];
+    [orgDateComponents setHour:0];
+    [orgDateComponents setMinute:0];
+    [orgDateComponents setSecond:0];
+    
+    NSCalendar *cal = [NSCalendar currentCalendar];
+    [cal setTimeZone:[NSTimeZone localTimeZone]];
+    [cal setLocale:[NSLocale currentLocale]];
+    
+    NSDate *newDate = [cal dateFromComponents:orgDateComponents];
+    
+    return newDate;
+}
+
 #pragma mark - UI event handlers
 
 - (void)handleCancelButton:(id)sender
@@ -171,7 +191,7 @@
     }];
 }
 
-- (void)handleCreateButton:(id)sender
+- (void)handleCreateButton:(id)sender 
 {
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.mode = MBProgressHUDModeIndeterminate;
@@ -181,7 +201,7 @@
 	
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"yyy-MM-dd'T'HH:mm:ss'Z'"];
-    NSDate *dateSelected = [self.model objectForKey:@"expirationdate"];
+    NSDate *dateSelected = [self handleExpirationDate:[self.model objectForKey:@"expirationdate"]];
     NSString *expirationDate = [dateFormatter stringFromDate: dateSelected == nil?[NSDate date]: dateSelected];
     NSDictionary *linkInfo =[NSDictionary dictionaryWithObjectsAndKeys:[self.model objectForKey:@"email"], @"Email",
                           [self.model objectForKey:@"subject"], @"Subject",

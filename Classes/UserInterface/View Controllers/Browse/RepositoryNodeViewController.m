@@ -1806,7 +1806,7 @@ NSString * const kMultiSelectMove = @"moveAction";
         [sheet addButtonWithTitle:NSLocalizedString(@"operation.pop.menu.download", @"Download")];
     }
     //TODO:disable create download link feature.
-    //[sheet addButtonWithTitle:NSLocalizedString(@"operation.pop.menu.createlink", @"Create Downlaod Link")];
+    [sheet addButtonWithTitle:NSLocalizedString(@"operation.pop.menu.createlink", @"Create Downlaod Link")];
     
 	[sheet setCancelButtonIndex:[sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")]];
     
