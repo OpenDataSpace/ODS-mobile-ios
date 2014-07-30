@@ -20,7 +20,7 @@
     NSAssert(repoItem != nil, @"Append content stream request repository information.");
     
     NSString *contentDisposition = [NSString stringWithFormat:@"attachment;filename*=UTF-8''%@",[uploadInfo.completeFileName stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-    NSString *appendURLString = [NSString stringWithFormat:@"%@&append=true&isLastChunk=%@&changeToken=%@",[CMISAppendContentHTTPRequest appendURLFromUploadInfo:uploadInfo], isLastChunk?@"true":@"false", uploadInfo.repositoryItem.changeToken];
+    NSString *appendURLString = [NSString stringWithFormat:@"%@&append=true&isLastChunk=%@%@",[CMISAppendContentHTTPRequest appendURLFromUploadInfo:uploadInfo], isLastChunk?@"true":@"false", uploadInfo.repositoryItem.changeToken?[NSString stringWithFormat:@"&changeToken=%@", uploadInfo.repositoryItem.changeToken]:@""];
     
     CMISAppendContentHTTPRequest *request = [CMISAppendContentHTTPRequest requestWithURL:[NSURL URLWithString:appendURLString] accountUUID:[uploadInfo selectedAccountUUID]];
     [request setRequestMethod:@"PUT"];
