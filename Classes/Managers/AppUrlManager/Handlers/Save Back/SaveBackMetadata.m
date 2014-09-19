@@ -71,4 +71,8 @@
     return [NSArray arrayWithArray:keys];
 }
 
+- (void) setValue:(id)value forUndefinedKey:(NSString *)key {
+    NSLog(@"undefinedKey:%@", key);
+}
+
 @end
