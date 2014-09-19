@@ -72,7 +72,7 @@
 }
 
 - (void) setValue:(id)value forUndefinedKey:(NSString *)key {
-    NSLog(@"undefinedKey:%@", key);
+    AlfrescoLogDebug(@"undefinedKey:%@", key);
 }
 
 @end
