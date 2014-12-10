@@ -43,6 +43,7 @@
 #define NLSystemVersionGreaterOrEqualThan(version) ([[[UIDevice currentDevice] systemVersion] floatValue] >= version)
 
 #define IOS7_OR_LATER NLSystemVersionGreaterOrEqualThan(7.0)
+#define IOS8_OR_LATER NLSystemVersionGreaterOrEqualThan(8.0)
 /**
  * System Versioning Preprocessor Macros
  * from: http://stackoverflow.com/questions/3339722/check-iphone-ios-version/5337804#5337804

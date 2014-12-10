@@ -76,7 +76,7 @@ NSString * const kMultiSelectMove = @"moveAction";
 - (void)loadRightBarForEditMode;
 - (void)cancelAllHTTPConnections;
 - (void)processAddActionSheetWithButtonTitle:(NSString *)buttonLabel;
-- (void)processUploadActionSheetWithButtonTitle:(NSString *)buttonLabel;
+ ;
 - (void)processDeleteActionSheetWithButtonTitle:(NSString *)buttonLabel;
 - (void)presentModalViewControllerHelper:(UIViewController *)modalViewController;
 - (void)presentModalViewControllerHelper:(UIViewController *)modalViewController animated:(BOOL)animated;
@@ -544,223 +544,227 @@ NSString * const kMultiSelectMove = @"moveAction";
 
 - (void)processAddActionSheetWithButtonTitle:(NSString *)buttonLabel
 {
-    if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.take-photo", @"Take Photo")] || [buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.take-photo-video", @"Take Photo or Video")]) 
-    {
-        if (IS_IPAD)
+    dispatch_async(dispatch_get_main_queue(), ^ {
+        if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.take-photo", @"Take Photo")] || [buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.take-photo-video", @"Take Photo or Video")])
         {
-            UIViewController *pickerContainer = [[UIViewController alloc] init];
-            if (!self.imagePickerController)
+            if (IS_IPAD)
             {
-                self.imagePickerController = [[[UIImagePickerController alloc] init] autorelease];
-            }
-            [pickerContainer setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
-            [self.imagePickerController setSourceType:UIImagePickerControllerSourceTypeCamera];
-            [self.imagePickerController setMediaTypes:[UIImagePickerController availableMediaTypesForSourceType:self.imagePickerController.sourceType]];
-            [self.imagePickerController setDelegate:self];
-            [pickerContainer.view addSubview:self.imagePickerController.view];
-            
-            [self presentModalViewControllerHelper:pickerContainer];
-            [self.popover setPopoverContentSize:self.imagePickerController.view.frame.size animated:YES];
-            [self.popover setPassthroughViews:[NSArray arrayWithObjects:[[UIApplication sharedApplication] keyWindow], self.imagePickerController.view, nil]];
-           
-            CGRect rect = self.popover.contentViewController.view.frame;
-            self.imagePickerController.view.frame = rect;
-             NSLog(@"frame=====%f,%f,%f,%f", rect.origin.x, rect.origin.y, rect.size.width, rect.size.height);
-            [pickerContainer release];
-        }
-        else
-        {
-            if (!self.imagePickerController)
-            {
-                self.imagePickerController = [[[UIImagePickerController alloc] init] autorelease];
-            }
-            [self.imagePickerController setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
-            [self.imagePickerController setSourceType:UIImagePickerControllerSourceTypeCamera];
-            [self.imagePickerController setMediaTypes:[UIImagePickerController availableMediaTypesForSourceType:self.imagePickerController.sourceType]];
-            [self.imagePickerController setDelegate:self];
-            
-            [self presentModalViewControllerHelper:self.imagePickerController];
-        }
-        
-        [[UIApplication sharedApplication] setStatusBarHidden:NO];
-        
-    }
-    else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.create-folder", @"Create Folder")]) 
-    {
-        RepositoryItem *item = nil;
-        if ([self.folderItems item]) {
-            item = [self.folderItems item];
-        }else {
-            item = [[RepositoryItem alloc] init];
-            item.identLink = [NSString stringWithFormat:@"%@/%@/children?id=%@",[[[AlfrescoUtils sharedInstanceForAccountUUID:self.selectedAccountUUID] serviceDocumentURL] absoluteString], [self.folderItems repoInfo].repositoryId, [self.folderItems repoInfo].repositoryId];
-        }
-        
-        CreateFolderViewController *createFolder = [[[CreateFolderViewController alloc] initWithParentItem:item accountUUID:self.selectedAccountUUID] autorelease];
-        createFolder.delegate = self;
-        [createFolder setModalPresentationStyle:UIModalPresentationFormSheet];
-        [IpadSupport presentModalViewController:createFolder withNavigation:self.navigationController];
-    }
-    else if([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.record-audio", @"Record Audio")]) 
-    {
-        [self loadAudioUploadForm];
-    }
-    else if([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.download-folder", @"Download all documents")]) 
-    {
-        [self prepareDownloadAllDocuments];
-    }
-    else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.upload", @"Upload")])
-    {
-        UIActionSheet *sheet = [[UIActionSheet alloc]
-                                initWithTitle:@""
-                                delegate:self 
-                                cancelButtonTitle:nil
-                                destructiveButtonTitle:nil 
-                                otherButtonTitles: NSLocalizedString(@"add.actionsheet.choose-photo", @"Choose Photo from Library"), NSLocalizedString(@"add.actionsheet.upload-document", @"Upload Document"), nil];
-        
-        [sheet setCancelButtonIndex:[sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")]];
-        if (IS_IPAD)
-        {
-            [sheet setActionSheetStyle:UIActionSheetStyleDefault];
-            //[sheet showFromBarButtonItem:self.actionSheetSenderControl animated:YES];
-            if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]))
-            {
-                [sheet showFromBarButtonItem:self.actionSheetSenderControl animated:YES];
+                UIViewController *pickerContainer = [[UIViewController alloc] init];
+                if (!self.imagePickerController)
+                {
+                    self.imagePickerController = [[[UIImagePickerController alloc] init] autorelease];
+                }
+                [pickerContainer setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
+                [self.imagePickerController setSourceType:UIImagePickerControllerSourceTypeCamera];
+                [self.imagePickerController setMediaTypes:[UIImagePickerController availableMediaTypesForSourceType:self.imagePickerController.sourceType]];
+                [self.imagePickerController setDelegate:self];
+                [pickerContainer.view addSubview:self.imagePickerController.view];
+                
+                [self presentModalViewControllerHelper:pickerContainer];
+                [self.popover setPopoverContentSize:self.imagePickerController.view.frame.size animated:YES];
+                [self.popover setPassthroughViews:[NSArray arrayWithObjects:[[UIApplication sharedApplication] keyWindow], self.imagePickerController.view, nil]];
+               
+                CGRect rect = self.popover.contentViewController.view.frame;
+                self.imagePickerController.view.frame = rect;
+                 NSLog(@"frame=====%f,%f,%f,%f", rect.origin.x, rect.origin.y, rect.size.width, rect.size.height);
+                [pickerContainer release];
             }
             else
             {
-                // iOS 5.1 bug workaround
-                CGRect actionButtonRect = self.actionSheetSenderRect;
-                if ([[UIApplication sharedApplication] statusBarOrientation] == UIDeviceOrientationPortraitUpsideDown) {
-                    CGRect screen = [[UIScreen mainScreen] bounds];
-                    actionButtonRect.origin.x = screen.size.width - (actionButtonRect.origin.x + actionButtonRect.size.width);
-                    actionButtonRect.origin.y = screen.size.height - (actionButtonRect.origin.y + actionButtonRect.size.height + 25.0);
+                if (!self.imagePickerController)
+                {
+                    self.imagePickerController = [[[UIImagePickerController alloc] init] autorelease];
                 }
-                [sheet showFromRect:actionButtonRect inView:self.view.window animated:YES];
+                [self.imagePickerController setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
+                [self.imagePickerController setSourceType:UIImagePickerControllerSourceTypeCamera];
+                [self.imagePickerController setMediaTypes:[UIImagePickerController availableMediaTypesForSourceType:self.imagePickerController.sourceType]];
+                [self.imagePickerController setDelegate:self];
+                
+                [self presentModalViewControllerHelper:self.imagePickerController];
             }
-        } 
-        else 
-        {
-            [sheet showInView:[[self tabBarController] view]];
+            
+            [[UIApplication sharedApplication] setStatusBarHidden:NO];
+            
         }
-        
-        [sheet setTag:kUploadActionSheetTag];
-        [self.actionSheetSenderControl setEnabled:NO];
-        [self setActionSheet:sheet];
-        [sheet release];
-    }
-    else if([buttonLabel isEqualToString:NSLocalizedString(@"create.actionsheet.text-file", @"Create Text file")]) 
-    {
-        NSString *templatePath = [[NSBundle mainBundle] pathForResource:kCreateDocumentTemplateFilename ofType:kCreateDocumentTextExtension];
-        NSString *documentName = NSLocalizedString(@"create-document.text-file.template-name", @"My Text file");    
-        
-        UploadInfo *uploadInfo = [[[UploadInfo alloc] init] autorelease];
-        [uploadInfo setUploadFileURL:[NSURL fileURLWithPath:templatePath]];
-        [uploadInfo setUploadType:UploadFormTypeCreateDocument];
-        [uploadInfo setFilename:documentName];
-        [self presentUploadFormWithItem:uploadInfo andHelper:nil];
-    }
+        else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.create-folder", @"Create Folder")]) 
+        {
+            RepositoryItem *item = nil;
+            if ([self.folderItems item]) {
+                item = [self.folderItems item];
+            }else {
+                item = [[RepositoryItem alloc] init];
+                item.identLink = [NSString stringWithFormat:@"%@/%@/children?id=%@",[[[AlfrescoUtils sharedInstanceForAccountUUID:self.selectedAccountUUID] serviceDocumentURL] absoluteString], [self.folderItems repoInfo].repositoryId, [self.folderItems repoInfo].repositoryId];
+            }
+            
+            CreateFolderViewController *createFolder = [[[CreateFolderViewController alloc] initWithParentItem:item accountUUID:self.selectedAccountUUID] autorelease];
+            createFolder.delegate = self;
+            [createFolder setModalPresentationStyle:UIModalPresentationFormSheet];
+            [IpadSupport presentModalViewController:createFolder withNavigation:self.navigationController];
+        }
+        else if([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.record-audio", @"Record Audio")]) 
+        {
+            [self loadAudioUploadForm];
+        }
+        else if([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.download-folder", @"Download all documents")]) 
+        {
+            [self prepareDownloadAllDocuments];
+        }
+        else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.upload", @"Upload")])
+        {
+            UIActionSheet *sheet = [[UIActionSheet alloc]
+                                    initWithTitle:@""
+                                    delegate:self 
+                                    cancelButtonTitle:nil
+                                    destructiveButtonTitle:nil 
+                                    otherButtonTitles: NSLocalizedString(@"add.actionsheet.choose-photo", @"Choose Photo from Library"), NSLocalizedString(@"add.actionsheet.upload-document", @"Upload Document"), nil];
+            
+            [sheet setCancelButtonIndex:[sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")]];
+            if (IS_IPAD)
+            {
+                [sheet setActionSheetStyle:UIActionSheetStyleDefault];
+                //[sheet showFromBarButtonItem:self.actionSheetSenderControl animated:YES];
+                if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]))
+                {
+                    [sheet showFromBarButtonItem:self.actionSheetSenderControl animated:YES];
+                }
+                else
+                {
+                    // iOS 5.1 bug workaround
+                    CGRect actionButtonRect = self.actionSheetSenderRect;
+                    if ([[UIApplication sharedApplication] statusBarOrientation] == UIDeviceOrientationPortraitUpsideDown) {
+                        CGRect screen = [[UIScreen mainScreen] bounds];
+                        actionButtonRect.origin.x = screen.size.width - (actionButtonRect.origin.x + actionButtonRect.size.width);
+                        actionButtonRect.origin.y = screen.size.height - (actionButtonRect.origin.y + actionButtonRect.size.height + 25.0);
+                    }
+                    [sheet showFromRect:actionButtonRect inView:self.view.window animated:YES];
+                }
+            } 
+            else 
+            {
+                [sheet showInView:[[self tabBarController] view]];
+            }
+            
+            [sheet setTag:kUploadActionSheetTag];
+            [self.actionSheetSenderControl setEnabled:NO];
+            [self setActionSheet:sheet];
+            [sheet release];
+        }
+        else if([buttonLabel isEqualToString:NSLocalizedString(@"create.actionsheet.text-file", @"Create Text file")]) 
+        {
+            NSString *templatePath = [[NSBundle mainBundle] pathForResource:kCreateDocumentTemplateFilename ofType:kCreateDocumentTextExtension];
+            NSString *documentName = NSLocalizedString(@"create-document.text-file.template-name", @"My Text file");    
+            
+            UploadInfo *uploadInfo = [[[UploadInfo alloc] init] autorelease];
+            [uploadInfo setUploadFileURL:[NSURL fileURLWithPath:templatePath]];
+            [uploadInfo setUploadType:UploadFormTypeCreateDocument];
+            [uploadInfo setFilename:documentName];
+            [self presentUploadFormWithItem:uploadInfo andHelper:nil];
+        }
+    });
 }
 
 - (void)processUploadActionSheetWithButtonTitle:(NSString *)buttonLabel
 {
-    if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.choose-photo", @"Choose Photo from Library")])
-    {
-        __block RepositoryNodeViewController *blockSelf = self;
-        
-        AGImagePickerController *imagePickerController = [[AGImagePickerController alloc] initWithFailureBlock:^(NSError *error) 
-         {
-             AlfrescoLogDebug(@"Fail. Error: %@", error);
-             
-             if (error == nil) 
+    dispatch_async(dispatch_get_main_queue(), ^ {
+        if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.choose-photo", @"Choose Photo from Library")])
+        {
+            __block RepositoryNodeViewController *blockSelf = self;
+            
+            AGImagePickerController *imagePickerController = [[AGImagePickerController alloc] initWithFailureBlock:^(NSError *error) 
              {
-                 AlfrescoLogDebug(@"User has cancelled.");
-                 [blockSelf dismissModalViewControllerHelper];
-             } 
-             else 
-             {
-                 // We need to wait for the view controller to appear first.
-                 double delayInSeconds = 0.5;
-                 dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
-                 dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-                     [blockSelf dismissModalViewControllerHelper:NO];
-                     //Fallback in the UIIMagePickerController if the AssetsLibrary is not accessible
-                     UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-                     [picker setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
-                     [picker setSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
-                     [picker setMediaTypes:[UIImagePickerController availableMediaTypesForSourceType:picker.sourceType]];
-                     [picker setDelegate:blockSelf];
-                     
-                     [blockSelf presentModalViewControllerHelper:picker animated:NO];
-                     
-                     [picker release];
-                 });
-             }
-             
-             [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
-             
-         } andSuccessBlock:^(NSArray *info) {
-             [blockSelf startHUD];
-             AlfrescoLogDebug(@"User finished picking %d library assets", info.count);
-             //It is always NO because we will show the UploadForm next
-             //Only affects iPhone, in the iPad the popover dismiss is always animated
-             [blockSelf dismissModalViewControllerHelper:NO];
-             
-             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                 NSMutableArray *existingDocs = [NSMutableArray arrayWithArray:[blockSelf existingDocuments]];
+                 AlfrescoLogDebug(@"Fail. Error: %@", error);
                  
-                 if([info count] == 1)
+                 if (error == nil) 
                  {
-                     ALAsset *asset = [info lastObject];
-                     UploadInfo *uploadInfo = [blockSelf uploadInfoFromAsset:asset andExistingDocs:existingDocs];
-                     [[UploadsManager sharedManager] setExistingDocuments:existingDocs forUpLinkRelation:[self identLinkFromRepositoryNodeController:blockSelf]];
-                     dispatch_async(dispatch_get_main_queue(), ^{
-                         [blockSelf presentUploadFormWithItem:uploadInfo andHelper:[uploadInfo uploadHelper]];
-                         [blockSelf stopHUD];
-                     });
+                     AlfrescoLogDebug(@"User has cancelled.");
+                     [blockSelf dismissModalViewControllerHelper];
                  } 
-                 else if([info count] > 1)
+                 else 
                  {
-                     NSMutableArray *uploadItems = [NSMutableArray arrayWithCapacity:[info count]];
-                     for (ALAsset *asset in info)
-                     {
-                         @autoreleasepool
-                         {
-                             UploadInfo *uploadInfo = [blockSelf uploadInfoFromAsset:asset andExistingDocs:existingDocs];
-                             [uploadItems addObject:uploadInfo];
-                             //Updated the existingDocs array so that uploadInfoFromAsset:andExistingDocs: can choose
-                             //the right name
-                             [existingDocs addObject:[uploadInfo completeFileName]];
-                         }
-                     }
-                     
-                     [[UploadsManager sharedManager] setExistingDocuments:existingDocs forUpLinkRelation:[self identLinkFromRepositoryNodeController:blockSelf]];
-                     dispatch_async(dispatch_get_main_queue(), ^{
-                         [blockSelf presentUploadFormWithMultipleItems:uploadItems andUploadType:UploadFormTypeLibrary];
-                         [blockSelf stopHUD];
+                     // We need to wait for the view controller to appear first.
+                     double delayInSeconds = 0.5;
+                     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+                     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                         [blockSelf dismissModalViewControllerHelper:NO];
+                         //Fallback in the UIIMagePickerController if the AssetsLibrary is not accessible
+                         UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+                         [picker setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
+                         [picker setSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
+                         [picker setMediaTypes:[UIImagePickerController availableMediaTypesForSourceType:picker.sourceType]];
+                         [picker setDelegate:blockSelf];
+                         
+                         [blockSelf presentModalViewControllerHelper:picker animated:NO];
+                         
+                         [picker release];
                      });
                  }
-             });
-             
-             [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
-         }];
-        
-        [imagePickerController setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
-        if(IS_IPAD)
-        {
-            //[imagePickerController setChangeBarStyle:NO];
+                 
+                 [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+                 
+             } andSuccessBlock:^(NSArray *info) {
+                 [blockSelf startHUD];
+                 AlfrescoLogDebug(@"User finished picking %d library assets", info.count);
+                 //It is always NO because we will show the UploadForm next
+                 //Only affects iPhone, in the iPad the popover dismiss is always animated
+                 [blockSelf dismissModalViewControllerHelper:NO];
+                 
+                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                     NSMutableArray *existingDocs = [NSMutableArray arrayWithArray:[blockSelf existingDocuments]];
+                     
+                     if([info count] == 1)
+                     {
+                         ALAsset *asset = [info lastObject];
+                         UploadInfo *uploadInfo = [blockSelf uploadInfoFromAsset:asset andExistingDocs:existingDocs];
+                         [[UploadsManager sharedManager] setExistingDocuments:existingDocs forUpLinkRelation:[self identLinkFromRepositoryNodeController:blockSelf]];
+                         dispatch_async(dispatch_get_main_queue(), ^{
+                             [blockSelf presentUploadFormWithItem:uploadInfo andHelper:[uploadInfo uploadHelper]];
+                             [blockSelf stopHUD];
+                         });
+                     } 
+                     else if([info count] > 1)
+                     {
+                         NSMutableArray *uploadItems = [NSMutableArray arrayWithCapacity:[info count]];
+                         for (ALAsset *asset in info)
+                         {
+                             @autoreleasepool
+                             {
+                                 UploadInfo *uploadInfo = [blockSelf uploadInfoFromAsset:asset andExistingDocs:existingDocs];
+                                 [uploadItems addObject:uploadInfo];
+                                 //Updated the existingDocs array so that uploadInfoFromAsset:andExistingDocs: can choose
+                                 //the right name
+                                 [existingDocs addObject:[uploadInfo completeFileName]];
+                             }
+                         }
+                         
+                         [[UploadsManager sharedManager] setExistingDocuments:existingDocs forUpLinkRelation:[self identLinkFromRepositoryNodeController:blockSelf]];
+                         dispatch_async(dispatch_get_main_queue(), ^{
+                             [blockSelf presentUploadFormWithMultipleItems:uploadItems andUploadType:UploadFormTypeLibrary];
+                             [blockSelf stopHUD];
+                         });
+                     }
+                 });
+                 
+                 [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+             }];
+            
+            [imagePickerController setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
+            if(IS_IPAD)
+            {
+                //[imagePickerController setChangeBarStyle:NO];
+            }
+            [self presentModalViewControllerHelper:imagePickerController];
+            [imagePickerController release];
         }
-        [self presentModalViewControllerHelper:imagePickerController];
-        [imagePickerController release];
-    }
-    else if([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.upload-document", @"Upload Document from Saved Docs")]) 
-    {
-        SavedDocumentPickerController *picker = [[SavedDocumentPickerController alloc] initWithMultiSelection:YES];
-        [picker setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
-        [picker setDelegate:self];
-        
-        [self presentModalViewControllerHelper:picker];
-        [picker release];
-    }
+        else if([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.upload-document", @"Upload Document from Saved Docs")]) 
+        {
+            SavedDocumentPickerController *picker = [[SavedDocumentPickerController alloc] initWithMultiSelection:YES];
+            [picker setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
+            [picker setDelegate:self];
+            
+            [self presentModalViewControllerHelper:picker];
+            [picker release];
+        }
+    });
 }
 
 - (void)processDeleteActionSheetWithButtonTitle:(NSString *)buttonLabel

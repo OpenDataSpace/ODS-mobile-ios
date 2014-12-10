@@ -192,7 +192,7 @@
     CGRect bounds = [[UIScreen mainScreen] bounds];
     CGFloat width = bounds.size.width;
     
-    if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation)) {
+    if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation) && !IOS8_OR_LATER) {
         width = bounds.size.height;
     }
     

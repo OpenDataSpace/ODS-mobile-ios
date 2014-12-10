@@ -14,7 +14,7 @@
 		<string>https://github.com/OpenDataSpace/ODS-mobile-ios.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>FreshDocs.xcodeproj/project.xcworkspace</string>
+	<string>FreshDocs.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>C30F7963600CD7366F82435F2BBAAD2A0D5FBA5C</key>
