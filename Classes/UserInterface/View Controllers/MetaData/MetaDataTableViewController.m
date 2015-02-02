@@ -323,21 +323,21 @@ static NSArray * cmisPropertiesToDisplay = nil;
             [footers addObject:@""];
         }
         
-        NSMutableArray *versionsHistoryGroup = [NSMutableArray array];
-        NSString *versionHistoryURI = [[LinkRelationService shared] hrefForLinkRelationString:@"version-history" onCMISObject:cmisObject];
-        
-        if (!isVersionHistory && versionHistoryURI)
-        {
-            IFButtonCellController *viewVersionHistoryButton = [[IFButtonCellController alloc] initWithLabel:NSLocalizedString(@"metadata.button.view.version.history", @"View Version History") 
-                                                                                                  withAction:@selector(viewVersionHistoryButtonClicked)
-                                                                                                    onTarget:self];
-            [viewVersionHistoryButton setBackgroundColor:[UIColor whiteColor]];
-            [versionsHistoryGroup addObject:viewVersionHistoryButton];
-            [viewVersionHistoryButton release];
-            [headers addObject:NSLocalizedString(@"metadata.group.header.version-history", @"Version History")];
-            [groups addObject:versionsHistoryGroup];
-            [footers addObject:@""];
-        }
+//        NSMutableArray *versionsHistoryGroup = [NSMutableArray array];
+//        NSString *versionHistoryURI = [[LinkRelationService shared] hrefForLinkRelationString:@"version-history" onCMISObject:cmisObject];
+//        
+//        if (!isVersionHistory && versionHistoryURI)
+//        {
+//            IFButtonCellController *viewVersionHistoryButton = [[IFButtonCellController alloc] initWithLabel:NSLocalizedString(@"metadata.button.view.version.history", @"View Version History") 
+//                                                                                                  withAction:@selector(viewVersionHistoryButtonClicked)
+//                                                                                                    onTarget:self];
+//            [viewVersionHistoryButton setBackgroundColor:[UIColor whiteColor]];
+//            [versionsHistoryGroup addObject:viewVersionHistoryButton];
+//            [viewVersionHistoryButton release];
+//            [headers addObject:NSLocalizedString(@"metadata.group.header.version-history", @"Version History")];
+//            [groups addObject:versionsHistoryGroup];
+//            [footers addObject:@""];
+//        }
         //add download button
         if (![cmisObject isFolder]) {
             NSMutableArray *actionGroup = [NSMutableArray array];

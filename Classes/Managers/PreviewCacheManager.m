@@ -94,7 +94,8 @@ NSString * const PreviewMetadataFileName = @"PreviewFilesMetadata.plist";
     RepositoryItem *item = [info repositoryItem];
     NSString *fileID = [item guid];
     
-    NSMutableDictionary *tempDownloadInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:destination, @"path", info.repositoryItem.title, @"title", nil];
+    //we only store file name.
+    NSMutableDictionary *tempDownloadInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:[destination lastPathComponent], @"path", info.repositoryItem.title, @"title", nil];
     [[self readPreviewFileMetadata] setObject:tempDownloadInfo forKey:fileID];
     
     if (![self writeMetadata])

@@ -49,6 +49,7 @@
 @synthesize sentBytes = _sentBytes;
 @synthesize uploadFileAsset = _uploadFileAsset;
 @synthesize chunkSize = _chunkSize;
+@synthesize uploadInfo = _uploadInfo;
 
 @synthesize isCancelled = _isCancelled;
 @synthesize error = _error;
@@ -195,17 +196,20 @@
     
     if (_error == nil && [objRequest responseStatusCode] == 200) {
         _uploadInfo.repositoryItem = [objRequest repositoryItem];
-        AlfrescoLogDebug(@"uploaded file size:%@",[_uploadInfo.repositoryItem.metadata objectForKey:@"cmis:contentStreamLength"]);
+        AlfrescoLogDebug(@"uploaded file size:%@, file name:%@ changeToken:%@",[_uploadInfo.repositoryItem.metadata objectForKey:@"cmis:contentStreamLength"],_uploadInfo.repositoryItem.title, _uploadInfo.repositoryItem.changeToken);
         self.sentBytes = [[_uploadInfo.repositoryItem.metadata objectForKey:@"cmis:contentStreamLength"] longLongValue];
         
         return YES;
     }
+    
+    AlfrescoLogDebug(@"%@", _error);
     return NO;
 }
 
 - (BOOL) appendChunkData:(NSMutableData*) contentData dataLength:(uint64_t) dataLength isLastChunk:(BOOL)isLastChunk
 {
     @autoreleasepool {
+        AlfrescoLogDebug(@"appendChunkData file name:%@ changeToken:%@",[_uploadInfo.repositoryItem.metadata objectForKey:@"cmis:contentStreamLength"],_uploadInfo.repositoryItem.title, _uploadInfo.repositoryItem.changeToken);
         CMISAppendContentHTTPRequest *appendRequest = [CMISAppendContentHTTPRequest cmisAppendRequestWithUploadInfo:_uploadInfo contentData:contentData isLastChunk:isLastChunk];
         [appendRequest addRequestHeader:@"Content-Type" value:_mimeType];
         [appendRequest setUploadProgressDelegate:self];
@@ -215,11 +219,11 @@
         
         if (_error == nil && ([appendRequest responseStatusCode] == 201 || [appendRequest responseStatusCode] == 200)) {  //put data successfully
             AlfrescoLogDebug(@"upload size:%llu  total:%llu",self.sentBytes, self.totalBytes);
-            
+            AlfrescoLogDebug(@"appendChunkData:%@ ,error:%@", [NSString stringWithUTF8String:[[appendRequest responseData] bytes]], _error);
             return YES;
         }
         
-        //AlfrescoLogDebug(@"appendChunkData:%@", [NSString stringWithUTF8String:[[appendRequest responseData] bytes]]);
+        AlfrescoLogDebug(@"appendChunkData:%@ ,error:%@", [NSString stringWithUTF8String:[[appendRequest responseData] bytes]], _error);
     }
     
     return NO;

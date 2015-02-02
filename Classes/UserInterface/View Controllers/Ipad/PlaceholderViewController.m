@@ -102,7 +102,8 @@ static BOOL launchViewPresented = NO;
     noDocImgView_.frame = imageViewFrame;
     
     //loading no doc image from server
-    [noDocImgView_ setImageWithURL:[[LogoManager shareManager] getLogoURLByName:kLogoNoDocumentSelected] placeholderImage:[UIImage imageNamed:kLogoNoDocumentSelected]];
+//    [noDocImgView_ setImageWithURL:[[LogoManager shareManager] getLogoURLByName:kLogoNoDocumentSelected] placeholderImage:[UIImage imageNamed:kLogoNoDocumentSelected]];
+    [noDocImgView_ setImage:[[LogoManager shareManager] getLogoImageByName:kLogoNoDocumentSelected]];
     
     UILabel *noDocText = [[UILabel alloc] initWithFrame:CGRectMake(0, noDocImgView_.frame.size.height, noDocView.frame.size.width, 40)];
     noDocText.backgroundColor = [UIColor clearColor];
@@ -144,7 +145,7 @@ static BOOL launchViewPresented = NO;
 
 - (void) handleNotification:(NSNotification*) noti {
     if ([noti.name isEqualToString:kNotificationUpdateLogos]) {
-        [noDocImgView_ setImageWithURL:[[LogoManager shareManager] getLogoURLByName:kLogoNoDocumentSelected] placeholderImage:[UIImage imageNamed:kLogoNoDocumentSelected]];
+        [noDocImgView_ setImage:[[LogoManager shareManager] getLogoImageByName:kLogoNoDocumentSelected]];
     }
 }
 @end

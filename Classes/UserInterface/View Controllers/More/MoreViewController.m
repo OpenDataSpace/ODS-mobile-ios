@@ -85,6 +85,11 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleNotification:) name:kNotificationUpdateLogos object:nil];
 }
 
+- (void) viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self updateAndReload];
+}
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Always Rotate
@@ -180,7 +185,7 @@
     TableCellViewController *aboutCell = [[[TableCellViewController alloc] initWithAction:@selector(showAboutView) onTarget:self] autorelease];
     aboutCell.textLabel.text = NSLocalizedString(@"About", @"About tab bar button label");
     //aboutCell.imageView.image = [UIImage imageNamed:kAboutMoreIcon_ImageName];
-    [aboutCell.imageView setImageWithURL:[[LogoManager shareManager] getLogoURLByName:@"about-more.png"] placeholderImage:[UIImage imageNamed:kAboutMoreIcon_ImageName]];
+    [aboutCell.imageView setImage:[[LogoManager shareManager] getLogoImageByName:kAboutMoreIcon_ImageName]];
     aboutCell.selectionStyle = UITableViewCellSelectionStyleBlue;
     [moreCellGroup addObject:aboutCell];
     

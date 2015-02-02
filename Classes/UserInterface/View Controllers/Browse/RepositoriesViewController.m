@@ -332,6 +332,7 @@ static NSString *RepositoryInfoKey = @"RepositoryInfo";
         self.HUD = createAndShowProgressHUDForView([[self navigationController] view]);
         [self.HUD setDelegate:self];
 	}
+    [self.tableView setAllowsSelection:NO];
 }
 
 - (void)stopHUD
@@ -341,6 +342,8 @@ static NSString *RepositoryInfoKey = @"RepositoryInfo";
         stopProgressHUD(self.HUD);
         self.HUD = nil;
     }
+    
+    [self.tableView setAllowsSelection:YES];
 }
 
 - (void)clearAllHUDs
@@ -354,6 +357,7 @@ static NSString *RepositoryInfoKey = @"RepositoryInfo";
             }
         }
 		self.HUD = nil;
+        [self.tableView setAllowsSelection:YES];
     });
 }
 

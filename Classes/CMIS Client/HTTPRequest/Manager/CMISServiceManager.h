@@ -33,6 +33,7 @@
 @class CMISServiceManager;
 @class ServiceDocumentRequest;
 
+@class RepositoryInfo;
 
 extern NSString * const kCMISServiceManagerErrorDomain;
 
@@ -131,6 +132,7 @@ extern NSString * const kCMISServiceManagerErrorDomain;
 
 - (BOOL)isActive;
 
+- (RepositoryInfo*) getConfigRepoForAccountUUID:(NSString*) accountUUID;
 /**
  * Returns the shared singleton
  */

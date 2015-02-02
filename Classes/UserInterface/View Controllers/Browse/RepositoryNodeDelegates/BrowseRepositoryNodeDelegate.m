@@ -222,7 +222,7 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
                 DownloadInfo *downloadInfo = [[DownloadInfo alloc] initWithRepositoryItem:child];
                 [downloadInfo setSelectedAccountUUID:self.selectedAccountUUID];
                 [downloadInfo setTenantID:self.tenantID];
-                [downloadInfo setTempFilePath:[previewInfo objectForKey:@"path"]];
+                [downloadInfo setTempFilePath:[FileUtils pathToCacheFile:[[previewInfo objectForKey:@"path"] lastPathComponent]]];
 
                 [self.previewDelegate showDocument:downloadInfo];
             }else if ([downloadManager downloadExistsForKey:child.title]) {   //use downloaded data

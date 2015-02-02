@@ -119,13 +119,14 @@
     // Additional Logo image - set here to ensure it's localized
     [self.additionalLogoButton.imageView setImage:[UIImage imageNamed:@"zia-partner-logo.png"]];
 #else
-    [self.buildTimeLabel setText:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]];//CFBundleVersion"]];
+    NSString *versionString = [NSString stringWithFormat:@"%@(%@)",[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"], [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]];
+    [self.buildTimeLabel setText:versionString];//CFBundleVersion"]];
 #endif
     if (IS_IPAD) {
-        [_ziaLogoButtonImageView setImageWithURL:[[LogoManager shareManager] getLogoURLByName:kLogoZiaLogoCP_260] placeholderImage:[UIImage imageNamed:kLogoZiaLogoCP_260]];
-        [_smallZiaButtonImageView setImageWithURL:[[LogoManager shareManager] getLogoURLByName:kLogoZiaLogoCP_130] placeholderImage:[UIImage imageNamed:kLogoZiaLogoCP_130]];
+        [_ziaLogoButtonImageView setImage:[[LogoManager shareManager] getLogoImageByName:kLogoZiaLogoCP_260]];
+        [_smallZiaButtonImageView setImage:[[LogoManager shareManager] getLogoImageByName:kLogoZiaLogoCP_130]];
     }else {
-        [_ziaLogoButtonImageView setImageWithURL:[[LogoManager shareManager] getLogoURLByName:kLogoZiaLogoCP_130] placeholderImage:[UIImage imageNamed:kLogoZiaLogoCP_130]];
+        [_ziaLogoButtonImageView setImage:[[LogoManager shareManager] getLogoImageByName:kLogoZiaLogoCP_130]];
     }
 }
 

@@ -236,8 +236,9 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
         // Posting a kNotificationAccountListUpdated notification
         if(success)
         {
+            NSString *uuid = [[accountInfo uuid] copy];
             [[AccountStatusService sharedService] removeAccountStatusForUUID:[accountInfo uuid]];
-            NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:[accountInfo uuid], @"uuid", kAccountUpdateNotificationDelete, @"type", nil];
+            NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:uuid, @"uuid", kAccountUpdateNotificationDelete, @"type", nil];
             [[NSNotificationCenter defaultCenter] postAccountListUpdatedNotification:userInfo];
         }
     }

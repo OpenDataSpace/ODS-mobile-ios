@@ -313,6 +313,7 @@ NSInteger const kGetCommentsCountTag = 6;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleFilesExpired:) name:kNotificationExpiredFiles object:nil];
     
     self.webView.isRestrictedDocument = self.isRestrictedDocument;
+    [self.webView setScalesPageToFit:YES];
     
     RepositoryInfo *repoInfo = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:self.selectedAccountUUID tenantID:self.tenantID];
     AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:self.selectedAccountUUID];
@@ -666,6 +667,17 @@ NSInteger const kGetCommentsCountTag = 6;
     return iconSpacer;
 }
 
+- (void) viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    NSLog(@"sie:%f %f", size.width, size.height);
+    if (IS_IPAD && size.width < 600) { //to fix ios8, view size is incorrect.
+        CGRect frame = CGRectMake(0, 64, 768, 960);
+        self.view.frame = frame;
+        frame.origin.y = 0;
+        self.webView.frame = frame;
+        self.webView.scrollView.frame = frame;
+        [self.webView.scrollView zoomToRect:frame animated:YES];
+    }
+}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
@@ -983,64 +995,66 @@ NSInteger const kGetCommentsCountTag = 6;
 {
 	NSString *buttonLabel = [actionSheet buttonTitleAtIndex:buttonIndex];
     
-	if ([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.openin", @"Open in...")]) 
-    {
-        [self actionButtonPressed:self.actionButton];
-    } 
-    else if ([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.print", @"Print")]) 
-    {
-        UIPrintInteractionController *printController = [UIPrintInteractionController sharedPrintController];
-        
-        UIPrintInfo *printInfo = [UIPrintInfo printInfo];
-        printInfo.outputType = UIPrintInfoOutputGeneral;
-        printInfo.jobName = self.navigationController.title;
-        
-        printController.printInfo = printInfo;
-        printController.printFormatter = [self.webView viewPrintFormatter];
-        printController.showsPageRange = YES;
-        
-        UIPrintInteractionCompletionHandler completionHandler = ^(UIPrintInteractionController *controller, BOOL completed, NSError *error)
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.openin", @"Open in...")])
         {
-            [self enableAllToolbarControls:YES animated:YES];
-            if (!completed && error)
+            [self actionButtonPressed:self.actionButton];
+        } 
+        else if ([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.print", @"Print")]) 
+        {
+            UIPrintInteractionController *printController = [UIPrintInteractionController sharedPrintController];
+            
+            UIPrintInfo *printInfo = [UIPrintInfo printInfo];
+            printInfo.outputType = UIPrintInfoOutputGeneral;
+            printInfo.jobName = self.navigationController.title;
+            
+            printController.printInfo = printInfo;
+            printController.printFormatter = [self.webView viewPrintFormatter];
+            printController.showsPageRange = YES;
+            
+            UIPrintInteractionCompletionHandler completionHandler = ^(UIPrintInteractionController *controller, BOOL completed, NSError *error)
             {
-                AlfrescoLogDebug(@"Printing could not complete because of error: %@", error);
+                [self enableAllToolbarControls:YES animated:YES];
+                if (!completed && error)
+                {
+                    AlfrescoLogDebug(@"Printing could not complete because of error: %@", error);
+                }
+            };
+            
+            if (IS_IPAD)
+            {
+                [printController presentFromBarButtonItem:self.actionButton animated:YES completionHandler:completionHandler];
             }
-        };
-        
-        if (IS_IPAD)
-        {
-            [printController presentFromBarButtonItem:self.actionButton animated:YES completionHandler:completionHandler];
+            else
+            {
+                [printController presentAnimated:YES completionHandler:completionHandler];
+            }
         }
         else
         {
-            [printController presentAnimated:YES completionHandler:completionHandler];
+            if ([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.email.attachment", @"Email action text")])
+            {
+                [self emailDocumentAsAttachment];
+            }
+            else if ([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.email.link", @"Email action text")])
+            {
+                [self emailDocumentAsLink];
+            }
+            else if ([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.download", @"Download action text")])
+            {
+                [self downloadButtonPressed];
+            }
+            else if ([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.delete", @"Delete action text")])
+            {
+                [self trashButtonPressed];
+            }
+            else if ([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.review", @"Review action text")])
+            {
+                [self reviewButtonPressed];
+            }
+            [self enableAllToolbarControls:YES animated:YES];
         }
-    }
-    else
-    {
-        if ([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.email.attachment", @"Email action text")])
-        {
-            [self emailDocumentAsAttachment];
-        }
-        else if ([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.email.link", @"Email action text")])
-        {
-            [self emailDocumentAsLink];
-        }
-        else if ([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.download", @"Download action text")])
-        {
-            [self downloadButtonPressed];
-        }
-        else if ([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.delete", @"Delete action text")])
-        {
-            [self trashButtonPressed];
-        }
-        else if ([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.review", @"Review action text")])
-        {
-            [self reviewButtonPressed];
-        }
-        [self enableAllToolbarControls:YES animated:YES];
-    }
+    });
 }
 
 - (IBAction)actionButtonPressed:(UIBarButtonItem *)sender
@@ -1054,7 +1068,10 @@ NSInteger const kGetCommentsCountTag = 6;
 		
     if (![self.docInteractionController presentOpenInMenuFromBarButtonItem:sender animated:YES])
     {
-        displayErrorMessageWithTitle(NSLocalizedString(@"noAppsAvailableDialogMessage", @"There are no applications that are capable of opening this file on this device"), NSLocalizedString(@"noAppsAvailableDialogTitle", @"No Applications Available"));
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
+            displayErrorMessageWithTitle(NSLocalizedString(@"noAppsAvailableDialogMessage", @"There are no applications that are capable of opening this file on this device"), NSLocalizedString(@"noAppsAvailableDialogTitle", @"No Applications Available"));
+        });
+        [sender setEnabled:YES];
     }
 }
 
@@ -1094,7 +1111,9 @@ NSInteger const kGetCommentsCountTag = 6;
     // Since the file was moved from the temp path to the save file we want to update the file path to the one in the saved documents
     self.filePath = [FileUtils pathToSavedFile:filename];
     
-    displayInformationMessage(NSLocalizedString(@"documentview.download.confirmation.title", @"Document Saved"));
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
+        displayInformationMessage(NSLocalizedString(@"documentview.download.confirmation.title", @"Document Saved"));
+    });
 }
 
 - (void)trashButtonPressed

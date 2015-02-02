@@ -261,7 +261,7 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     if ((!self.uploadInfo.uploadFileURL && [self uploadType] != UploadFormTypeCreateDocument) || (name == nil || [name length] == 0))
     {
         displayErrorMessageWithTitle(NSLocalizedString(@"uploadview.required.fields.missing.dialog.message", @"Please fill in all required fields"), NSLocalizedString(@"uploadview.required.fields.missing.dialog.title", @""));
-        
+        [self.navigationItem.rightBarButtonItem setEnabled:[self validateName:name]];
         return NO;
     }
     
@@ -296,7 +296,7 @@ NSString * const kPhotoQualityKey = @"photoQuality";
         }
         
         // We call the helper to perform any last action before uploading, like resizing an image with a quality parameter
-        [self.uploadHelper preUpload];
+        //[self.uploadHelper preUpload];
         [[UploadsManager sharedManager] queueUpload:self.uploadInfo];
         [self callUpdateActionOnTarget];
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -491,10 +491,10 @@ NSString * const kPhotoQualityKey = @"photoQuality";
             cellController = defaultCell;
             [uploadFormCellGroup addObject:cellController];
             
-            if([self containsPhoto])
-            {
-                [uploadFormCellGroup addObject:[self qualityChoiceCell]];
-            }
+//            if([self containsPhoto])
+//            {
+//                [uploadFormCellGroup addObject:[self qualityChoiceCell]];
+//            }
             break;
         }
         case UploadFormTypePhoto:
@@ -513,7 +513,7 @@ NSString * const kPhotoQualityKey = @"photoQuality";
             [cellController setAccessoryType:UITableViewCellAccessoryNone];
             
             [uploadFormCellGroup addObject:cellController];
-            [uploadFormCellGroup addObject:[self qualityChoiceCell]];
+//            [uploadFormCellGroup addObject:[self qualityChoiceCell]];
             /*UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:self.uploadInfo.uploadFileURL] ];
             [self.model setObject:image forKey:@"media"];
             cellController = [[IFPhotoCellController alloc] initWithLabel:NSLocalizedString([self uploadTypeCellLabel:self.uploadType], @"Photo")  atKey:@"media" inModel:self.model];

@@ -124,7 +124,7 @@
 		((IFGenericTableViewController *)tableViewController).controllerForReturnHandler = self;
 		autoAdvance = NO;
 	}
-
+    [tableViewController.view endEditing:YES]; //http://stackoverflow.com/questions/26608360/ios-8-uiinputviewset-setrestorableresponder-message-sent-to-deallocated-i
 	[tableViewController.navigationController pushViewController:choiceTableViewController animated:YES];
 	[choiceTableViewController release];
 

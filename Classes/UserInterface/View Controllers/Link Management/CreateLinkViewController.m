@@ -206,8 +206,8 @@
     NSDictionary *linkInfo =[NSDictionary dictionaryWithObjectsAndKeys:[self.model objectForKey:@"email"], @"Email",
                           [self.model objectForKey:@"subject"], @"Subject",
                           [self.model objectForKey:@"message"], @"Message",
-                          [self.model objectForKey:@"password"], @"Password",
-                          expirationDate, @"ExpirationDate",nil];
+                          expirationDate, @"ExpirationDate",
+                             [self.model objectForKey:@"password"], @"Password",nil];
     
     CMISCreateLinkHTTPRequest *request = [CMISCreateLinkHTTPRequest cmisCreateLinkRequestWithItem:_repositoryItem destURL:_linkCreateURL linkType:@"gds:downloadLink" linkInfo:linkInfo accountUUID:_accountUUID];
     request.delegate = self;

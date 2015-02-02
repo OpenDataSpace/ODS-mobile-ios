@@ -186,6 +186,7 @@
 	if (renditionFilterOrNil != nil) [optionalArguments setObject:renditionFilterOrNil forKey:@"renditionFilter"];
 	if (orderByOrNil != nil) [optionalArguments setObject:orderByOrNil forKey:@"orderBy"];
 	if (includePathSegment) [optionalArguments setObject:@"true" forKey:@"includePathSegment"];
+    [optionalArguments setObject:@"1" forKey:@"depth"];
 	return optionalArguments;
 }
 

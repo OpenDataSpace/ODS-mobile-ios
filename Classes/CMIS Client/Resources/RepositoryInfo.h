@@ -84,4 +84,6 @@
 
 @property (nonatomic, assign) BOOL hasValidSession;
 
+@property (nonatomic, retain) NSString  *latestChangeLogToken;
+
 @end

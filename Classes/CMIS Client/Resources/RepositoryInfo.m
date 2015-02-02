@@ -48,6 +48,8 @@
 
 @synthesize hasValidSession = _hasValidSession;
 
+@synthesize latestChangeLogToken = _latestChangeLogToken;
+
 - (void)dealloc
 {
 	[_repositoryId release];
@@ -65,6 +67,7 @@
     [_productName release];
     [_accountUuid release];
     [_tenantID release];
+    [_latestChangeLogToken release];
 
     [super dealloc];
 }

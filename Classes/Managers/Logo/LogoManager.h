@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "FolderDescendantsRequest.h"
 #import "RepositoryInfo.h"
+#import "LogoItem.h"
+#import "BrandingRepositoryInfo.h"
 
 extern NSString * const kLogoAboutZiaLogo_500;
 extern NSString * const kLogoAboutZiaLogo;
@@ -20,6 +22,7 @@ extern NSString * const kLogoZiaLogoCP_130;
 extern NSString * const kLogoZiaLogoCP_260;
 extern NSString * const kLogoNoDocumentSelected;
 extern NSString * const kLogoTabAboutLogo;
+extern NSString * const KLogoAboutMore;
 
 extern NSString * const kNotificationUpdateLogos;
 
@@ -30,12 +33,19 @@ extern NSString * const kNotificationUpdateLogos;
 //set current active account uuid
 - (void) setCurrentActiveAccount:(NSString*) uuid;
 
-//get logo url by name
-- (NSURL*) getLogoURLByName:(NSString*) logoName;
+//get logo image by name
+- (UIImage*) getLogoImageByName:(NSString*) logoName;
 
 //check if has logo information.
 - (BOOL) isExistLogosForAccount:(NSString*) uuid;
 
 //set logo infor for account
-- (void) setLogoInfo:(NSArray*) allItems accountUUID:(NSString*) uuid;
+- (void) setLogoInfo:(NSArray*) allItems accountUUID:(NSString*) uuid configRepo:(RepositoryInfo*) configRepo;
+
+//check configration repository latest change token
+- (BOOL) isNeedUpdateLogosWithRepository:(RepositoryInfo*) repoInfo accountUUID:(NSString*) accountUUID;
+
+//delete branding data for account
+- (void) deleteBrandingDataForAccountUUID:(NSString*) acctUUID;
+
 @end

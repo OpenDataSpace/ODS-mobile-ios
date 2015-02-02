@@ -185,6 +185,14 @@ static CGFloat masterViewControllerWidth = 320.0;
 
 - (BOOL)splitViewController:(UISplitViewController *)svc shouldHideViewController:(UIViewController *)vc inOrientation:(UIInterfaceOrientation)orientation
 {
+    UIViewController *current = [self.viewControllers objectAtIndex:0];
+    
+    if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
+        [current.navigationItem setLeftBarButtonItem:self.masterPopoverBarButton animated:NO];
+    }else {
+        [current.navigationItem setLeftBarButtonItem:self.expandButton animated:NO];
+    }
+    
     return (UIInterfaceOrientationIsPortrait(orientation) || hideMasterAlways);
 }
 
@@ -209,13 +217,21 @@ static CGFloat masterViewControllerWidth = 320.0;
     
     CGFloat delta = self.isExpanded ? -masterViewControllerWidth : masterViewControllerWidth;
     
-    if (self.interfaceOrientation == UIDeviceOrientationLandscapeLeft)
-    {
-        splitFrame.origin.y -= delta;
+    if (IOS8_OR_LATER) {
+        if (expanded) {
+           _splitViewController.preferredDisplayMode = UISplitViewControllerDisplayModePrimaryHidden;
+        }else {
+            _splitViewController.preferredDisplayMode = UISplitViewControllerDisplayModeAutomatic;
+        }
+    }else {
+        if (self.interfaceOrientation == UIDeviceOrientationLandscapeLeft)
+        {
+            splitFrame.origin.y -= delta;
+        }
+        splitFrame.size.height += delta;
+        masterFrame.origin.x -= delta;
+        detailFrame.size.width += delta;
     }
-    splitFrame.size.height += delta;
-    masterFrame.origin.x -= delta;
-    detailFrame.size.width += delta;
     
     if (animated)
     {

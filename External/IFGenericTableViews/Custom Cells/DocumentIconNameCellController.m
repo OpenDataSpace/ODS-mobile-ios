@@ -133,7 +133,8 @@ CGFloat const kDINCCGutter = 10.0f;
         CGSize  labelSize  = [label sizeWithFont:LABEL_FONT];
         CGFloat tableWidth = bounds.size.width;
         CGFloat drawWidth  = (tableWidth * (5.0f/6.0f)) - ((20.0f * indentationLevel) + labelSize.width + (2 * kDINCCGutter));
-        CGFloat drawHeight = [tableView rowHeight] - 2 * kDINCCGutter;
+        CGFloat rowHeight = [tableView rowHeight] < 5.0? 44.0 : [tableView rowHeight];
+        CGFloat drawHeight = rowHeight - 2 * kDINCCGutter;
         
         CGSize filenameSize = [filename sizeWithFont:FILE_FONT];
         filenameSize.width = fminf(filenameSize.width, drawWidth - 40.0f);

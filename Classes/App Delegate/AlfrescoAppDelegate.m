@@ -47,6 +47,7 @@
 #import "ConnectivityManager.h"
 #import "PreviewManager.h"
 #import "AlfrescoMDMLite.h"
+#import "LogoManager.h"
 
 /*
  Set to YES if the migration if we want to test migration and NO to have the standard behaviour for migration
@@ -234,6 +235,8 @@ void uncaughtExceptionHandler(NSException *exception)
                            [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"],
                            [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]];
     AlfrescoLogInfo(@"%@ %@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"], buildTime);
+    
+    AlfrescoLogDebug(@"Screen scale:%f",[[UIScreen mainScreen] scale]);
 
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
     

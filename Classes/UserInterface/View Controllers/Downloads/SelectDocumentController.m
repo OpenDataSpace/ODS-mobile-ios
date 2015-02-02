@@ -52,7 +52,7 @@
     {
         UIBarButtonItem *button = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(performDone:)] autorelease];
         [button setEnabled:NO];
-        styleButtonAsDefaultAction(button);
+        //styleButtonAsDefaultAction(button);
         [self.navigationItem setRightBarButtonItem:button];
     }
     else
@@ -66,6 +66,16 @@
     if (self.noDocumentsFooterTitle)
     {
         [(FolderTableViewDataSource *)self.tableView.dataSource setNoDocumentsFooterTitle:self.noDocumentsFooterTitle];
+    }
+}
+
+- (void) viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    if (!self.doneOnTap || self.multiSelection)
+    {
+        NSInteger selectedCount = [[self.tableView indexPathsForSelectedRows] count];
+        [self.navigationItem.rightBarButtonItem setEnabled:(selectedCount != 0)];
     }
 }
 

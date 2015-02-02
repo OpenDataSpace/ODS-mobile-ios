@@ -93,7 +93,7 @@ NSInteger sortActiveDownloads(DownloadInfo *d1, DownloadInfo *d2, void *context)
     
     // The Stop All custom button
     UIBarButtonItem *stopAll = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"download.progress.stopAll", @"Stop All") style:UIBarButtonItemStyleDone target:self action:@selector(stopAllButtonAction:)];
-    styleButtonAsDestructiveAction(stopAll);
+    //styleButtonAsDestructiveAction(stopAll);
     [self.navigationItem setRightBarButtonItem:stopAll];
     [stopAll release];
 }
@@ -119,8 +119,11 @@ NSInteger sortActiveDownloads(DownloadInfo *d1, DownloadInfo *d2, void *context)
     
     if ([_activeDownloads count] == 0)
     {
+        [self.navigationItem.rightBarButtonItem setEnabled:NO];
         [self.alertView dismissWithClickedButtonIndex:self.alertView.cancelButtonIndex animated:NO];
         [self.navigationController popViewControllerAnimated:YES];
+    }else {
+        [self.navigationItem.rightBarButtonItem setEnabled:YES];
     }
 }
 

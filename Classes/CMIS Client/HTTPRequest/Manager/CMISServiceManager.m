@@ -397,9 +397,7 @@ NSString * const kProductNameEnterprise = @"Enterprise";
     {
         ServiceDocumentRequest *serviceDocReq = (ServiceDocumentRequest *)request;
         AlfrescoLogDebug(@"Service document request success for UUID=%@", [serviceDocReq accountUUID]);
-        
-        NSString *authorization = [[request requestHeaders] objectForKey:@"Authorization"];
-        [[[SDWebImageManager sharedManager] imageDownloader] setValue:authorization forHTTPHeaderField:@"Authorization"];
+    
         RepositoryInfo *thisRepository = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:serviceDocReq.accountUUID tenantID:serviceDocReq.tenantID];
         AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:serviceDocReq.accountUUID];
         
@@ -431,15 +429,16 @@ NSString * const kProductNameEnterprise = @"Enterprise";
             [self callListeners:@selector(serviceDocumentRequestFailed:) forAccountUuid:[serviceDocReq accountUUID] withObject:request];
         }
 #else
-        //check if already exist
-        if (![[LogoManager shareManager] isExistLogosForAccount:serviceDocReq.accountUUID]
-            && [self getConfigRepoForAccountUUID:serviceDocReq.accountUUID]) {
-            FolderDescendantsRequest *logoRequest = [self logosRequest:serviceDocReq.accountUUID];
-            [logoRequest setUserInfo:[NSDictionary dictionaryWithObject:serviceDocReq forKey:@"serviceDocReq"]];
-            [self.networkQueue addOperation:logoRequest];
-        }else {
-            //TODO:nothing to do
+        //check if we should load logos from server
+        RepositoryInfo *repoConfig = [self getConfigRepoForAccountUUID:serviceDocReq.accountUUID];
+        if (repoConfig && [repoConfig latestChangeLogToken]) {
+            if ([[LogoManager shareManager] isNeedUpdateLogosWithRepository:repoConfig accountUUID:serviceDocReq.accountUUID]) {
+                FolderDescendantsRequest *logoRequest = [self logosRequest:serviceDocReq.accountUUID];
+                [logoRequest setUserInfo:[NSDictionary dictionaryWithObject:serviceDocReq forKey:@"serviceDocReq"]];
+                [self.networkQueue addOperation:logoRequest];
+            }
         }
+        
 #endif
         [self.accountsRunning removeObject:[serviceDocReq accountUUID]];
     }
@@ -487,7 +486,7 @@ NSString * const kProductNameEnterprise = @"Enterprise";
     else if ([request isKindOfClass:[FolderDescendantsRequest class]]) {
         ServiceDocumentRequest *serviceDocReq = (ServiceDocumentRequest *)[request.userInfo objectForKey:@"serviceDocReq"];
         FolderDescendantsRequest *logoRequest = (FolderDescendantsRequest *)request;
-        [[LogoManager shareManager] setLogoInfo:logoRequest.folderDescendants accountUUID:serviceDocReq.accountUUID];
+        [[LogoManager shareManager] setLogoInfo:logoRequest.folderDescendants accountUUID:serviceDocReq.accountUUID configRepo:[self getConfigRepoForAccountUUID:logoRequest.accountUUID]];
         [self callListeners:@selector(serviceDocumentRequestFinished:) forAccountUuid:[serviceDocReq accountUUID] withObject:serviceDocReq];
     }
 }
@@ -567,9 +566,10 @@ NSString * const kProductNameEnterprise = @"Enterprise";
     
     NSString *folder = [configRepo rootFolderHref];
     NSString *folderDescendants = [folder stringByReplacingOccurrencesOfString:@"children" withString:@"descendants"];
-    NSString *folderDescendantsUrl = [folderDescendants stringByAppendingString:@"&depth=-1"];
+    //NSString *folderDescendantsUrl = [folderDescendants stringByAppendingString:@"&depth=-1"];
     NSDictionary *defaultParamsDictionary = [[LinkRelationService shared] defaultOptionalArgumentsForFolderChildrenCollection];
-    NSURL *folderChildrenCollectionURL = [[NSURL URLWithString:folderDescendantsUrl] URLByAppendingParameterDictionary:defaultParamsDictionary];
+    [defaultParamsDictionary setValue:@"-1" forKey:@"depth"];
+    NSURL *folderChildrenCollectionURL = [[NSURL URLWithString:folderDescendants] URLByAppendingParameterDictionary:defaultParamsDictionary];
     
     AlfrescoLogDebug(@"logos request url:%@", folderChildrenCollectionURL);
     

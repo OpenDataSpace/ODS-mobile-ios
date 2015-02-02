@@ -58,6 +58,9 @@ NSString * const kDefaultImageExtension = @"jpg";
         if([CLLocationManager locationServicesEnabled])
         {
             [self setLocationManager:[[[CLLocationManager alloc] init] autorelease]];
+            if (IOS8_OR_LATER) {
+                [self.locationManager requestAlwaysAuthorization];
+            }
             [self.locationManager setDelegate:self];
         }
     }

@@ -146,9 +146,10 @@ NSString * const  kMoveTargetTypeFolder = @"TYPE_FOLDER";;
 
 - (void)companyHomeRequest
 {
-    NSString *folder = [_parentItem rootFolderHref];
+    NSString *folder = [[_parentItem rootFolderHref] stringByReplacingOccurrencesOfString:@"children" withString:@"foldertree"];
     NSDictionary *defaultParamsDictionary = [[LinkRelationService shared] defaultOptionalArgumentsForFolderChildrenCollection];
     NSURL *folderChildrenCollectionURL = [[NSURL URLWithString:folder] URLByAppendingParameterDictionary:defaultParamsDictionary];
+    
     
     FolderItemsHTTPRequest *down = [[FolderItemsHTTPRequest alloc] initWithURL:folderChildrenCollectionURL accountUUID:self.selectedAccountUUID];
     [down setDelegate:self];
@@ -318,6 +319,8 @@ NSString * const  kMoveTargetTypeFolder = @"TYPE_FOLDER";;
     }else if ([_itemType isEqualToString:kMoveTargetTypeFolder]) {
         if (_parentItem != nil && [_parentItem isKindOfClass:[RepositoryInfo class]]) {
             [self companyHomeRequest];
+        } else {
+            [self folderItemsRequest];
         }
     }
 }
@@ -441,6 +444,7 @@ NSString * const  kMoveTargetTypeFolder = @"TYPE_FOLDER";;
 
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
+    [self dataSourceFinishedLoadingWithSuccess:NO];
     [self clearAllHUDs];
     AlfrescoLogDebug(@"FAILURE %@", [request error]);
 }

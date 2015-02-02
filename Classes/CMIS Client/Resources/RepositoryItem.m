@@ -124,7 +124,8 @@
     NSString *url = [self selfURL];
     if ([self isFolder])
     {
-        url = [NSString stringByAppendingString:@"&&allVersion=true" toString:url];//@"/tree"
+        url = [url stringByReplacingOccurrencesOfString:@"entry" withString:@"descendants"];
+        url = [NSString stringByAppendingString:@"&allVersions=true&unfileObjects=delete&continueOnFailure=true" toString:url];//@"/tree"
     }
     return url;
 }
