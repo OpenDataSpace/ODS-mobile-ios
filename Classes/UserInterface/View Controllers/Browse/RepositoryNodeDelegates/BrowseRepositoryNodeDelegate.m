@@ -346,7 +346,7 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
     // Zero-height UIView removes trailing empty cells, which look strange if the last UITableViewCell is expanded
-    return [[[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 0)] autorelease];
+    return [[[UIView alloc] initWithFrame:CGRectZero] autorelease];//CGRectMake(0, 0, tableView.frame.size.width, 0)] autorelease];
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath

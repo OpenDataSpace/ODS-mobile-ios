@@ -1669,7 +1669,10 @@ NSString * const kMultiSelectMove = @"moveAction";
     }
 
     [self.browseDataSource.repositoryItems removeObjectsAtIndexes:indexes];
+    [self.tableView setContentOffset:CGPointZero animated:NO];
+    [self.tableView beginUpdates];
     [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:kDefaultTableViewRowAnimation];
+    [self.tableView endUpdates];
     [indexes release];
     
     [self setEditing:NO];
