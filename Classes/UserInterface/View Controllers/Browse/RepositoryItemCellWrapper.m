@@ -101,9 +101,11 @@
     if (isDownloadingPreview)
     {
         [self.cell setAccessoryView:[self makeCancelPreviewDisclosureButton]];
+        [self.cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     }
     else
     {
+        [self.cell setSelectionStyle:UITableViewCellSelectionStyleBlue];
         [self.cell setAccessoryView:[self makeDetailDisclosureButton]];
     }
 }
@@ -139,6 +141,7 @@
     [button setFrame:CGRectMake(0, 0, buttonImage.size.width, buttonImage.size.height)];
     [button setImage:buttonImage forState:UIControlStateNormal];
     [button setShowsTouchWhenHighlighted:YES];
+    [self.cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     [button addTarget:self action:@selector(accessoryButtonTapped:withEvent:) forControlEvents:UIControlEventTouchUpInside];
     return button;
 }
@@ -221,7 +224,6 @@
         filename = child.title;
     }
     [cell.filename setText:filename];
-    [cell setSelectionStyle:UITableViewCellSelectionStyleBlue];
     [self setIsDownloadingPreview:NO];
     
     if ([child isFolder])

@@ -181,7 +181,7 @@
         _uploadInfo.repositoryItem = [itemParser parse];
         [_uploadInfo setCmisObjectId:_uploadInfo.repositoryItem.guid];
         [_uploadInfo setRepositoryItem:_uploadInfo.repositoryItem];
-        
+        AlfrescoLogDebug(@"Create empty file guid:%@ changeToken:%@", _uploadInfo.repositoryItem.guid, _uploadInfo.repositoryItem.changeToken);
         return YES;
     }
     
@@ -196,7 +196,7 @@
     
     if (_error == nil && [objRequest responseStatusCode] == 200) {
         _uploadInfo.repositoryItem = [objRequest repositoryItem];
-        AlfrescoLogDebug(@"uploaded file size:%@, file name:%@ changeToken:%@",[_uploadInfo.repositoryItem.metadata objectForKey:@"cmis:contentStreamLength"],_uploadInfo.repositoryItem.title, _uploadInfo.repositoryItem.changeToken);
+        AlfrescoLogDebug(@"uploaded file guid:%@ changeToken:%@",_uploadInfo.repositoryItem.guid, _uploadInfo.repositoryItem.changeToken);
         self.sentBytes = [[_uploadInfo.repositoryItem.metadata objectForKey:@"cmis:contentStreamLength"] longLongValue];
         
         return YES;
@@ -209,7 +209,7 @@
 - (BOOL) appendChunkData:(NSMutableData*) contentData dataLength:(uint64_t) dataLength isLastChunk:(BOOL)isLastChunk
 {
     @autoreleasepool {
-        AlfrescoLogDebug(@"appendChunkData file name:%@ changeToken:%@",[_uploadInfo.repositoryItem.metadata objectForKey:@"cmis:contentStreamLength"],_uploadInfo.repositoryItem.title, _uploadInfo.repositoryItem.changeToken);
+        AlfrescoLogDebug(@"Begin appendChunkData file guid:%@ changeToken:%@",_uploadInfo.repositoryItem.guid, _uploadInfo.repositoryItem.changeToken);
         CMISAppendContentHTTPRequest *appendRequest = [CMISAppendContentHTTPRequest cmisAppendRequestWithUploadInfo:_uploadInfo contentData:contentData isLastChunk:isLastChunk];
         [appendRequest addRequestHeader:@"Content-Type" value:_mimeType];
         [appendRequest setUploadProgressDelegate:self];
@@ -219,11 +219,11 @@
         
         if (_error == nil && ([appendRequest responseStatusCode] == 201 || [appendRequest responseStatusCode] == 200)) {  //put data successfully
             AlfrescoLogDebug(@"upload size:%llu  total:%llu",self.sentBytes, self.totalBytes);
-            AlfrescoLogDebug(@"appendChunkData:%@ ,error:%@", [NSString stringWithUTF8String:[[appendRequest responseData] bytes]], _error);
+            AlfrescoLogDebug(@"appendChunkData success:%@ ,error:%@", [NSString stringWithUTF8String:[[appendRequest responseData] bytes]], _error);
             return YES;
         }
         
-        AlfrescoLogDebug(@"appendChunkData:%@ ,error:%@", [NSString stringWithUTF8String:[[appendRequest responseData] bytes]], _error);
+        AlfrescoLogDebug(@"appendChunkData failed file guid:%@ changeToken:%@ response:%@ ,error:%@",_uploadInfo.repositoryItem.guid, _uploadInfo.repositoryItem.changeToken, [NSString stringWithUTF8String:[[appendRequest responseData] bytes]], _error);
     }
     
     return NO;

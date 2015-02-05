@@ -721,9 +721,8 @@ static NSOperationQueue *sharedQueue = nil;
 	#if DEBUG_REQUEST_STATUS
 	ASI_DEBUG_LOG(@"[STATUS] Request cancelled: %@",self);
 	#endif
-    
-	[[self cancelledLock] lock];
 
+	[[self cancelledLock] lock];
     if ([self isCancelled] || [self complete]) {
 		[[self cancelledLock] unlock];
 		return;
@@ -736,14 +735,15 @@ static NSOperationQueue *sharedQueue = nil;
     [self willChangeValueForKey:@"isCancelled"];
     cancelled = YES;
     [self didChangeValueForKey:@"isCancelled"];
-    
 	[[self cancelledLock] unlock];
+    
+    [self markAsFinished];  //force to finish
 	CFRelease(self);
 }
 
 - (void)cancel
 {
-    [self performSelector:@selector(cancelOnRequestThread) onThread:[[self class] threadForRequest:self] withObject:nil waitUntilDone:NO];    
+    [self performSelector:@selector(cancelOnRequestThread) onThread:[[self class] threadForRequest:self] withObject:nil waitUntilDone:NO];
 }
 
 - (void)clearDelegatesAndCancel
@@ -760,7 +760,6 @@ static NSOperationQueue *sharedQueue = nil;
 	// Clear blocks
 	[self releaseBlocksOnMainThread];
 	#endif
-
 	[[self cancelledLock] unlock];
 	[self cancel];
 }
@@ -4839,7 +4838,7 @@ static NSOperationQueue *sharedQueue = nil;
 	CFRunLoopSourceContext context = {0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
 	CFRunLoopSourceRef source = CFRunLoopSourceCreate(kCFAllocatorDefault, 0, &context);
 	CFRunLoopAddSource(CFRunLoopGetCurrent(), source, kCFRunLoopDefaultMode);
-
+    
     BOOL runAlways = YES; // Introduced to cheat Static Analyzer
 	while (runAlways) {
 		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];

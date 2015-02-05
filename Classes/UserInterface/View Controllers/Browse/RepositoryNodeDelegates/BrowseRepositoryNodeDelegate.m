@@ -144,7 +144,9 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
     {
         cellWrapper = [self.repositoryItems objectAtIndex:[indexPath row]];
         child = [cellWrapper anyRepositoryItem];
-        [self.multiSelectToolbar userDidDeselectItem:child atIndexPath:indexPath];
+        if (![cellWrapper.cell isKindOfClass:[UploadProgressTableViewCell class]] && !cellWrapper.isDownloadingPreview) {
+            [self.multiSelectToolbar userDidDeselectItem:child atIndexPath:indexPath];
+        }
     }
 }
 
@@ -169,8 +171,10 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
     }
     
     if ([tableView isEditing])
-    {
-        [self.multiSelectToolbar userDidSelectItem:child atIndexPath:indexPath];
+    {  //UploadProgressTableViewCell && cellWrapper.isDownloadingPreview
+        if (![cellWrapper.cell isKindOfClass:[UploadProgressTableViewCell class]] && !cellWrapper.isDownloadingPreview) {
+            [self.multiSelectToolbar userDidSelectItem:child atIndexPath:indexPath];
+        }
     }
     else
     {
@@ -669,9 +673,16 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
 - (void)tableView:(UITableView *)tableView didRecognizeLongPressOnRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell * cell = [tableView cellForRowAtIndexPath:indexPath];
     RepositoryItem *item = [[self.repositoryItems objectAtIndex:indexPath.row] anyRepositoryItem];
-    if([self.actionsDelegate respondsToSelector:@selector(showOperationMenu:)] && (cell && item))
-    {
-        [self.actionsDelegate performSelector:@selector(showOperationMenu:) withObject:[NSArray arrayWithObjects:cell, item, nil]];
+    RepositoryItemCellWrapper *cellWrapper = nil;
+    cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
+    
+    if (!self.tableView.editing) {
+        if (![cellWrapper.cell isKindOfClass:[UploadProgressTableViewCell class]] && !cellWrapper.isDownloadingPreview) {
+            if([self.actionsDelegate respondsToSelector:@selector(showOperationMenu:)] && (cell && item))
+            {
+                [self.actionsDelegate performSelector:@selector(showOperationMenu:) withObject:[NSArray arrayWithObjects:cell, item, nil]];
+            }
+        }
     }
 }
 

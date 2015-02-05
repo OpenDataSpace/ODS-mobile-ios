@@ -116,7 +116,7 @@
     {
         [self.delegate previewManager:self downloadCancelled:self.currentDownload];
     }
-    
+
     [self setCurrentDownload:nil];
 }
 
@@ -189,10 +189,11 @@
     [self.currentDownload setDownloadStatus:DownloadInfoStatusDownloaded];
     [self.currentDownload setTempFilePath:request.downloadDestinationPath];
     
-    
+    DownloadInfo *currentDownlaodInfo = self.currentDownload;
+    self.currentDownload = nil;
     if ([self.delegate respondsToSelector:@selector(previewManager:downloadFinished:)])
     {
-        [self.delegate previewManager:self downloadFinished:self.currentDownload];
+        [self.delegate previewManager:self downloadFinished:currentDownlaodInfo];
     }
     
     DownloadInfo *downloadInfo = request.downloadInfo;

@@ -22,7 +22,7 @@
     NSString *contentDisposition = [NSString stringWithFormat:@"attachment;filename*=UTF-8''%@",[uploadInfo.completeFileName stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     NSString *appendURLString = [NSString stringWithFormat:@"%@&append=true&isLastChunk=%@%@",[CMISAppendContentHTTPRequest appendURLFromUploadInfo:uploadInfo], isLastChunk?@"true":@"false", uploadInfo.repositoryItem.changeToken?[NSString stringWithFormat:@"&changeToken=%@", uploadInfo.repositoryItem.changeToken]:@""];
     
-     AlfrescoLogDebug(@"cmisAppendRequestWithUploadInfo file name:%@ changeToken:%@ --- %@",uploadInfo.repositoryItem.title, uploadInfo.repositoryItem.changeToken, appendURLString);
+     AlfrescoLogDebug(@"cmisAppendRequestWithUploadInfo file guid:%@ changeToken:%@ --- %@",uploadInfo.repositoryItem.guid, uploadInfo.repositoryItem.changeToken, appendURLString);
     
     CMISAppendContentHTTPRequest *request = [CMISAppendContentHTTPRequest requestWithURL:[NSURL URLWithString:appendURLString] accountUUID:[uploadInfo selectedAccountUUID]];
     [request setRequestMethod:@"PUT"];

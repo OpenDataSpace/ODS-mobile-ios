@@ -103,21 +103,29 @@
     [self.tableView setAllowsSelection:YES];
     [self setPresentNewDocumentPopover:NO];
     [self setPresentEditMode:NO];
+    
+    if (indexPath != nil)
+    {
+        
+        [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
+    }
 }
 
 - (void)previewManager:(PreviewManager *)manager downloadStarted:(DownloadInfo *)info
 {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        NSIndexPath *indexPath = [self getIndexPathForItem:info.repositoryItem];
-        RepositoryItemTableViewCell *cell = (RepositoryItemTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
-        RepositoryItemCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
-        
-        [manager setProgressIndicator:cell.progressBar];
-        [cell.progressBar setProgress:manager.currentProgress];
-        [cell.details setHidden:YES];
-        [cell.favIcon setHidden:YES];
-        [cell.progressBar setHidden:NO];
-        [self setIsDownloadingPreview:YES forWrapper:cellWrapper];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSIndexPath *indexPath = [self getIndexPathForItem:info.repositoryItem];
+            RepositoryItemTableViewCell *cell = (RepositoryItemTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+            RepositoryItemCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
+            
+            [manager setProgressIndicator:cell.progressBar];
+            [cell.progressBar setProgress:manager.currentProgress];
+            [cell.details setHidden:YES];
+            [cell.favIcon setHidden:YES];
+            [cell.progressBar setHidden:NO];
+            [self setIsDownloadingPreview:YES forWrapper:cellWrapper];
+        });
     });
 }
 
