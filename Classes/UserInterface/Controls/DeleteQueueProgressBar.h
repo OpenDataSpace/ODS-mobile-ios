@@ -45,7 +45,7 @@
     NSString *_selectedUUID;
     NSString *_tenantID;
 }
-
+@property (nonatomic, retain) UIView *containerView;
 @property (nonatomic, retain) ASINetworkQueue *requestQueue;
 @property (nonatomic, retain) NSArray *itemsToDelete;
 @property (nonatomic, retain) UIAlertView *progressAlert;

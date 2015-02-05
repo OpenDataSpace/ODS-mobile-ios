@@ -1683,6 +1683,7 @@ NSString * const kMultiSelectMove = @"moveAction";
 {
     self.deleteQueueProgressBar = nil;
     [self setEditing:NO];
+    [self.browseDataSource reloadDataSource];
 }
 
 #pragma mark - CreateFolder Delegate methods
@@ -1884,7 +1885,7 @@ NSString * const kMultiSelectMove = @"moveAction";
 - (void) renameItem:(NSString*) newFileName
 {
     if (_selectedItem && newFileName) {
-        self.renameQueueProgressBar = [RenameQueueProgressBar createWithItem:[NSDictionary dictionaryWithObjectsAndKeys:_selectedItem, @"Item", newFileName, @"NewFileName",nil] delegate:self andMessage:NSLocalizedString(@"Rrename.progressbar.message", @"Renaming Item")];
+        self.renameQueueProgressBar = [RenameQueueProgressBar createWithItem:[NSDictionary dictionaryWithObjectsAndKeys:_selectedItem, @"Item", newFileName, @"NewFileName",nil] delegate:self andMessage:NSLocalizedString(@"rename.progressbar.message", @"Renaming Item")];
         [self.renameQueueProgressBar setSelectedUUID:self.selectedAccountUUID];
         [self.renameQueueProgressBar setTenantID:self.tenantID];
         [self.renameQueueProgressBar startRenaming];

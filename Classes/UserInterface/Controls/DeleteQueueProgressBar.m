@@ -27,7 +27,9 @@
 
 NSInteger const kDeleteCounterTag =  6;
 
-@interface DeleteQueueProgressBar (private)
+@interface DeleteQueueProgressBar () {
+    NSInteger _itemsTotal;
+}
 - (void) loadDeleteView;
 - (void) updateProgressView;
 @end
@@ -41,6 +43,7 @@ NSInteger const kDeleteCounterTag =  6;
 @synthesize progressView = _progressView;
 @synthesize selectedUUID = _selectedUUID;
 @synthesize tenantID = _tenantID;
+@synthesize containerView = _containerView;
 
 - (void) dealloc
 {
@@ -63,6 +66,7 @@ NSInteger const kDeleteCounterTag =  6;
         self.itemsToDelete = itemsToDelete;
         self.delegate = del;
         self.progressTitle = message;
+        _itemsTotal = [itemsToDelete count];
         _deletedItems = [[NSMutableArray array] retain];
         [self loadDeleteView];
     }
@@ -79,33 +83,37 @@ NSInteger const kDeleteCounterTag =  6;
                                                    delegate:self
                                           cancelButtonTitle:NSLocalizedString(@"cancelButton", @"Cancel")
                                           otherButtonTitles:nil];
-    alert.message = [NSString stringWithFormat: @"%@%@", alert.message, @"\n\n\n\n"];
+    //alert.message = [NSString stringWithFormat: @"%@%@", alert.message, @"\n\n\n\n"];
     self.progressAlert = alert;
     
 	[alert release];
+    
+    //create a view to contain the progress view and label
+    _containerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 270.0f, 40.0f)];
+    [self.progressAlert setValue:_containerView forKey:@"accessoryView"];
 	
 	// create a progress bar and put it in the alert
-	UIProgressView *progress = [[UIProgressView alloc] initWithFrame:CGRectMake(30.0f, 80.0f, 225.0f, 90.0f)];
+	UIProgressView *progress = [[UIProgressView alloc] initWithFrame:CGRectMake(10.0f, 10.0f, 250.0f, 10.0f)];
     self.progressView = progress;
     [progress setProgressViewStyle:UIProgressViewStyleBar];
 	[progress release];
-	[self.progressAlert addSubview:self.progressView];
+	[_containerView addSubview:self.progressView];
 	
 	// create a label, and add that to the alert, too
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(30.0f, 90.0f, 225.0f, 40.0f)];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 20.0f, 270.0f, 20.0f)];
     label.backgroundColor = [UIColor clearColor];
-    label.textColor = [UIColor whiteColor];
+    label.textColor = [UIColor grayColor];
     label.textAlignment = UITextAlignmentCenter;
     label.font = [UIFont systemFontOfSize:13.0f];
     label.text = @"x files left";
     label.tag = kDeleteCounterTag;
-    [self.progressAlert addSubview:label];
+    [_containerView addSubview:label];
     [label release];
 }
 
 - (void) updateProgressView
 {
-    UILabel *label = (UILabel *)[self.progressAlert viewWithTag:kDeleteCounterTag];
+    UILabel *label = (UILabel *)[self.containerView viewWithTag:kDeleteCounterTag];
     if([self.requestQueue requestsCount] == 1)
     {
         label.text = [NSString stringWithFormat:NSLocalizedString(@"deleteprogress.file-left", @"1 item left"), 
@@ -116,6 +124,8 @@ NSInteger const kDeleteCounterTag =  6;
         label.text = [NSString stringWithFormat:NSLocalizedString(@"deleteprogress.files-left", @"x items left"), 
                       [self.requestQueue requestsCount]];
     }
+    float progress = (float)[_deletedItems count]/_itemsTotal;
+    [self.progressView setProgress:progress animated:YES];
 }
 
 #pragma mark - public methods
@@ -220,7 +230,7 @@ NSInteger const kDeleteCounterTag =  6;
     {
         [_requestQueue cancelAllOperations];
         
-        if (self.delegate && [self.delegate respondsToSelector:@selector(deleteQueueWasCancelled::)])
+        if (self.delegate && [self.delegate respondsToSelector:@selector(deleteQueueWasCancelled:)])
         {
             [self.delegate deleteQueueWasCancelled:self];
         }

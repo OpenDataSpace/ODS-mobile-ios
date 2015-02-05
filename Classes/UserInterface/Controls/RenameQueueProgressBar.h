@@ -22,6 +22,7 @@
 
 @interface RenameQueueProgressBar : NSObject <UIAlertViewDelegate, ASIProgressDelegate>
 
+@property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, strong) ASINetworkQueue *requestQueue;
 @property (nonatomic, strong) NSDictionary *itemToRename;
 @property (nonatomic, strong) UIAlertView *progressAlert;
