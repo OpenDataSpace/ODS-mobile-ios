@@ -1235,6 +1235,7 @@ NSString * const kMultiSelectMove = @"moveAction";
     {
         DocumentsNavigationController *navController = (DocumentsNavigationController *)[self navigationController];
         editing ? [navController hidePanels] : [navController showPanels];
+        [navController resizeView:[[navController.viewControllers lastObject] view]];
     }
 
     if (editing)

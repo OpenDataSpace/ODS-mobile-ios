@@ -160,7 +160,11 @@ DetailNavigationController *detailController;
         newNavigation.modalPresentationStyle = newController.modalPresentationStyle;
         newNavigation.modalTransitionStyle = newController.modalTransitionStyle;
         newNavigation.navigationBar.barStyle = UIBarStyleBlackOpaque;
-        [appDelegate presentModalViewController:newNavigation animated:YES];
+        if (navController) {
+            [navController presentModalViewController:newNavigation animated:YES];
+        }else {
+            [appDelegate presentModalViewController:newNavigation animated:YES];
+        }
     }
     else
     {

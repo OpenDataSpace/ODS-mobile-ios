@@ -69,5 +69,6 @@
 
 - (NSString *)itemText:(NSInteger)itemsCount;
 
+- (void)resizeView:(UIView *)view;
 
 @end
