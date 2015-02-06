@@ -502,10 +502,11 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
         
         [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
         [viewController release];
-    }
-    if([self.actionsDelegate respondsToSelector:@selector(loadRightBarAnimated:)])
-    {
-        [self.actionsDelegate performSelector:@selector(loadRightBarAnimated:) withObject:[NSNumber numberWithBool:NO]];
+    }else {
+        if([self.actionsDelegate respondsToSelector:@selector(loadRightBarAnimated:)])
+        {
+            [self.actionsDelegate performSelector:@selector(loadRightBarAnimated:) withObject:[NSNumber numberWithBool:NO]];
+        }
     }
     [self stopHUD];
 }
@@ -524,19 +525,21 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
     {
 		// we're loading a child which needs to
 		// be created and pushed onto the nav stack
-        FolderItemsHTTPRequest *fid = (FolderItemsHTTPRequest *) request;
-        
-        // create a new view controller for the list of repository items (documents and folders)            
-        RepositoryNodeViewController *viewController = [[RepositoryNodeViewController alloc] initWithNibName:nil bundle:nil];
-        [viewController setSelectedAccountUUID:[self selectedAccountUUID]];
-        [viewController setTenantID:[self tenantID]];
-        [viewController setFolderItems:fid];
-        [viewController setTitle:[fid parentTitle]];
-        [viewController setGuid:fid.item.guid];
-        
-        // push that view onto the nav controller's stack
-        [self.navigationController pushViewController:viewController animated:YES];
-        [viewController release];
+        if (self.actionsDelegate) {
+            FolderItemsHTTPRequest *fid = (FolderItemsHTTPRequest *) request;
+            
+            // create a new view controller for the list of repository items (documents and folders)            
+            RepositoryNodeViewController *viewController = [[RepositoryNodeViewController alloc] initWithNibName:nil bundle:nil];
+            [viewController setSelectedAccountUUID:[self selectedAccountUUID]];
+            [viewController setTenantID:[self tenantID]];
+            [viewController setFolderItems:fid];
+            [viewController setTitle:[fid parentTitle]];
+            [viewController setGuid:fid.item.guid];
+            
+            // push that view onto the nav controller's stack
+            [self.navigationController pushViewController:viewController animated:YES];
+            [viewController release];
+        }
 	} 
     
     [self stopHUD];

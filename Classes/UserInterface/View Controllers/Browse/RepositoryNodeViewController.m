@@ -227,6 +227,10 @@ NSString * const kMultiSelectMove = @"moveAction";
 - (void)viewWillAppear:(BOOL)animated
 {
 	[super viewWillAppear:animated];
+    if (!IS_IPAD && !IOS8_OR_LATER) {
+        [self.browseDelegate setActionsDelegate:self];
+        [self.browseDataSource setDelegate:self];
+    }
     [self updateCurrentRowSelection];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:kDetailViewControllerChangedNotification object:nil];
 }
@@ -234,6 +238,11 @@ NSString * const kMultiSelectMove = @"moveAction";
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    
+    if (!IS_IPAD && !IOS8_OR_LATER) {
+        [self.browseDelegate setActionsDelegate:nil];
+        [self.browseDataSource setDelegate:nil];
+    }
     
     if (self.actionSheet.window)
     {
@@ -796,7 +805,7 @@ NSString * const kMultiSelectMove = @"moveAction";
         [self.searchDelegate.searchController.searchResultsTableView deselectRowAtIndexPath:selectedRow animated:YES];
     }
     
-    if (IS_IPAD)
+    if (IS_IPAD && !self.isEditing)
     {
         NSIndexPath *indexPath = [self indexPathForNodeWithGuid:[IpadSupport getCurrentDetailViewControllerObjectID]];
         if (self.tableView)
