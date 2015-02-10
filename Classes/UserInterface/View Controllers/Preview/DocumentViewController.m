@@ -1377,6 +1377,7 @@ NSInteger const kGetCommentsCountTag = 6;
     [UIView setAnimationDuration:kDocumentFadeInTime];
     [self.webView setAlpha:1.0];
     [UIView commitAnimations];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kShowDocumentLoadFinishNotification object:nil];
 }
 
 /**
@@ -1396,6 +1397,7 @@ NSInteger const kGetCommentsCountTag = 6;
         [self performSelectorOnMainThread:@selector(previewLoadFailed) withObject:nil waitUntilDone:NO];
     }
     [self.webView setAlpha:1.0];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kShowDocumentLoadFinishNotification object:nil];
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType

@@ -24,6 +24,8 @@
 //  Constants.m
 //
 
+NSString * const kShowDocumentLoadFinishNotification = @"kShowDocumentLoadFinishNotification";
+
 NSString * const kDetailViewControllerChangedNotification = @"detailViewControllerChanged";
 NSString * const kUserPreferencesChangedNotification = @"userPreferencesChangedNotification";
 NSString * const kKeychainUserDefaultsDidChangeNotification = @"keychainUserDefaultsDidChangeNotification";

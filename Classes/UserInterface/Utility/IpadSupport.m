@@ -79,8 +79,8 @@ DetailNavigationController *detailController;
     if (IS_IPAD && detailController != nil && newController != nil) 
     {
         [detailController.detailViewController didReceiveMemoryWarning];
-        [detailController resetViewControllerStackWithNewTopViewController:newController dismissPopover:dismiss];
         [detailController.detailViewController viewDidUnload];
+        [detailController resetViewControllerStackWithNewTopViewController:newController dismissPopover:dismiss];
         
         if (fullScreen == YES)
         {

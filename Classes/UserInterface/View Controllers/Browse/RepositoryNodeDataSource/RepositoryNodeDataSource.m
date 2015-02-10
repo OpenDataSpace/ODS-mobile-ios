@@ -35,6 +35,7 @@
 #import "FavoriteManager.h"
 #import "AlfrescoMDMLite.h"
 #import "NSURL+HTTPURLUtils.h"
+#import "RepositoryNodeViewController.h"
 
 UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRowAnimationFade;
 
@@ -433,14 +434,30 @@ UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRo
 #pragma mark - HUD Delegate
 - (void)startHUD
 {
-    if(!self.HUD)
+    if(self.delegate && [self.delegate respondsToSelector:@selector(enableNavigationRightBarItem:)])
     {
-        [self setHUD:createAndShowProgressHUDForView(self.tableView)];
+        [self.delegate performSelector:@selector(enableNavigationRightBarItem:) withObject:[NSNumber numberWithBool:NO]];
     }
+    
+    if(self.delegate) {
+        RepositoryNodeViewController *nodeController = (RepositoryNodeViewController*) self.delegate;
+        if(!self.HUD)
+        {
+            [self setHUD:createAndShowProgressHUDForView([[nodeController navigationController] view])];
+        }
+    }
+//    if(!self.HUD)
+//    {
+//        [self setHUD:createAndShowProgressHUDForView(self.tableView)];
+//    }
 }
 
 - (void)stopHUD
 {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(enableNavigationRightBarItem:)])
+    {
+        [self.delegate performSelector:@selector(enableNavigationRightBarItem:) withObject:[NSNumber numberWithBool:YES]];
+    }
     if(self.HUD)
     {
         stopProgressHUD(self.HUD);

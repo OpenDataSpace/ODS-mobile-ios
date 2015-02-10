@@ -101,8 +101,12 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleFilesExpired:) name:kNotificationExpiredFiles object:nil];
     
 	[Theme setThemeForUITableViewController:self];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showDocumentNotification:) name:kShowDocumentLoadFinishNotification object:nil];
 }
 
+- (void) showDocumentNotification:(NSNotification*) noti {
+    [self.tableView setAllowsSelection:YES];
+}
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
 	return YES;
@@ -140,6 +144,14 @@
     }
 }
 
+- (DocumentViewController*) sharedDocumentViewController {
+    static DocumentViewController *sharedViewController = nil;
+    if (sharedViewController == nil) {
+        [[DocumentViewController alloc] initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
+    }
+    return sharedViewController;
+}
+    
 - (void) showDocument
 {
     NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
@@ -165,6 +177,7 @@
     }
     else
     {
+        [self.tableView setAllowsSelection:NO];
         DocumentViewController *viewController = [[DocumentViewController alloc] initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
         
         if (downloadMetadata && downloadMetadata.key)

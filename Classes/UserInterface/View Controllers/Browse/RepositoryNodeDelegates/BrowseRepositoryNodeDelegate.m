@@ -128,6 +128,7 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(documentUpdated:) name:kNotificationDocumentUpdated object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(documentFavoritedOrUnfavorited:) name:kNotificationDocumentFavoritedOrUnfavorited object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleFilesExpired:) name:kNotificationExpiredFiles object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showDocumentNotification:) name:kShowDocumentLoadFinishNotification object:nil];
     }
     return self;
 }
@@ -201,6 +202,7 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
             //FavoriteManager *favoriteManager = [FavoriteManager sharedManager];
             //FavoriteFileDownloadManager *fileManager = [FavoriteFileDownloadManager sharedInstance];
             //NSString *fileName = [fileManager generatedNameForFile:child.title withObjectID:child.guid];
+            [self.tableView setAllowsSelection:NO];
             PreviewCacheManager *previewManager = [PreviewCacheManager sharedManager];
             FileDownloadManager *downloadManager = [FileDownloadManager sharedInstance];
             NSDictionary *previewInfo = [previewManager downloadInfoFromCache:child];
@@ -247,6 +249,7 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
                 }
                 else
                 {
+                    [tableView setAllowsSelection:YES];
                     displayWarningMessageWithTitle(NSLocalizedString(@"noContentWarningMessage", @"This document has no content."), NSLocalizedString(@"noContentWarningTitle", @"No content"));
                 }
             }
@@ -395,14 +398,27 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
 #pragma mark - HUD Delegate
 - (void)startHUDInTableView:(UITableView *)tableView
 {
-    if(!self.HUD)
-    {
-        [self setHUD:createAndShowProgressHUDForView(tableView)];
+    if(self.actionsDelegate) {
+        RepositoryNodeViewController *nodeController = (RepositoryNodeViewController*) self.actionsDelegate;
+        [nodeController enableNavigationRightBarItem:NO];
+        if(!self.HUD)
+        {
+            [self setHUD:createAndShowProgressHUDForView([[nodeController navigationController] view])];
+        }
     }
+//    if(!self.HUD)
+//    {
+//        [self setHUD:createAndShowProgressHUDForView(tableView)];
+//    }
 }
 
 - (void)stopHUD
 {
+    if(self.actionsDelegate && [self.actionsDelegate respondsToSelector:@selector(enableNavigationRightBarItem:)]) {
+        RepositoryNodeViewController *nodeController = (RepositoryNodeViewController*) self.actionsDelegate;
+        [nodeController enableNavigationRightBarItem:YES];
+    }
+    
     if(self.HUD)
     {
         stopProgressHUD(self.HUD);
@@ -485,7 +501,8 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
 #pragma mark - ASIHTTPRequest Delegate
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
-    [self.tableView setAllowsSelection:YES];
+    dispatch_async(dispatch_get_main_queue(), ^{
+    [self.tableView setAllowsSelection:YES];});
     if ([request isKindOfClass:[ObjectByIdRequest class]])
     {
         ObjectByIdRequest *object = (ObjectByIdRequest*) request;
@@ -513,7 +530,8 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
 
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
-    [self.tableView setAllowsSelection:YES];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.tableView setAllowsSelection:YES];});
     [self stopHUD];
 }
 
@@ -669,6 +687,10 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
             [self.tableView deselectRowAtIndexPath:index animated:YES];
         }
     }
+}
+
+- (void) showDocumentNotification:(NSNotification *)notification {
+    [self.tableView setAllowsSelection:YES];
 }
 
 

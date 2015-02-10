@@ -124,4 +124,6 @@
 @property (nonatomic, retain) RepositoryItem *selectedItem;
 
 - (id)initWithStyle:(UITableViewStyle)style;
+
+- (void)enableNavigationRightBarItem:(BOOL) bEnable;
 @end

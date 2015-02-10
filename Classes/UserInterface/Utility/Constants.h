@@ -30,6 +30,8 @@
 //
 // General Notification Types
 //
+extern NSString * const kShowDocumentLoadFinishNotification;
+
 extern NSString * const kDetailViewControllerChangedNotification;
 extern NSString * const kUserPreferencesChangedNotification;
 extern NSString * const kKeychainUserDefaultsDidChangeNotification;

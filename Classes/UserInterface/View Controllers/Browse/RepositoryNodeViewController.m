@@ -235,6 +235,26 @@ NSString * const kMultiSelectMove = @"moveAction";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:kDetailViewControllerChangedNotification object:nil];
 }
 
+- (void) viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self clearAllHUDs];
+}
+
+- (void)clearAllHUDs
+{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
+        for (UIView *view in [self.navigationController.view subviews])
+        {
+            if ([view class] == [MBProgressHUD class])
+            {
+                stopProgressHUD((MBProgressHUD*)view);
+            }
+        }
+        self.HUD = nil;
+        [self.tableView setAllowsSelection:YES];
+    });
+}
+
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
@@ -326,6 +346,7 @@ NSString * const kMultiSelectMove = @"moveAction";
     [self.browseDataSource.reloadRequest clearDelegatesAndCancel]; //fixed app will be crashed if back to parent folder when refresh folder items
     [self.folderItems clearDelegatesAndCancel];
     [self.folderDescendantsRequest clearDelegatesAndCancel];
+    [self enableNavigationRightBarItem:YES];
     [self stopHUD];
 }
 
@@ -1249,6 +1270,14 @@ NSString * const kMultiSelectMove = @"moveAction";
 
     if (editing)
     {
+        NSIndexPath *indexPath = [self indexPathForNodeWithGuid:[IpadSupport getCurrentDetailViewControllerObjectID]];
+        if (self.tableView)
+        {
+            if (indexPath)
+            {
+                [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
+            }
+        }
         [self.multiSelectToolbar didEnterMultiSelectMode];
         [self loadRightBarForEditMode];
     }
@@ -1639,15 +1668,24 @@ NSString * const kMultiSelectMove = @"moveAction";
         
         [self presentViewController:sheetController animated:YES completion:nil];
     }else {
-        UIActionSheet *sheet = [[[UIActionSheet alloc] initWithTitle:title
-                                                            delegate:self
-                                                   cancelButtonTitle:NSLocalizedString(@"cancelButton", @"Cancel")
-                                              destructiveButtonTitle:NSLocalizedString(@"delete.confirmation.button", @"Delete")
-                                                   otherButtonTitles:nil] autorelease];
-        [sheet setTag:kDeleteActionSheetTag];
-        [self setActionSheet:sheet];
-        // Display on the tabBar in order to maintain device rotation
-        [sheet showFromTabBar:[[(AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate] tabBarController] tabBar]];
+//        if (IS_IPAD) {
+//            UIAlertView * alertView = [[[UIAlertView alloc] initWithTitle:title message:nil delegate:self cancelButtonTitle:NSLocalizedString(@"cancelButton", @"Cancel") otherButtonTitles:NSLocalizedString(@"delete.confirmation.button", @"Delete"), nil] autorelease];
+//            [alertView setTag:kDeleteActionSheetTag];
+//            [alertView setDelegate:self];
+//            [alertView show];
+//            
+//        }else
+        {
+            UIActionSheet *sheet = [[[UIActionSheet alloc] initWithTitle:title
+                                                                delegate:self
+                                                       cancelButtonTitle:NSLocalizedString(@"cancelButton", @"Cancel")
+                                                  destructiveButtonTitle:NSLocalizedString(@"delete.confirmation.button", @"Delete")
+                                                       otherButtonTitles:nil] autorelease];
+            [sheet setTag:kDeleteActionSheetTag];
+            [self setActionSheet:sheet];
+            // Display on the tabBar in order to maintain device rotation
+            [sheet showFromTabBar:[[(AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate] tabBarController] tabBar]];
+        }
     }
 }
 
@@ -2246,6 +2284,14 @@ NSString * const kMultiSelectMove = @"moveAction";
     
     [self presentModalViewControllerHelper:picker];
     [picker release];
+}
+
+- (void)enableNavigationRightBarItem:(BOOL) bEnable {
+    [self.navigationItem.rightBarButtonItem setEnabled:bEnable];
+   
+    for (UIBarButtonItem *item in [self.navigationItem rightBarButtonItems]) {
+        [item setEnabled:bEnable];
+    }
 }
 
 @end
