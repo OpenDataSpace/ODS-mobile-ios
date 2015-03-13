@@ -649,7 +649,7 @@
 "download.failureDetail.title" = "Failed Download";
 "download.progress.waiting" = "Waiting to download ...";
 "download.progress.starting" = "Download starting ...";
-"download.progress.successed" = "Download finished.";
+"download.progress.successed" = "Download completed.";
 "download.progress.files.starting" = " files download starting ...";
 "download.progress.failed" = "Failed to download";
 "download.progress.stopAll" = "Stop All";

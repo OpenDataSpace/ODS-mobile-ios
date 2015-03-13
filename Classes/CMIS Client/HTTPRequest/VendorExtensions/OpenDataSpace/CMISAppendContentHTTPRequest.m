@@ -15,14 +15,21 @@
 
 + (CMISAppendContentHTTPRequest *)cmisAppendRequestWithUploadInfo:(UploadInfo *)uploadInfo contentData:(NSMutableData*) contentData isLastChunk:(BOOL)isLastChunk
 {
-    RepositoryItem *repoItem = [uploadInfo repositoryItem];
+    RepositoryItem *repoItem = nil;
+    if (uploadInfo.temporaryRrepositoryItem) {
+        repoItem = uploadInfo.temporaryRrepositoryItem;
+    }else {
+        repoItem = [uploadInfo repositoryItem];
+    }
+    
+    NSString *upLinkRelation = [CMISAppendContentHTTPRequest appendURLFromUploadRepostoryItem:repoItem];
     
     NSAssert(repoItem != nil, @"Append content stream request repository information.");
     
     NSString *contentDisposition = [NSString stringWithFormat:@"attachment;filename*=UTF-8''%@",[uploadInfo.completeFileName stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-    NSString *appendURLString = [NSString stringWithFormat:@"%@&append=true&isLastChunk=%@%@",[CMISAppendContentHTTPRequest appendURLFromUploadInfo:uploadInfo], isLastChunk?@"true":@"false", uploadInfo.repositoryItem.changeToken?[NSString stringWithFormat:@"&changeToken=%@", uploadInfo.repositoryItem.changeToken]:@""];
+    NSString *appendURLString = [NSString stringWithFormat:@"%@&append=true&isLastChunk=%@%@",upLinkRelation, isLastChunk?@"true":@"false", repoItem.changeToken?[NSString stringWithFormat:@"&changeToken=%@", repoItem.changeToken]:@""];
     
-     AlfrescoLogDebug(@"cmisAppendRequestWithUploadInfo file guid:%@ changeToken:%@ --- %@",uploadInfo.repositoryItem.guid, uploadInfo.repositoryItem.changeToken, appendURLString);
+     AlfrescoLogDebug(@"cmisAppendRequestWithUploadInfo file org guid:%@ temporary object guid:%@ changeToken:%@ --- %@",uploadInfo.repositoryItem.guid, repoItem.guid, repoItem.changeToken, appendURLString);
     
     CMISAppendContentHTTPRequest *request = [CMISAppendContentHTTPRequest requestWithURL:[NSURL URLWithString:appendURLString] accountUUID:[uploadInfo selectedAccountUUID]];
     [request setRequestMethod:@"PUT"];
@@ -39,12 +46,12 @@
     return request;
 }
 
-+ (NSString*) appendURLFromUploadInfo:(UploadInfo*) uploadInfo
++ (NSString*) appendURLFromUploadRepostoryItem:(RepositoryItem*) repoItem
 {
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(rel == %@)" argumentArray:[NSArray arrayWithObjects:@"edit-media", nil]];
-	NSArray *result = [[uploadInfo.repositoryItem linkRelations] filteredArrayUsingPredicate:predicate];
+	NSArray *result = [[repoItem linkRelations] filteredArrayUsingPredicate:predicate];
 	if ([result count] != 1) {
-		AlfrescoLogDebug(@"Hierarchy Navigation Link Relation could not be determined for given link relations: %@", [uploadInfo.repositoryItem linkRelations]);
+		AlfrescoLogDebug(@"Hierarchy Navigation Link Relation could not be determined for given link relations: %@", [repoItem linkRelations]);
 		return nil;
 	}
 	

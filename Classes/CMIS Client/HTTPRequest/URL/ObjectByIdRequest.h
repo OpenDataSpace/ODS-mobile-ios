@@ -32,5 +32,5 @@
 
 + (ObjectByIdRequest *) defaultObjectById: (NSString *) objectId accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
 + (ObjectByIdRequest *) objectByIdWithTemplateURL: (NSString *) templateUrl objectId: (NSString *) objectId accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
-
++ (ObjectByIdRequest *)objectByIdWithURL:(NSString *)locationUrl accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
 @end

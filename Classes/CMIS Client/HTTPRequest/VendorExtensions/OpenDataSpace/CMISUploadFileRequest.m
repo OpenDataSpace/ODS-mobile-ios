@@ -157,13 +157,27 @@
     }
     
     if (readLen > 0)
-        data = [NSData dataWithBytesNoCopy:readBuffer length:readLen freeWhenDone:NO];
+        data = [NSMutableData dataWithBytesNoCopy:readBuffer length:readLen freeWhenDone:NO];
     
     return data;
 }
 
 #pragma mark -
 #pragma mark Upload Helpers
+
+- (RepositoryItem*) updateTemporaryRepositoryItem:(NSString*) contentLocation {
+    if (contentLocation) {
+        ObjectByIdRequest *objRequest = [ObjectByIdRequest objectByIdWithURL:contentLocation accountUUID:_uploadInfo.selectedAccountUUID tenantID:_uploadInfo.tenantID];
+        [objRequest startSynchronous];
+        _error = [objRequest error];
+        
+        if (_error == nil && [objRequest responseStatusCode] == 200) {
+            return [objRequest repositoryItem];
+        }
+    }
+    
+    return nil;
+}
 
 - (BOOL) createFileOnServer   //create empty file on server.
 {
@@ -180,46 +194,80 @@
         RepositoryItemParser *itemParser = [[RepositoryItemParser alloc] initWithData:[createFileRequest responseData]];
         _uploadInfo.repositoryItem = [itemParser parse];
         [_uploadInfo setCmisObjectId:_uploadInfo.repositoryItem.guid];
-        [_uploadInfo setRepositoryItem:_uploadInfo.repositoryItem];
         AlfrescoLogDebug(@"Create empty file guid:%@ changeToken:%@", _uploadInfo.repositoryItem.guid, _uploadInfo.repositoryItem.changeToken);
+        NSString *contentLocation = [[createFileRequest responseHeaders] objectForKey:@"Location"];
+        if (contentLocation) {
+            _uploadInfo.temporaryRrepositoryItem = [self updateTemporaryRepositoryItem:contentLocation];
+            if (!_uploadInfo.temporaryRrepositoryItem) {
+                return NO;
+            }
+            AlfrescoLogDebug(@"Create empty file org guid:%@ temporary guid:%@ temporary object changetoken", _uploadInfo.repositoryItem.guid, _uploadInfo.temporaryRrepositoryItem.guid, _uploadInfo.temporaryRrepositoryItem.changeToken);
+        }
+        
         return YES;
     }
-    
+    AlfrescoLogDebug(@"createFileOnServer:%@ ,error:%@", [NSString stringWithUTF8String:[[createFileRequest responseData] bytes]], _error);
     return NO;
 }
 
 - (BOOL) updateRepositoryItemInfo   //update change token for uploading file
 {
-    ObjectByIdRequest *objRequest = [ObjectByIdRequest defaultObjectById:_uploadInfo.repositoryItem.guid accountUUID:_uploadInfo.selectedAccountUUID tenantID:_uploadInfo.tenantID];
-    [objRequest startSynchronous];
-    _error = [objRequest error];
-    
-    if (_error == nil && [objRequest responseStatusCode] == 200) {
-        _uploadInfo.repositoryItem = [objRequest repositoryItem];
-        AlfrescoLogDebug(@"uploaded file guid:%@ changeToken:%@",_uploadInfo.repositoryItem.guid, _uploadInfo.repositoryItem.changeToken);
-        self.sentBytes = [[_uploadInfo.repositoryItem.metadata objectForKey:@"cmis:contentStreamLength"] longLongValue];
+    if (!_uploadInfo.temporaryRrepositoryItem) {
+        ObjectByIdRequest *objRequest = [ObjectByIdRequest defaultObjectById:_uploadInfo.repositoryItem.guid accountUUID:_uploadInfo.selectedAccountUUID tenantID:_uploadInfo.tenantID];
+        [objRequest startSynchronous];
+        _error = [objRequest error];
         
-        return YES;
+        if (_error == nil && [objRequest responseStatusCode] == 200) {
+            _uploadInfo.repositoryItem = [objRequest repositoryItem];
+            AlfrescoLogDebug(@"uploaded file guid:%@ changeToken:%@",_uploadInfo.repositoryItem.guid, _uploadInfo.repositoryItem.changeToken);
+            self.sentBytes = [[_uploadInfo.repositoryItem.metadata objectForKey:@"cmis:contentStreamLength"] longLongValue];
+            //Content-Location
+            NSString *contentLocation = [[objRequest responseHeaders] objectForKey:@"Location"];
+            if (contentLocation) {
+                _uploadInfo.temporaryRrepositoryItem = [self updateTemporaryRepositoryItem:contentLocation];
+                if (!_uploadInfo.temporaryRrepositoryItem) {
+                    return NO;
+                }
+                AlfrescoLogDebug(@"uploaded file org guid:%@ changeToken:%@ temporary object guid:%@  temporary changtoken:%@",_uploadInfo.repositoryItem.guid, _uploadInfo.repositoryItem.changeToken,_uploadInfo.temporaryRrepositoryItem.guid, _uploadInfo.temporaryRrepositoryItem.changeToken);
+            }
+            
+            return YES;
+        }
+        
+        AlfrescoLogDebug(@"updateRepositoryItemInfo %@", _error);
+        return NO;
     }
     
-    AlfrescoLogDebug(@"%@", _error);
-    return NO;
+    return YES;
 }
 
 - (BOOL) appendChunkData:(NSMutableData*) contentData dataLength:(uint64_t) dataLength isLastChunk:(BOOL)isLastChunk
 {
     @autoreleasepool {
-        AlfrescoLogDebug(@"Begin appendChunkData file guid:%@ changeToken:%@",_uploadInfo.repositoryItem.guid, _uploadInfo.repositoryItem.changeToken);
+        AlfrescoLogDebug(@"Begin appendChunkData file guid:%@ changeToken:%@, temporary object guid:%@ temporary changetoken:%@",_uploadInfo.repositoryItem.guid, _uploadInfo.repositoryItem.changeToken,[[_uploadInfo temporaryRrepositoryItem] guid], [[_uploadInfo temporaryRrepositoryItem] changeToken]);
         CMISAppendContentHTTPRequest *appendRequest = [CMISAppendContentHTTPRequest cmisAppendRequestWithUploadInfo:_uploadInfo contentData:contentData isLastChunk:isLastChunk];
         [appendRequest addRequestHeader:@"Content-Type" value:_mimeType];
         [appendRequest setUploadProgressDelegate:self];
         [appendRequest startSynchronous];
         
         _error = [appendRequest error];
-        
         if (_error == nil && ([appendRequest responseStatusCode] == 201 || [appendRequest responseStatusCode] == 200)) {  //put data successfully
             AlfrescoLogDebug(@"upload size:%llu  total:%llu",self.sentBytes, self.totalBytes);
             AlfrescoLogDebug(@"appendChunkData success:%@ ,error:%@", [NSString stringWithUTF8String:[[appendRequest responseData] bytes]], _error);
+            NSString *contentLocation = [[appendRequest responseHeaders] objectForKey:@"Location"];
+            if (contentLocation) {
+                _uploadInfo.temporaryRrepositoryItem = [self updateTemporaryRepositoryItem:contentLocation];
+                if (!_uploadInfo.temporaryRrepositoryItem) {
+                    AlfrescoLogDebug(@"updateTemporaryRepositoryItem failed guid:%@ temporary object guid:%@ temporary object changetoken",_uploadInfo.repositoryItem.guid, _uploadInfo.temporaryRrepositoryItem.guid, _uploadInfo.temporaryRrepositoryItem.changeToken);
+                    return NO;
+                }
+                self.sentBytes = [[_uploadInfo.temporaryRrepositoryItem.metadata objectForKey:@"cmis:contentStreamLength"] longLongValue];
+                if (isLastChunk) {
+                    _uploadInfo.repositoryItem = _uploadInfo.temporaryRrepositoryItem;
+                }
+                AlfrescoLogDebug(@"appended ChunkData file guid:%@ changeToken:%@, temporary object guid:%@ temporary changetoken:%@",_uploadInfo.repositoryItem.guid, _uploadInfo.repositoryItem.changeToken,_uploadInfo.temporaryRrepositoryItem.guid, _uploadInfo.temporaryRrepositoryItem.changeToken);
+            }
+
             return YES;
         }
         
@@ -244,16 +292,30 @@
             return NO;
         }
         
-        if (![self appendChunkData:data dataLength:readLength isLastChunk:(self.sentBytes + readLength == self.totalBytes)]) {
-            return NO;
-        }
-        
         if (![self updateRepositoryItemInfo]) {
             return NO;
         }
         
+        if (![self appendChunkData:data dataLength:readLength isLastChunk:(self.sentBytes + readLength == self.totalBytes)]) {
+            return NO;
+        }
+        
+//        if (![self updateRepositoryItemInfo]) {
+//            return NO;
+//        }
+        
         if (_isCancelled) {   //cancel upload request
             return NO;
+        }
+    }
+    
+    if (_uploadInfo.temporaryRrepositoryItem) {
+        ObjectByIdRequest *objRequest = [ObjectByIdRequest defaultObjectById:_uploadInfo.repositoryItem.guid accountUUID:_uploadInfo.selectedAccountUUID tenantID:_uploadInfo.tenantID];
+        [objRequest startSynchronous];
+        _error = [objRequest error];
+        
+        if (_error == nil && [objRequest responseStatusCode] == 200) {
+            _uploadInfo.repositoryItem = [objRequest repositoryItem];
         }
     }
     

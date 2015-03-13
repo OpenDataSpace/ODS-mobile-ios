@@ -57,6 +57,7 @@ typedef enum
 @property (nonatomic, copy) NSString *upLinkRelation;
 @property (nonatomic, copy) NSString *cmisObjectId;
 @property (nonatomic, retain) RepositoryItem *repositoryItem;
+@property (nonatomic, retain) RepositoryItem *temporaryRrepositoryItem;  //for new gateway
 @property (nonatomic, retain) NSDate *uploadDate;
 @property (nonatomic, retain) NSArray *tags;
 @property (nonatomic, assign) UploadInfoStatus uploadStatus;

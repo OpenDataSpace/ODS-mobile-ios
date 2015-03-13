@@ -83,4 +83,26 @@
 	return [[getRequest retain] autorelease];
 }
 
++ (ObjectByIdRequest *)objectByIdWithURL:(NSString *)locationUrl accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID {
+    NSDictionary *namedParameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                     @"",@"filter",
+                                     @"true",@"includeAllowableActions",
+                                     @"false",@"includePolicyIds",
+                                     @"none",@"includeRelationships",  //TODO:our server not support false;
+                                     @"false",@"includeACL",
+                                     @"cmis:thumbnail",@"renditionFilter",nil];
+    
+    NSString *url = replaceStringWithNamedParameters(locationUrl, namedParameters);
+    ObjectByIdRequest *getRequest = [ObjectByIdRequest requestWithURL:[NSURL URLWithString:url] accountUUID:uuid];
+    [getRequest setTenantID:aTenantID];
+    [getRequest setShouldContinueWhenAppEntersBackground:YES];
+    [getRequest setAllowCompressedResponse:YES]; // this is the default, but being verbose
+    
+    [getRequest addRequestHeader:@"Accept" value:kAtomPubServiceMediaType];
+    [getRequest setRequestMethod:@"GET"];
+    [getRequest setTimeOutSeconds:120];
+    
+    return [[getRequest retain] autorelease];
+}
+
 @end
