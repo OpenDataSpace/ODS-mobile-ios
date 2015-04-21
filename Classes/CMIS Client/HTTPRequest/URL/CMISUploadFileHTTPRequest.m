@@ -38,6 +38,15 @@
     [super dealloc];
 }
 
+- (void) failWithError:(NSError *)theError {
+    NSLog(@"CMISUploadFileHTTPRequest");
+    if ([self responseStatusCode] == 403) {  //HTTP Status 403 - Quota is reached, write is aborted
+        displayErrorMessageWithTitle(NSLocalizedString(@"Not enough data space for upload file.", nil), NSLocalizedString(@"Quota is reached", nil));
+    }else {
+        [super failWithError:theError];
+    }
+}
+
 + (CMISUploadFileHTTPRequest *)cmisUploadRequestWithUploadInfo:(UploadInfo *)uploadInfo
 {
     CMISUploadFileHTTPRequest *request = [CMISUploadFileHTTPRequest requestWithURL:[uploadInfo uploadURL] accountUUID:[uploadInfo selectedAccountUUID]];

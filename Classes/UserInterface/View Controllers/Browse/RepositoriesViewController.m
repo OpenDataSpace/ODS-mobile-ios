@@ -279,17 +279,25 @@ static NSString *RepositoryInfoKey = @"RepositoryInfo";
     [nextController release];
 #else
     
-    NSString *folder = [repoInfo rootFolderHref];
-    NSDictionary *defaultParamsDictionary = [[LinkRelationService shared] defaultOptionalArgumentsForFolderChildrenCollection];
-    NSURL *folderChildrenCollectionURL = [[NSURL URLWithString:folder] URLByAppendingParameterDictionary:defaultParamsDictionary];
-    FolderItemsHTTPRequest *request = [[[FolderItemsHTTPRequest alloc] initWithURL:folderChildrenCollectionURL accountUUID:self.selectedAccountUUID] autorelease];
+//    NSString *folder = [repoInfo rootFolderHref];
+//    NSDictionary *defaultParamsDictionary = [[LinkRelationService shared] defaultOptionalArgumentsForFolderChildrenCollection];
+//    NSURL *folderChildrenCollectionURL = [[NSURL URLWithString:folder] URLByAppendingParameterDictionary:defaultParamsDictionary];
+//    FolderItemsHTTPRequest *request = [[[FolderItemsHTTPRequest alloc] initWithURL:folderChildrenCollectionURL accountUUID:self.selectedAccountUUID] autorelease];
+//    [request setDelegate:self];
+//    [request setDidFinishSelector:@selector(folderItemsRequestFinished:)];
+//    [request setDidFailSelector:@selector(folderItemsRequestFailed:)];
+//    [request setParentTitle:[[self navigationItem] title]];
+//    [request setTenantID:[repoInfo tenantID]];
+//    [request setRepoInfo:repoInfo];
+//    
+//    [request startAsynchronous];
+    
+    /* to get root folder's allowable actions */
+    ObjectByIdRequest *request = [ObjectByIdRequest objectByIdWithTemplateURL:repoInfo.objectByIdUriTemplate objectId:repoInfo.repositoryId accountUUID:_selectedAccountUUID tenantID:repoInfo.repositoryId];
+    [request setUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:repoInfo, @"repoInfo", nil]];
     [request setDelegate:self];
     [request setDidFinishSelector:@selector(folderItemsRequestFinished:)];
     [request setDidFailSelector:@selector(folderItemsRequestFailed:)];
-    [request setParentTitle:[[self navigationItem] title]];
-    [request setTenantID:[repoInfo tenantID]];
-    [request setRepoInfo:repoInfo];
-    
     [request startAsynchronous];
     
     [self startHUD];
@@ -394,11 +402,10 @@ static NSString *RepositoryInfoKey = @"RepositoryInfo";
 
 - (void)folderItemsRequestFinished:(ASIHTTPRequest *)request
 {
-    [self stopHUD];
     if ([request isKindOfClass:[FolderItemsHTTPRequest class]])
     {
         FolderItemsHTTPRequest *fid = (FolderItemsHTTPRequest *) request;
-        
+        [self stopHUD];
         // create a new view controller for the list of repository items (documents and folders)
         RepositoryNodeViewController *vc = [[RepositoryNodeViewController alloc] initWithStyle:UITableViewStylePlain];
         [vc setFolderItems:fid];
@@ -411,6 +418,22 @@ static NSString *RepositoryInfoKey = @"RepositoryInfo";
         // push that view onto the nav controller's stack
         [self.navigationController pushViewController:vc animated:YES];
         [vc release];
+    }else if ([request isKindOfClass:[ObjectByIdRequest class]]) {
+        ObjectByIdRequest *objectRequest = (ObjectByIdRequest*) request;
+        RepositoryInfo *repoInfo = [[objectRequest userInfo] objectForKey:@"repoInfo"];
+        NSString *folder = [repoInfo rootFolderHref];
+        NSDictionary *defaultParamsDictionary = [[LinkRelationService shared] defaultOptionalArgumentsForFolderChildrenCollection];
+        NSURL *folderChildrenCollectionURL = [[NSURL URLWithString:folder] URLByAppendingParameterDictionary:defaultParamsDictionary];
+        FolderItemsHTTPRequest *request = [[[FolderItemsHTTPRequest alloc] initWithURL:folderChildrenCollectionURL accountUUID:self.selectedAccountUUID] autorelease];
+        [request setItem:objectRequest.repositoryItem];
+        [request setDelegate:self];
+        [request setDidFinishSelector:@selector(folderItemsRequestFinished:)];
+        [request setDidFailSelector:@selector(folderItemsRequestFailed:)];
+        [request setParentTitle:[[self navigationItem] title]];
+        [request setTenantID:[repoInfo tenantID]];
+        [request setRepoInfo:repoInfo];
+        
+        [request startAsynchronous];
     }
 }
 

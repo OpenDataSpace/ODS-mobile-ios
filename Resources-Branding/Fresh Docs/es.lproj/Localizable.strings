@@ -922,3 +922,25 @@
 "dialog.chooser.cancel" = "Cancel";
 "moveprogress.file-left" = "1 item remaining";
 "moveprogress.files-left" = "%d items remaining";
+
+/* create links */
+"create-link.fields.email" = "Email";
+"create-link.fields.subject" = "Subject";
+"create-link.fields.expirationdate" = "Expiration Date";
+"create-link.fields.password" = "Password";
+"create-link.fields.message" = "Message";
+"create-link.placeholder.required" = "Required";
+"create-link.placeholder.optional" = "Optional";
+"creating.link" = "Creating link...";
+"create-link.success" = "Craete link successful.";
+"create-link.failure" = "Failed to create link.";
+
+/* Repository name */
+"My" = "My";
+"Shared" = "Shared";
+"Global" = "Global";
+
+/* Open Data Space Error */
+"Quota is reached" = "Quota is reached";
+"Not enough data space for upload file." = "Not enough data space for upload file.";
+

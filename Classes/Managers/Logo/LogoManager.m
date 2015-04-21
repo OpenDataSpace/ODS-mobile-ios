@@ -81,7 +81,7 @@ static CGFloat const updateLogoTimeInterval = 300;  //5 mins  5*60
 
 - (void) readBrandingRepositoryInformation {
     /* Initial repository information */
-    NSString *brandingReposStorePath = [FileUtils pathToConfigFile:kLogoConfigurationFile];
+    NSString *brandingReposStorePath = [FileUtils pathToConfigFile:kRepositoryConfigrationFile];
     NSData *serializedBrandingReposData = [NSData dataWithContentsOfFile:brandingReposStorePath];
     if (serializedBrandingReposData && serializedBrandingReposData.length > 0)
     {

@@ -604,7 +604,8 @@ UIView *activeView(void)
         //To work around a system notice that is tried to be presented in a modal view controller
         return appDelegate.mainViewController.presentedViewController.view;
     }
-    else if (IS_IPAD)
+    else
+    if (IS_IPAD)
     {
         if (detailNavigation.masterPopoverController.popoverVisible)
         {

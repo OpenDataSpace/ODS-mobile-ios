@@ -237,7 +237,7 @@ NSString * const kMultiSelectMove = @"moveAction";
 
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [self clearAllHUDs];
+    //[self clearAllHUDs];
 }
 
 - (void)clearAllHUDs
@@ -1103,14 +1103,15 @@ NSString * const kMultiSelectMove = @"moveAction";
 {
     AssetUploadItem *assetUploadHelper =  [[[AssetUploadItem alloc] initWithAssetURL:assetURL] autorelease];
     //[assetUploadHelper createPreview:^(NSURL *previewURL)
+    dispatch_async(dispatch_get_main_queue(), ^
     {
+        [self stopHUD];
         UploadInfo *uploadInfo = [[[UploadInfo alloc] init] autorelease];
         [uploadInfo setUploadFileURL:assetURL];
         [uploadInfo setUploadType:UploadFormTypePhoto];
         [uploadInfo setUploadFileIsTemporary:YES];
         [self presentUploadFormWithItem:uploadInfo andHelper:assetUploadHelper];
-        [self stopHUD];
-    }//];
+    });//];
 }
 
 //This will be called when location services are not enabled
@@ -1765,21 +1766,20 @@ NSString * const kMultiSelectMove = @"moveAction";
     if (IOS8_OR_LATER) {
         UIAlertController *sheetController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"operation.pop.menu.title", @"Operations") message:nil preferredStyle:UIAlertControllerStyleActionSheet];
         
-        
-        [sheetController addAction:[UIAlertAction
-                                    actionWithTitle:NSLocalizedString(@"operation.pop.menu.delete", @"Delete")
-                                    style:UIAlertActionStyleDefault
-                                    handler:^(UIAlertAction *alertAction) {
-                                        [self processOperationsActionSheetWithButtonTitle:NSLocalizedString(@"operation.pop.menu.delete", @"Delete")];
-                                    }]];
-        
-        
-        [sheetController addAction:[UIAlertAction
-                                    actionWithTitle:NSLocalizedString(@"operation.pop.menu.rename", @"Rename")
-                                    style:UIAlertActionStyleDefault
-                                    handler:^(UIAlertAction *alertAction) {
-                                        [self processOperationsActionSheetWithButtonTitle:NSLocalizedString(@"operation.pop.menu.rename", @"Rename")];
-                                    }]];
+        if ([_selectedItem canDeleteObject]) {
+            [sheetController addAction:[UIAlertAction
+                                        actionWithTitle:NSLocalizedString(@"operation.pop.menu.delete", @"Delete")
+                                        style:UIAlertActionStyleDefault
+                                        handler:^(UIAlertAction *alertAction) {
+                                            [self processOperationsActionSheetWithButtonTitle:NSLocalizedString(@"operation.pop.menu.delete", @"Delete")];
+                                        }]];
+            [sheetController addAction:[UIAlertAction
+                                        actionWithTitle:NSLocalizedString(@"operation.pop.menu.rename", @"Rename")
+                                        style:UIAlertActionStyleDefault
+                                        handler:^(UIAlertAction *alertAction) {
+                                            [self processOperationsActionSheetWithButtonTitle:NSLocalizedString(@"operation.pop.menu.rename", @"Rename")];
+                                        }]];
+        }
         
         if ([_selectedItem canMoveObject])
         {
@@ -1834,8 +1834,11 @@ NSString * const kMultiSelectMove = @"moveAction";
                                 destructiveButtonTitle:nil
                                 otherButtonTitles: nil];
         
-        [sheet addButtonWithTitle:NSLocalizedString(@"operation.pop.menu.delete", @"Delete")];
-        [sheet addButtonWithTitle:NSLocalizedString(@"operation.pop.menu.rename", @"Rename")];
+        if ([_selectedItem canDeleteObject]) {
+            [sheet addButtonWithTitle:NSLocalizedString(@"operation.pop.menu.delete", @"Delete")];
+            [sheet addButtonWithTitle:NSLocalizedString(@"operation.pop.menu.rename", @"Rename")];
+        }
+        
         if ([_selectedItem canMoveObject])
         {
             [sheet addButtonWithTitle:NSLocalizedString(@"operation.pop.menu.move", @"Move")];

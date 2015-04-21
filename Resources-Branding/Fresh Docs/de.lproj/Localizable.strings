@@ -902,7 +902,7 @@
 "create-link.fields.expirationdate" = "Expiration Date";
 "create-link.fields.password" = "Password";
 "create-link.fields.message" = "Message";
-"create-link.placeholder.required" = "Required";
+"create-link.placeholder.required" = "Erforderlich";
 "create-link.placeholder.optional" = "Optional";
 "creating.link" = "Creating link...";
 "create-link.success" = "Craete link successful.";
@@ -912,3 +912,7 @@
 "My" = "My";
 "Shared" = "Shared";
 "Global" = "Global";
+
+/* Open Data Space Error */
+"Quota is reached" = "Quota is reached";
+"Not enough data space for upload file." = "No enough data space for upload file.";

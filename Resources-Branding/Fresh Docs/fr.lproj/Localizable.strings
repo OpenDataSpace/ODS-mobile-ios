@@ -944,3 +944,7 @@
 "my" = "Fichiers privés";
 "shared" = "Fichiers partagés";
 "global" = "Fichiers globals";
+
+/* Open Data Space Error */
+"Quota is reached" = "Quota is reached";
+"Not enough data space for upload file." = "Not enough data space for upload file.";

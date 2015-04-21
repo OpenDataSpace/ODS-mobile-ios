@@ -91,11 +91,11 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     
     [[NSNotificationCenter defaultCenter] postUploadWaitingNotificationWithUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:uploadUUID, @"uploadUUID", uploadInfo, @"uploadInfo", nil]];
     
-    NSString *uploadPath = [uploadInfo.uploadFileURL path];
-    if(!uploadInfo || ![[NSFileManager defaultManager] fileExistsAtPath:uploadPath])
-    {
-        displayErrorMessageWithTitle(NSLocalizedString(@"uploads.retry.cannotRetry", @"The upload has permanently failed. Please start the upload again."), NSLocalizedString(@"uploads.cancelAll.title", @"Uploads"));
-    }
+//    NSString *uploadPath = [uploadInfo.uploadFileURL path];
+//    if(!uploadInfo || ![[NSFileManager defaultManager] fileExistsAtPath:uploadPath])
+//    {
+//        displayErrorMessageWithTitle(NSLocalizedString(@"uploads.retry.cannotRetry", @"The upload has permanently failed. Please start the upload again."), NSLocalizedString(@"uploads.cancelAll.title", @"Uploads"));
+//    }
     
     return YES;
 }

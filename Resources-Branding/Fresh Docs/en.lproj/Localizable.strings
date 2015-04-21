@@ -944,3 +944,7 @@
 "My" = "My";
 "Shared" = "Shared";
 "Global" = "Global";
+
+/* Open Data Space Error */
+"Quota is reached" = "Quota is reached";
+"Not enough data space for upload file." = "Not enough data space for upload file.";
